@@ -27,5 +27,13 @@ public class NetmanGUI : Photon.MonoBehaviour {
                 PhotonNetwork.Disconnect();
             }
         }
+		
+		Netman nman = this.gameObject.GetComponent<Netman>();
+		
+		if (PhotonNetwork.room != null && !nman.hasSpawn) {
+			if (GUILayout.Button("Spawn")) {
+				this.gameObject.GetComponent<Netman>().SpawnPlayer(0);	
+			}
+		}
     }
 }

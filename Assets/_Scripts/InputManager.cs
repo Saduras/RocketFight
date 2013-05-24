@@ -4,6 +4,11 @@ using System.Collections;
 public class InputManager : MonoBehaviour {
 	
 	public static float speed = 5;
+	public static string groundTag = "Ground";
+	
+	public GameObject projectile;
+	public float cooldown = 0.5f;
+	private float lastShot = 0;
 	
 	// The client who controls this character
 	private PhotonPlayer controllingPlayer;
@@ -36,7 +41,7 @@ public class InputManager : MonoBehaviour {
 			RaycastHit[] rayHits = Physics.RaycastAll(cursorRay);
 			Vector3 hitPoint = Vector3.zero;
 			foreach(RaycastHit hit in rayHits) {
-				if (hit.collider.CompareTag("ground")) {
+				if (hit.collider.CompareTag(groundTag)) {
 					hitPoint = hit.point;
 				}
 			}
@@ -45,7 +50,11 @@ public class InputManager : MonoBehaviour {
 			viewDirection.Normalize();
 			this.transform.LookAt(this.transform.position + viewDirection);
 
-			
+			if( Input.GetButton("Fire1") ) {
+				if( Time.time > lastShot + cooldown ) {
+					PhotonNetwork.Instantiate(projectile.name, this.transform.Find("RocketStart").position, this.transform.rotation, 0);	
+				}
+			}
 			// Get fire input.
 			// if (Input.GetButtonDown("Fire"))
 			//	networkView.RPC("ShootMissile",RPCMode.Server, true);
@@ -66,9 +75,9 @@ public class InputManager : MonoBehaviour {
 	
 	[RPC]
 	public void SetPlayer(PhotonPlayer player) {
-		Debug.Log("Setting the controlling player: " + player.name);
+		Debug.Log("Setting the controlling player: " + player.name + "[" + player.ID + "]");
 		controllingPlayer = player;
-		photonView.RPC("SetPlayer",PhotonTargets.OthersBuffered, player);
+		// photonView.RPC("SetPlayer",PhotonTargets.OthersBuffered, player);
 	}
 	
 	[RPC]

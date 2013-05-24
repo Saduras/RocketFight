@@ -5,7 +5,7 @@ using System.Collections;
 public class RespawnPoint : MonoBehaviour {
 	
 	public bool free = true;
-	private PhotonPlayer player;
+	public PhotonPlayer player;
 	private PhotonView photonView;
 	
 	public virtual void Awake () {
@@ -25,12 +25,13 @@ public class RespawnPoint : MonoBehaviour {
 	 */
 	[RPC]
 	public bool AssignTo(PhotonPlayer assignedPlayer) {
-		if( !free ) 
+		if( !free ) {
+			Debug.LogError("Spawnpoint is not free!");
 			return false;
-		
+		}
 		player = assignedPlayer;
 		free = false;
-		photonView.RPC("AssignTo",PhotonTargets.OthersBuffered, assignedPlayer);
+		//photonView.RPC("AssignTo",PhotonTargets.OthersBuffered, assignedPlayer);
 		Debug.Log("Assigned respawn point to: " + player.name);
 		return true;
 	}
