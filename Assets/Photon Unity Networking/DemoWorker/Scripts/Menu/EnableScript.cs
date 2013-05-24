@@ -20,12 +20,12 @@ public class EnableScript : MonoBehaviour
         if (PhotonNetwork.room != null)
         {
             Destroy(this.mainMenu);
-            this.game.active = true;
+            this.game.SetActive(true);
         }
         else
         {
             Destroy(this.game);
-            this.mainMenu.active = true;
+            this.mainMenu.SetActive(true);
         }
         
         // now this script is not needed anymore. destroy it and it's gameobject

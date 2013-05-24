@@ -1,0 +1,13 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="..\RocketFight-Prototyp\Assets\Scripts\Network\photon\PhotonNetmanGUI.cs">
+    <Files>
+      <File FileName="..\RocketFight-Prototyp\Assets\Scripts\Network\photon\PhotonNetman.cs" Line="22" Column="2" />
+      <File FileName="..\RocketFight-Prototyp\Assets\Scripts\Network\photon\PhotonNetmanGUI.cs" Line="7" Column="2" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
