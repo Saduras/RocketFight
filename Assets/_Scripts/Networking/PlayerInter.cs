@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(PhotonView))]
 public class PlayerInter : Photon.MonoBehaviour {
 
 	//

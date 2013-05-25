@@ -12,7 +12,7 @@ public class DeathTrigger : MonoBehaviour {
 	
 	public void OnDrawGizmos () {
 		Bounds bounds = GetComponent<BoxCollider>().bounds;
-		Transform transform = GetComponent<Transform>();
+		//Transform transform = GetComponent<Transform>();
 		
 		Vector3 topFrontRight = (bounds.center + bounds.extents);
 		Vector3 topFrontLeft = (bounds.center + Vector3.Scale(bounds.extents, new Vector3(-1, 1, 1)));

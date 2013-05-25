@@ -1,17 +1,20 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\Networking\Netman.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\PlayerManager.cs">
     <Files>
-      <File FileName="..\RocketFight-Prototyp\Assets\Scripts\Network\photon\PlayerManager.cs" Line="101" Column="41" />
-      <File FileName="Assets\_Scripts\InputManager.cs" Line="63" Column="58" />
-      <File FileName="Assets\_Scripts\Networking\Netman.cs" Line="27" Column="2" />
+      <File FileName="..\RocketFight-Prototyp\Assets\Scripts\Network\photon\PlayerManager.cs" Line="100" Column="28" />
+      <File FileName="..\RocketFight-Prototyp\Assets\Scripts\Network\Server\Server_PlayerManager.cs" Line="30" Column="2" />
+      <File FileName="Assets\_Scripts\InputManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Scripts\Networking\Netman.cs" Line="1" Column="1" />
       <File FileName="Assets\Photon Unity Networking\DemoSynchronization\CubeLerp.cs" Line="1" Column="1" />
       <File FileName="Assets\Photon Unity Networking\DemoSynchronization\CubeInter.cs" Line="1" Column="1" />
-      <File FileName="Assets\_Scripts\Networking\PlayerInter.cs" Line="8" Column="31" />
+      <File FileName="Assets\_Scripts\Networking\PlayerInter.cs" Line="30" Column="81" />
       <File FileName="Assets\_Scripts\RespawnPoint.cs" Line="1" Column="1" />
-      <File FileName="Assets\_Scripts\Networking\NetmanGUI.cs" Line="1" Column="1" />
-      <File FileName="Assets\_Scripts\DeathTrigger.cs" Line="31" Column="46" />
-      <File FileName="Assets\_Scripts\PlayerManager.cs" Line="13" Column="64" />
+      <File FileName="Assets\_Scripts\Networking\NetmanGUI.cs" Line="4" Column="1" />
+      <File FileName="Assets\_Scripts\DeathTrigger.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Scripts\PlayerManager.cs" Line="18" Column="4" />
+      <File FileName="Assets\_Scripts\RocketController.cs" Line="46" Column="5" />
+      <File FileName="Assets\_Scripts\ExplosionAnimation.cs" Line="22" Column="49" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -52,7 +52,8 @@ public class InputManager : MonoBehaviour {
 
 			if( Input.GetButton("Fire1") ) {
 				if( Time.time > lastShot + cooldown ) {
-					PhotonNetwork.Instantiate(projectile.name, this.transform.Find("RocketStart").position, this.transform.rotation, 0);	
+					PhotonNetwork.Instantiate(projectile.name, this.transform.Find("RocketStart").position, this.transform.rotation, 0);
+					lastShot = Time.time;
 				}
 			}
 			// Get fire input.

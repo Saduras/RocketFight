@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerManager : MonoBehaviour {
+public class PlayerManager : Photon.MonoBehaviour {
 
 	private GameObject spawnPoint;
 	
