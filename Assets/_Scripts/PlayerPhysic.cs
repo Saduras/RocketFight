@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerPhysic : Photon.MonoBehaviour {
 	
 	public float forceReduction = 0.5f;
+	public bool controlableWhileForce = false;
 	private Vector3 force;
 	private float epsilon = 0.1f;
 	
@@ -21,6 +22,13 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 			
 			Vector3 deltaForce = force * forceReduction * Time.deltaTime;
 			force -= deltaForce;
+			
+			if( !controlableWhileForce && (this.gameObject.GetComponent<InputManager>().enabled == true) ) {
+				this.gameObject.GetComponent<InputManager>().enabled = false;
+			}
+		} else {
+			if( this.gameObject.GetComponent<InputManager>().enabled == false)
+				this.gameObject.GetComponent<InputManager>().enabled = true;
 		}
 	}
 	
