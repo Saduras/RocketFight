@@ -75,7 +75,10 @@ public class InputManager : Photon.MonoBehaviour {
 
 			if( Input.GetButton("Fire1") ) {
 				if( Time.time > lastShot + cooldown ) {
-					PhotonNetwork.Instantiate(projectile.name, this.transform.Find("RocketStart").position, this.transform.rotation, 0);
+					GameObject handle = PhotonNetwork.Instantiate(projectile.name, 
+												this.transform.Find("RocketStart").position, 
+												this.transform.rotation, 0);
+					handle.SendMessage("SetRange", Vector3.Distance(this.transform.Find("RocketStart").position, hitPoint) );
 					lastShot = Time.time;
 				}
 			}

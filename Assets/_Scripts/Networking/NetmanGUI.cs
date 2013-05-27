@@ -35,5 +35,10 @@ public class NetmanGUI : Photon.MonoBehaviour {
 				this.gameObject.GetComponent<Netman>().SpawnPlayer(0);	
 			}
 		}
+		
+		int ping = PhotonNetwork.GetPing();
+		GUILayout.BeginArea( new Rect(Screen.width - 100, 40, 100, 40));
+			GUILayout.TextArea("Ping: " + ping);
+		GUILayout.EndArea();
     }
 }
