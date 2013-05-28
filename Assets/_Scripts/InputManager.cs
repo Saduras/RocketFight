@@ -11,6 +11,7 @@ public class InputManager : Photon.MonoBehaviour {
 	
 	public float cooldown = 0.5f;
 	
+	public bool localGame = false;
 	public GameObject projectile;
 	public string groundTag = "Ground";
 	private float lastShot = 0;
@@ -39,7 +40,7 @@ public class InputManager : Photon.MonoBehaviour {
 	// Update is called once per frame
 	public void Update () {
 		// Check for input updates
-		if( PhotonNetwork.player == controllingPlayer) {
+		if( (PhotonNetwork.player == controllingPlayer) || localGame ) {
 			// Get movement input.
 			Vector3 movement = Vector3.zero;
 			Vector3 hitPoint;
@@ -75,10 +76,18 @@ public class InputManager : Photon.MonoBehaviour {
 
 			if( Input.GetButton("Fire1") ) {
 				if( Time.time > lastShot + cooldown ) {
-					GameObject handle = PhotonNetwork.Instantiate(projectile.name, 
+					if(!localGame) {
+						GameObject handle = PhotonNetwork.Instantiate(projectile.name, 
 												this.transform.Find("RocketStart").position, 
 												this.transform.rotation, 0);
-					handle.SendMessage("SetRange", Vector3.Distance(this.transform.Find("RocketStart").position, hitPoint) );
+						handle.SendMessage("SetRange", Vector3.Distance(this.transform.Find("RocketStart").position, hitPoint) );
+					} else {
+						GameObject handle = (GameObject) Instantiate(projectile, 
+												this.transform.Find("RocketStart").position, 
+												this.transform.rotation);
+						handle.SendMessage("SetRange", Vector3.Distance(this.transform.Find("RocketStart").position, hitPoint) );
+						//handle.SendMessage("SetLocaGame", localGame);
+					}
 					lastShot = Time.time;
 				}
 			}

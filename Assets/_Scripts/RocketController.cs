@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+
 [RequireComponent(typeof(PhotonView))]
 public class RocketController : Photon.MonoBehaviour {
 	
@@ -13,6 +14,7 @@ public class RocketController : Photon.MonoBehaviour {
 	public GameObject explosion;
 	public string playerTag = "Player";
 	private float birthTime;
+	private bool localGame = false;
 	
 	public enum FlightPath {
 		linear,
@@ -44,8 +46,10 @@ public class RocketController : Photon.MonoBehaviour {
 			this.transform.Translate( Vector3.forward * speed * Time.deltaTime );
 			break;
 		case FlightPath.ballisitic:
-			Vector3 move = Vector3.forward * speed * Mathf.Cos(ballisticAngle) + Vector3.up * speed * Mathf.Sin(ballisticAngle);
-			this.transform.Translate( move * Time.deltaTime );
+			// Mathf.Cos and Sin working with radians, so we need to convert the angle
+			float alpha = Mathf.Deg2Rad * ballisticAngle; 
+			Vector3 move = Vector3.forward * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha);
+			//this.transform.Translate( move * Time.deltaTime );
 			break;
 		case FlightPath.controlled:
 			this.transform.Translate( Vector3.forward * speed * Time.deltaTime );
@@ -56,8 +60,11 @@ public class RocketController : Photon.MonoBehaviour {
 			break;
 		}
 		
-		if ( (birthTime + lifetime < Time.time) && (photonView.owner == PhotonNetwork.player) ) {
+		if ( (birthTime + lifetime < Time.time) && ((photonView.owner == PhotonNetwork.player)) ) {
 			PhotonNetwork.Destroy( this.gameObject );	
+		}
+		if ( (birthTime + lifetime < Time.time) || localGame) {
+			Destroy( this.gameObject );	
 		}
 	}
 	
@@ -66,10 +73,26 @@ public class RocketController : Photon.MonoBehaviour {
 			Explode();
 			PhotonNetwork.Destroy( this.gameObject );
 		}
+		
+		if ( localGame ) {
+			Explode();
+			Destroy( this.gameObject );
+		}
+	}
+	
+	public void SetLocaGame(bool val) {
+		localGame = val;
 	}
 	
 	public void SetRange(float range) {
-		speed = Mathf.Sqrt( (range * Physics.gravity.magnitude) / Mathf.Sin (2 * ballisticAngle) );
+		// Mathf.Cos and Sin working with radians, so we need to convert the angle
+		float alpha = Mathf.Deg2Rad * ballisticAngle;
+		speed = Mathf.Sqrt( (range * Physics.gravity.magnitude) / Mathf.Sin(2 * alpha) );
+		Vector3 force = (Vector3.forward * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha));
+		Debug.Log( "force: " + force );
+		//force = this.transform.TransformDirection(force);
+		Debug.Log( "force: " + force );
+		this.rigidbody.AddRelativeForce( Vector3.forward * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha), ForceMode.VelocityChange );
 	}
 	
 	public void Explode() {
