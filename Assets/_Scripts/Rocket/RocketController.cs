@@ -85,14 +85,13 @@ public class RocketController : Photon.MonoBehaviour {
 	}
 	
 	public void SetRange(float range) {
-		// Mathf.Cos and Sin working with radians, so we need to convert the angle
-		float alpha = Mathf.Deg2Rad * ballisticAngle;
-		speed = Mathf.Sqrt( (range * Physics.gravity.magnitude) / Mathf.Sin(2 * alpha) );
-		Vector3 force = (Vector3.forward * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha));
-		Debug.Log( "force: " + force );
-		//force = this.transform.TransformDirection(force);
-		Debug.Log( "force: " + force );
-		this.rigidbody.AddRelativeForce( Vector3.forward * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha), ForceMode.VelocityChange );
+		if( flightPath == FlightPath.ballisitic) {
+			// Mathf.Cos and Sin working with radians, so we need to convert the angle
+			float alpha = Mathf.Deg2Rad * ballisticAngle;
+			speed = Mathf.Sqrt( (range * Physics.gravity.magnitude) / Mathf.Sin(2 * alpha) );
+			Vector3 force = (Vector3.forward * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha));
+			this.rigidbody.AddRelativeForce( Vector3.forward * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha), ForceMode.VelocityChange );
+		}
 	}
 	
 	public void Explode() {
