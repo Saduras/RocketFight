@@ -90,6 +90,16 @@ public class InputManager : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * Replace mouse coursor with custom texture
+	 */
+	public void OnGUI(){
+		GUI.DrawTexture( new Rect(Input.mousePosition.x-cursorSizeX/2, 
+				(Screen.height-Input.mousePosition.y)-cursorSizeY/2, 
+				cursorSizeX, 
+				cursorSizeY),cursorTex);
+	}
+	
 	private Vector3 GetMouseHitPoint() {
 		Ray cursorRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit[] rayHits = Physics.RaycastAll(cursorRay);
@@ -104,14 +114,10 @@ public class InputManager : Photon.MonoBehaviour {
 		return hitPoint;
 	}
 	
-	/**
-	 * Replace mouse coursor with custom texture
-	 */
-	public void OnGUI(){
-		GUI.DrawTexture( new Rect(Input.mousePosition.x-cursorSizeX/2, 
-				(Screen.height-Input.mousePosition.y)-cursorSizeY/2, 
-				cursorSizeX, 
-				cursorSizeY),cursorTex);
+	public void AddToMoveTo( Vector3 vec ) {
+		if( moveControl == Controls.mouse) {
+			moveTo += vec;	
+		}
 	}
 	
 	[RPC]

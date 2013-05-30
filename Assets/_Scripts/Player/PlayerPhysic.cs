@@ -11,11 +11,15 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	private Vector3 force;
 	private float epsilon = 0.1f;
 	private Vector3 startPos;
+	private InputManager inman;
 	
 	// Use this for initialization
 	void Start () {
 		if (!(photonView.owner == PhotonNetwork.player) ) {
 			this.enabled = false;
+			
+		} else {
+			inman = this.gameObject.GetComponent<InputManager>();	
 		}
 	}
 	
@@ -25,6 +29,7 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 		if( t < forceTime ) {
 			Vector3 dv = forceStart * Time.deltaTime / forceTime;
 			this.transform.Translate( dv, Space.World );
+			inman.AddToMoveTo(dv);
 			force -= dv;
 			//Debug.Log ("t: " + (forceTime - t)/forceTime + " force: " + dv);
 			

@@ -9,7 +9,7 @@ public class NetmanGUI : Photon.MonoBehaviour {
 	
 	public GUIStyle errorStyle;
 	
-	private string playerName = "";
+	private string playerName = "RocketFighter01";
 	private bool displayError = false;
 	private string errorMsg = "";
 
@@ -20,21 +20,11 @@ public class NetmanGUI : Photon.MonoBehaviour {
 
         if (PhotonNetwork.connectionState == ConnectionState.Disconnected)
         {
-            if (GUILayout.Button("Connect"))
-            {
-				if( playerName != "" ) {
-                	PhotonNetwork.ConnectUsingSettings( setting );
-					PhotonNetwork.player.name = playerName;
-					
-					displayError = false;
-				} else {
-					displayError = true;
-					errorMsg = "Choose a Username!";
-				}
+            if (GUILayout.Button("Connect") 
+				|| (Event.current.isKey && Event.current.keyCode == KeyCode.Return) ) {
+				connectPlayer();
             }
-        }
-        else
-        {
+        } else {
             if (GUILayout.Button("Disconnect"))
             {
                 PhotonNetwork.Disconnect();
@@ -65,6 +55,7 @@ public class NetmanGUI : Photon.MonoBehaviour {
 		
 			// Displayer Inputfiel to choos player name
 			if( PhotonNetwork.connectionState == ConnectionState.Disconnected ) {
+				GUILayout.Label("Username:");
 				playerName = GUILayout.TextField(playerName, 32);
 			}
 		
@@ -82,4 +73,21 @@ public class NetmanGUI : Photon.MonoBehaviour {
 			}
 		GUILayout.EndArea();
     }
+	
+	/**
+	 * Connect to master server if player has choosen a name.
+	 * Set the player name.
+	 * Set errorMsg and displayError if there was no player name set.
+	 */
+	private void connectPlayer() {
+		if( playerName != "" ) {
+        	PhotonNetwork.ConnectUsingSettings( setting );
+			PhotonNetwork.player.name = playerName;
+			
+			displayError = false;
+		} else {
+			displayError = true;
+			errorMsg = "Choose a Username!";
+		}
+	}
 }
