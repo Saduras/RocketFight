@@ -58,6 +58,7 @@ public class InputManager : Photon.MonoBehaviour {
 					// project current position tp the x-z plane
 					Vector3 pos = this.transform.position;
 					pos.y = 0;
+					moveTo.y = 0;
 					// calculate movement vector to destination if we are not already there
 					if( Vector3.Distance(moveTo,pos) > moveEpsilon ) {
 						movement = moveTo - pos;
@@ -117,6 +118,12 @@ public class InputManager : Photon.MonoBehaviour {
 	public void AddToMoveTo( Vector3 vec ) {
 		if( moveControl == Controls.mouse) {
 			moveTo += vec;	
+		}
+	}
+	
+	public void ResetMoveTo() {
+		if( moveControl == Controls.mouse) {
+			moveTo = this.transform.position;	
 		}
 	}
 	

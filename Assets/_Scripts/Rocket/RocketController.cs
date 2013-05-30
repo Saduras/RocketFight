@@ -100,6 +100,7 @@ public class RocketController : Photon.MonoBehaviour {
 		
 		GameObject[] gos = GameObject.FindGameObjectsWithTag( playerTag );
 		foreach( GameObject playerGo in gos ) {
+			// TODO annulate y axis
 			Vector3 direction = playerGo.transform.position - this.transform.position;
 			if( direction.magnitude <= explosionRange ) {
 				float strengh = explosionForce * (1 - (direction.magnitude / explosionRange));
