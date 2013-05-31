@@ -47,8 +47,8 @@ public class RocketController : Photon.MonoBehaviour {
 			break;
 		case FlightPath.ballisitic:
 			// Mathf.Cos and Sin working with radians, so we need to convert the angle
-			float alpha = Mathf.Deg2Rad * ballisticAngle; 
-			Vector3 move = Vector3.forward * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha);
+			// float alpha = Mathf.Deg2Rad * ballisticAngle; 
+			// Vector3 move = Vector3.forward * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha);
 			//this.transform.Translate( move * Time.deltaTime );
 			break;
 		case FlightPath.controlled:

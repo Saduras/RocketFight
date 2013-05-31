@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerManager : Photon.MonoBehaviour {
 
-	private GameObject spawnPoint;
+	private Vector3 spawnPoint;
 	private InputManager inman;
 	
 	void Start () {
@@ -15,12 +15,12 @@ public class PlayerManager : Photon.MonoBehaviour {
 		}
 	}
 	
-	public void SetSpawnPoint( GameObject go ) {
-		this.spawnPoint = go;	
+	public void SetSpawnPoint( Vector3 pos ) {
+		this.spawnPoint = pos;	
 	}
 	
 	public void OnDeath() {
-		this.transform.position = this.spawnPoint.transform.position;	
+		this.transform.position = spawnPoint;	
 		inman.ResetMoveTo();
 	}
 }

@@ -61,35 +61,41 @@ public class Netman : Photon.MonoBehaviour {
     public void OnJoinedRoom()
     {
         Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room. From here on, your game would be running. For reference, all callbacks are listed in enum: PhotonNetworkingMessage");
-		//Application.LoadLevel(gameScene);
-		//PlayerManager pman = handle.gameObject.GetComponent<PlayerManager>();
-		//pman.SendMessage("SetPlayer",PhotonNetwork.player);
+		PhotonNetwork.LoadLevel(gameScene);
     }
+	
+	public void OrganizeSpawning() {
+		if( Application.loadedLevelName == gameScene) {
+			GameObject[] gos = GameObject.FindGameObjectsWithTag(respawnTag);
+			PhotonPlayer[] playerArray = PhotonNetwork.playerList;
+			for( int i=0; i<playerArray.Length; i++) {
+				gos[i].GetPhotonView().RPC("AssignTo",PhotonTargets.AllBuffered,playerArray[i]);
+				//photonView.RPC("SetSpawnPoint",playerArray[i], gos[i]);
+				photonView.RPC("SpawnPlayer",playerArray[i],gos[i].transform.position);
+			}
+		}
+	}
+	
+	[RPC]
+	public void SetSpawnPoint( GameObject go ) {
+		spawnPoint = go;	
+	}
 	
 	/**
 	 * Called when new level was loaded.
 	 * If we loaded the game scene, find a respawn point for you.
 	 * Then spawn your player object at this spawn point.
 	 */
-	public void SpawnPlayer(int level) {
+	[RPC]
+	public void SpawnPlayer(Vector3 spawnPt) {
 		if( Application.loadedLevelName == gameScene) {
-			GameObject[] gos = GameObject.FindGameObjectsWithTag(respawnTag);
-			foreach( GameObject spawngo in gos) {
-				
-				if( spawngo.GetComponent<RespawnPoint>().IsFree() ) {
-					spawngo.GetPhotonView().RPC("AssignTo",PhotonTargets.AllBuffered,PhotonNetwork.player);
-					spawnPoint = spawngo;
-					break;
-				}
-			}
-			
-			if( spawnPoint == null ) 
+			if( spawnPt == null ) 
 				Debug.LogError("No free spawnpoint found!");
 			
-			Debug.Log("Intatiate player at " + spawnPoint.transform.position);
-			GameObject handle = PhotonNetwork.Instantiate(playerPrefab.name,spawnPoint.transform.position,Quaternion.identity,0);
+			Debug.Log("Intatiate player at " + spawnPt);
+			GameObject handle = PhotonNetwork.Instantiate(playerPrefab.name,spawnPt,Quaternion.identity,0);
 			handle.GetComponent<InputManager>().SendMessage("SetPlayer", PhotonNetwork.player);
-			handle.GetComponent<PlayerManager>().SendMessage("SetSpawnPoint", spawnPoint);
+			handle.GetComponent<PlayerManager>().SendMessage("SetSpawnPoint", spawnPt);
 			hasSpawn = true;
 		}
 		

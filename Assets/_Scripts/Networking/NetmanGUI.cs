@@ -33,9 +33,9 @@ public class NetmanGUI : Photon.MonoBehaviour {
 		
 		Netman nman = this.gameObject.GetComponent<Netman>();
 		
-		if (PhotonNetwork.room != null && !nman.hasSpawn) {
+		if (PhotonNetwork.room != null && !nman.hasSpawn && PhotonNetwork.isMasterClient) {
 			if (GUILayout.Button("Spawn")) {
-				this.gameObject.GetComponent<Netman>().SpawnPlayer(0);
+				this.gameObject.GetComponent<Netman>().OrganizeSpawning();
 				PhotonNetwork.room.open = false;
 				PhotonNetwork.room.visible = false;
 			}
