@@ -14,6 +14,8 @@ public class Netman : Photon.MonoBehaviour {
 	// Reference to the spawn point assigned to you.
 	private GameObject spawnPoint;
 	
+	private Color[] playerColors = new Color[]{Color.red, Color.blue, Color.green, Color.yellow};
+	
 	/**
 	 * Initialize PhotonNetwork settings.
 	 */
@@ -71,7 +73,8 @@ public class Netman : Photon.MonoBehaviour {
 			for( int i=0; i<playerArray.Length; i++) {
 				gos[i].GetPhotonView().RPC("AssignTo",PhotonTargets.AllBuffered,playerArray[i]);
 				//photonView.RPC("SetSpawnPoint",playerArray[i], gos[i]);
-				photonView.RPC("SpawnPlayer",playerArray[i],gos[i].transform.position);
+				Vector3 rgb = new Vector3( playerColors[i].r, playerColors[i].g, playerColors[i].b );
+				photonView.RPC("SpawnPlayer",playerArray[i],gos[i].transform.position, rgb);
 			}
 		}
 	}
@@ -87,7 +90,7 @@ public class Netman : Photon.MonoBehaviour {
 	 * Then spawn your player object at this spawn point.
 	 */
 	[RPC]
-	public void SpawnPlayer(Vector3 spawnPt) {
+	public void SpawnPlayer(Vector3 spawnPt, Vector3 rgb) {
 		if( Application.loadedLevelName == gameScene) {
 			if( spawnPt == null ) 
 				Debug.LogError("No free spawnpoint found!");
@@ -96,6 +99,7 @@ public class Netman : Photon.MonoBehaviour {
 			GameObject handle = PhotonNetwork.Instantiate(playerPrefab.name,spawnPt,Quaternion.identity,0);
 			handle.GetComponent<InputManager>().SendMessage("SetPlayer", PhotonNetwork.player);
 			handle.GetComponent<PlayerManager>().SendMessage("SetSpawnPoint", spawnPt);
+			handle.GetPhotonView().RPC("SetColor",PhotonTargets.AllBuffered,rgb);
 			hasSpawn = true;
 		}
 		

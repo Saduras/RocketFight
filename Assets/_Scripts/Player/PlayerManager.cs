@@ -5,6 +5,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 
 	private Vector3 spawnPoint;
 	private InputManager inman;
+	private Color color;
 	
 	void Start () {
 		if (!(photonView.owner == PhotonNetwork.player) ) {
@@ -16,7 +17,13 @@ public class PlayerManager : Photon.MonoBehaviour {
 	}
 	
 	public void SetSpawnPoint( Vector3 pos ) {
-		this.spawnPoint = pos;	
+		spawnPoint = pos;	
+	}
+	
+	[RPC]
+	public void SetColor( Vector3 rgb ) {
+		color = new Color(rgb[0],rgb[1],rgb[2], 1.0f);
+		this.renderer.material.SetColor("_Color",color);
 	}
 	
 	public void OnDeath() {

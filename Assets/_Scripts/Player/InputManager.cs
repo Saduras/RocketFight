@@ -138,10 +138,4 @@ public class InputManager : Photon.MonoBehaviour {
 	public PhotonPlayer GetPlayer() {
 		return controllingPlayer;	
 	}
-	
-	[RPC]
-	public void SetColor(Vector3 colorVec) {
-		Color col = new Color(colorVec.x, colorVec.y, colorVec.z, 1);
-		this.renderer.material.SetColor("_Color",col);
-	}
 }
