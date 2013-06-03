@@ -11,10 +11,8 @@ public class Netman : Photon.MonoBehaviour {
 	public GameObject playerPrefab;
 	// Tells you if the player had spawn a character or not.
 	public bool hasSpawn = false;
-	// Reference to the spawn point assigned to you.
-	private GameObject spawnPoint;
 	
-	private Color[] playerColors = new Color[]{Color.red, Color.blue, Color.green, Color.yellow};
+	public Color[] playerColors = new Color[]{Color.red, Color.blue, Color.green, Color.yellow};
 	
 	/**
 	 * Initialize PhotonNetwork settings.
@@ -79,11 +77,6 @@ public class Netman : Photon.MonoBehaviour {
 		}
 	}
 	
-	[RPC]
-	public void SetSpawnPoint( GameObject go ) {
-		spawnPoint = go;	
-	}
-	
 	/**
 	 * Called when new level was loaded.
 	 * If we loaded the game scene, find a respawn point for you.
@@ -92,9 +85,6 @@ public class Netman : Photon.MonoBehaviour {
 	[RPC]
 	public void SpawnPlayer(Vector3 spawnPt, Vector3 rgb) {
 		if( Application.loadedLevelName == gameScene) {
-			if( spawnPt == null ) 
-				Debug.LogError("No free spawnpoint found!");
-			
 			Debug.Log("Intatiate player at " + spawnPt);
 			GameObject handle = PhotonNetwork.Instantiate(playerPrefab.name,spawnPt,Quaternion.identity,0);
 			handle.GetComponent<InputManager>().SendMessage("SetPlayer", PhotonNetwork.player);
