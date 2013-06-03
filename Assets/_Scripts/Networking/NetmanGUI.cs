@@ -101,6 +101,10 @@ public class NetmanGUI : Photon.MonoBehaviour {
 			        }
 				GUILayout.EndArea();
 			GUILayout.EndArea();
+		} else {
+			GUILayout.BeginArea(new Rect(Screen.width/2 - 100, 5, 200, 30));
+				GUILayout.Label("Time: " + (nman.gameTime - Time.time + nman.startTime) );
+			GUILayout.EndArea();
 		}
     }
 	

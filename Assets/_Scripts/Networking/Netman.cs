@@ -12,6 +12,9 @@ public class Netman : Photon.MonoBehaviour {
 	// Tells you if the player had spawn a character or not.
 	public bool hasSpawn = false;
 	
+	public float startTime;
+	public float gameTime = 180;
+	
 	public Color[] playerColors = new Color[]{Color.red, Color.blue, Color.green, Color.yellow};
 	
 	/**
@@ -24,6 +27,11 @@ public class Netman : Photon.MonoBehaviour {
 		PhotonNetwork.sendRate = 15;
 		PhotonNetwork.sendRateOnSerialize = 15;
     }
+	
+	public void Update() {
+		if( startTime + gameTime < Time.time )
+			GameOver();
+	}
 	
 	/**
 	 * This is called when the client fails to connect to the server.
@@ -64,6 +72,15 @@ public class Netman : Photon.MonoBehaviour {
 		PhotonNetwork.LoadLevel(gameScene);
     }
 	
+	public void GameOver() {
+		GameObject[] playerPrefabs = GameObject.FindGameObjectsWithTag("Player");
+		foreach( GameObject go in playerPrefabs ) {
+			PhotonNetwork.Destroy( go );
+			hasSpawn = false;
+			Screen.showCursor = true;
+		}
+	}
+	
 	public void OrganizeSpawning() {
 		if( Application.loadedLevelName == gameScene) {
 			GameObject[] gos = GameObject.FindGameObjectsWithTag(respawnTag);
@@ -74,6 +91,7 @@ public class Netman : Photon.MonoBehaviour {
 				Vector3 rgb = new Vector3( playerColors[i].r, playerColors[i].g, playerColors[i].b );
 				photonView.RPC("SpawnPlayer",playerArray[i],gos[i].transform.position, rgb);
 			}
+			startTime = Time.time;
 		}
 	}
 	
