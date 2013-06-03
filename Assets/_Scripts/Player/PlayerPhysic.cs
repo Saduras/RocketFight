@@ -7,7 +7,6 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	public bool controlableWhileForce = false;
 	private float forceTimeStart;
 	private Vector3 force;
-	private float epsilon = 0.02f;
 	private InputManager inman;
 	private float curvePower = 2f;
 	
@@ -26,9 +25,7 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 		float t = Time.time - forceTimeStart;
 		if( t + Time.deltaTime < fadeTime ) {
 			Vector3 dv = force * Time.deltaTime / fadeTime * (2f * Mathf.Pow(1 - t / fadeTime, curvePower) );
-			Vector3 oldPos = transform.position;
 			this.transform.Translate( dv, Space.World );
-			Vector3 newPos = transform.position;
 			inman.AddToMoveTo( dv);
 			
 			if( !controlableWhileForce && (this.gameObject.GetComponent<InputManager>().enabled == true) ) {
