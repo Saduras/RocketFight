@@ -73,12 +73,20 @@ public class Netman : Photon.MonoBehaviour {
     }
 	
 	public void GameOver() {
+		
+		hasSpawn = false;
+		Screen.showCursor = true;
+		// kill player objects
 		GameObject[] playerPrefabs = GameObject.FindGameObjectsWithTag("Player");
 		foreach( GameObject go in playerPrefabs ) {
-			PhotonNetwork.Destroy( go );
-			hasSpawn = false;
-			Screen.showCursor = true;
+			PhotonNetwork.Destroy( go );	
 		}
+		
+		// free spawnpoints
+		GameObject[] gos = GameObject.FindGameObjectsWithTag(respawnTag);
+		for( int i=0; i<gos.Length; i++) {
+				gos[i].GetPhotonView().RPC("SetFree",PhotonTargets.AllBuffered);
+			}
 	}
 	
 	public void OrganizeSpawning() {
