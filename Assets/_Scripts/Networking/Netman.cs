@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Netman : Photon.MonoBehaviour {
 	
@@ -16,6 +17,8 @@ public class Netman : Photon.MonoBehaviour {
 	public float gameTime = 180;
 	
 	public Color[] playerColors = new Color[]{Color.red, Color.blue, Color.green, Color.yellow};
+	
+	public Dictionary<int, int> playerScores = new Dictionary<int, int>();
 	
 	/**
 	 * Initialize PhotonNetwork settings.
@@ -100,15 +103,30 @@ public class Netman : Photon.MonoBehaviour {
 	
 	public void OrganizeSpawning() {
 		if( Application.loadedLevelName == gameScene) {
+			// find spawnpoints
 			GameObject[] gos = GameObject.FindGameObjectsWithTag(respawnTag);
 			PhotonPlayer[] playerArray = PhotonNetwork.playerList;
 			for( int i=0; i<playerArray.Length; i++) {
+				// assign spawpoint
 				gos[i].GetPhotonView().RPC("AssignTo",PhotonTargets.AllBuffered,playerArray[i]);
-				//photonView.RPC("SetSpawnPoint",playerArray[i], gos[i]);
+				// spawn player incl. color
 				Vector3 rgb = new Vector3( playerColors[i].r, playerColors[i].g, playerColors[i].b );
 				photonView.RPC("SpawnPlayer",playerArray[i],gos[i].transform.position, rgb);
+				// init score
+				photonView.RPC("SetScore",PhotonTargets.AllBuffered, playerArray[i].ID, 0);
+				//playerScores[playerArray[i].ID] = 0;
 			}
 		}
+	}
+	
+	[RPC]
+	public void SetScore(int playerID, int val) {
+		playerScores[playerID] = val;
+	}
+	
+	[RPC]
+	public void IncreaseScore(int playerID) {
+		playerScores[playerID]++;
 	}
 	
 	/**

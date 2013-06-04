@@ -7,6 +7,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	private InputManager inman;
 	private Color color;
 	private PhotonPlayer lastHit;
+	private Netman netman;
 	
 	
 	void Start () {
@@ -14,7 +15,8 @@ public class PlayerManager : Photon.MonoBehaviour {
 			this.enabled = false;
 			
 		} else {
-			inman = this.gameObject.GetComponent<InputManager>();	
+			inman = gameObject.GetComponent<InputManager>();	
+			netman = GameObject.Find("PhotonNetman").GetComponent<Netman>();
 		}
 	}
 	
@@ -34,7 +36,11 @@ public class PlayerManager : Photon.MonoBehaviour {
 	}
 	
 	public void OnDeath() {
-		Debug.Log("Killed by " + lastHit.name + " [" + lastHit.ID + "]");
+		if ( lastHit != null ) {
+			Debug.Log("Killed by " + lastHit.name + " [" + lastHit.ID + "]");
+			if(lastHit != photonView.owner)
+				netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,lastHit.ID);
+		}
 		this.transform.position = spawnPoint;	
 		inman.ResetMoveTo();
 	}

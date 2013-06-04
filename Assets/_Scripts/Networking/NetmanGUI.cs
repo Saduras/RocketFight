@@ -41,8 +41,8 @@ public class NetmanGUI : Photon.MonoBehaviour {
 		
 		// Display ping in the upper right corner
 		int ping = PhotonNetwork.GetPing();
-		GUILayout.BeginArea( new Rect(Screen.width - 100, 40, 100, 40));
-			GUILayout.TextArea("Ping: " + ping);
+		GUILayout.BeginArea( new Rect(Screen.width - 70, 0, 70, 30), GUI.skin.box);
+			GUILayout.Label("Ping: " + ping);
 		GUILayout.EndArea();
 		
 		// display lobby and login information and hidde them ingame
@@ -66,7 +66,9 @@ public class NetmanGUI : Photon.MonoBehaviour {
 					// playerList = SortPlayerList(playerList);
 					for( int i=0; i<playerList.Length; i++) {
 						PhotonPlayer player = playerList[i];
-						string playerString = "Player: " + player.name + " [" + player.ID + "]";
+						int score = 0;
+						nman.playerScores.TryGetValue(player.ID, out score);
+						string playerString = player.name + " [" + player.ID + "]: " + score;
 						if( player.isMasterClient ) {
 							playerString += " *";
 						}
@@ -102,8 +104,17 @@ public class NetmanGUI : Photon.MonoBehaviour {
 				GUILayout.EndArea();
 			GUILayout.EndArea();
 		} else {
-			GUILayout.BeginArea(new Rect(Screen.width/2 - 100, 5, 200, 30));
+			GUILayout.BeginArea(new Rect(Screen.width/2 - 100, 5, 200, 60));
 				GUILayout.Label("Time: " + (nman.gameTime - Time.time + nman.startTime) );
+			GUILayout.EndArea();
+			
+			GUILayout.BeginArea(new Rect(0, Screen.height - 30, Screen.width, 30), GUI.skin.box);
+				GUILayout.BeginHorizontal();
+					GUILayout.Label("Score ");
+					foreach( KeyValuePair<int, int> score in nman.playerScores ) {
+						GUILayout.Label("" + score.Value, playerStringStyle[score.Key - 1]);
+					}
+				GUILayout.EndHorizontal();
 			GUILayout.EndArea();
 		}
     }
