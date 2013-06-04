@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 [RequireComponent(typeof(PhotonView))]
 public class NetmanGUI : Photon.MonoBehaviour {
@@ -105,7 +106,10 @@ public class NetmanGUI : Photon.MonoBehaviour {
 			GUILayout.EndArea();
 		} else {
 			GUILayout.BeginArea(new Rect(Screen.width/2 - 100, 5, 200, 60));
-				GUILayout.Label("Time: " + (nman.gameTime - Time.time + nman.startTime) );
+				float timer = (nman.gameTime - Time.time + nman.startTime);
+				string minutes = Mathf.Floor(timer / 60).ToString("00");
+				string seconds = (timer % 60).ToString("00");
+				GUILayout.Label("Time: " + minutes + ":" + seconds );
 			GUILayout.EndArea();
 			
 			GUILayout.BeginArea(new Rect(0, Screen.height - 30, Screen.width, 30), GUI.skin.box);
