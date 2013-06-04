@@ -100,14 +100,15 @@ public class RocketController : Photon.MonoBehaviour {
 		
 		GameObject[] gos = GameObject.FindGameObjectsWithTag( playerTag );
 		foreach( GameObject playerGo in gos ) {
-			// TODO annulate y axis
 			Vector3 direction = playerGo.transform.position - this.transform.position;
+			direction.y = 0;
 			if( direction.magnitude <= explosionRange ) {
 				float strengh = explosionForce * (1 - (direction.magnitude / explosionRange));
 				Debug.Log("Explosion strength: " + strengh );
 				Vector3 playerForce = direction.normalized * strengh;
 				
 				playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.AllBuffered,playerForce);	
+				playerGo.gameObject.GetPhotonView().RPC("HitBy",PhotonTargets.AllBuffered, photonView.owner);
 			}
 		}
 	}
