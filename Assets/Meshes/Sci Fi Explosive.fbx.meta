@@ -1,0 +1,112 @@
+fileFormatVersion: 2
+guid: 0fa2785c94e4bfd4886a9657113f8b0b
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: group
+    100002: Metal_Cylinder
+    100004: Metal_Pipe
+    100006: pPipe1
+    100008: pPipe2
+    100010: pPipe3
+    100012: pPipe4
+    100014: pPipe5
+    100016: pPlane3
+    100018: pPlane4
+    100020: //RootNode
+    100022: Sci_Fi_Explosive
+    400000: group
+    400002: Metal_Cylinder
+    400004: Metal_Pipe
+    400006: pPipe1
+    400008: pPipe2
+    400010: pPipe3
+    400012: pPipe4
+    400014: pPipe5
+    400016: pPlane3
+    400018: pPlane4
+    400020: //RootNode
+    400022: Sci_Fi_Explosive
+    2300000: Metal_Cylinder
+    2300002: Metal_Pipe
+    2300004: pPipe1
+    2300006: pPipe2
+    2300008: pPipe3
+    2300010: pPipe4
+    2300012: pPipe5
+    2300014: pPlane3
+    2300016: pPlane4
+    2300018: Sci_Fi_Explosive
+    3300000: Metal_Cylinder
+    3300002: Metal_Pipe
+    3300004: pPipe1
+    3300006: pPipe2
+    3300008: pPipe3
+    3300010: pPipe4
+    3300012: pPipe5
+    3300014: pPlane3
+    3300016: pPlane4
+    3300018: Sci_Fi_Explosive
+    4300000: Sci_Fi_Explosive
+    4300002: pPlane4
+    4300004: pPlane3
+    4300006: Metal_Cylinder
+    4300008: Metal_Pipe
+    4300010: pPipe1
+    4300012: pPipe2
+    4300014: pPipe3
+    4300016: pPipe4
+    4300018: pPipe5
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    handles: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  additionalBone: 1
+  animationType: 2
+  userData: 
