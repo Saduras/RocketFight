@@ -29,7 +29,7 @@ public class Netman : Photon.MonoBehaviour {
     }
 	
 	public void Update() {
-		if( startTime + gameTime < Time.time )
+		if( (startTime + gameTime < Time.time) && PhotonNetwork.isMasterClient && hasSpawn )
 			GameOver();
 	}
 	
@@ -73,20 +73,29 @@ public class Netman : Photon.MonoBehaviour {
     }
 	
 	public void GameOver() {
-		
-		hasSpawn = false;
-		Screen.showCursor = true;
 		// kill player objects
-		GameObject[] playerPrefabs = GameObject.FindGameObjectsWithTag("Player");
-		foreach( GameObject go in playerPrefabs ) {
-			PhotonNetwork.Destroy( go );	
-		}
-		
-		// free spawnpoints
-		GameObject[] gos = GameObject.FindGameObjectsWithTag(respawnTag);
-		for( int i=0; i<gos.Length; i++) {
+		if( PhotonNetwork.isMasterClient ) {
+			foreach( PhotonPlayer player in PhotonNetwork.playerList ) {
+				PhotonNetwork.DestroyPlayerObjects( player );
+				photonView.RPC("BackToMenu",PhotonTargets.AllBuffered);
+			}
+			//GameObject[] playerPrefabs = GameObject.FindGameObjectsWithTag("Player");
+			//	foreach( GameObject go in playerPrefabs ) {
+			//		PhotonNetwork.Destroy;
+			//	}
+			
+			// free spawnpoints
+			GameObject[] gos = GameObject.FindGameObjectsWithTag(respawnTag);
+			for( int i=0; i<gos.Length; i++) {
 				gos[i].GetPhotonView().RPC("SetFree",PhotonTargets.AllBuffered);
 			}
+		}
+	}
+	
+	[RPC]
+	public void BackToMenu() {
+		hasSpawn = false;
+		Screen.showCursor = true;
 	}
 	
 	public void OrganizeSpawning() {
@@ -99,7 +108,6 @@ public class Netman : Photon.MonoBehaviour {
 				Vector3 rgb = new Vector3( playerColors[i].r, playerColors[i].g, playerColors[i].b );
 				photonView.RPC("SpawnPlayer",playerArray[i],gos[i].transform.position, rgb);
 			}
-			startTime = Time.time;
 		}
 	}
 	
@@ -111,6 +119,7 @@ public class Netman : Photon.MonoBehaviour {
 	[RPC]
 	public void SpawnPlayer(Vector3 spawnPt, Vector3 rgb) {
 		if( Application.loadedLevelName == gameScene) {
+			startTime = Time.time;
 			Debug.Log("Intatiate player at " + spawnPt);
 			GameObject handle = PhotonNetwork.Instantiate(playerPrefab.name,spawnPt,Quaternion.identity,0);
 			handle.GetComponent<InputManager>().SendMessage("SetPlayer", PhotonNetwork.player);
