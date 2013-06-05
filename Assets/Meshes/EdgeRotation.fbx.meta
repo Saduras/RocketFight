@@ -1,26 +1,13 @@
 fileFormatVersion: 2
-guid: 123a86c49bcf2d14db18afbb2247fc49
+guid: 4bc36bc6630ac81479a8134ee2705a21
 ModelImporter:
   serializedVersion: 15
   fileIDToRecycleName:
     100000: //RootNode
-    100002: Cap 1
-    100004: Cap 2
     400000: //RootNode
-    400002: Cap 1
-    400004: Cap 2
     2300000: //RootNode
-    2300002: Cap 1
-    2300004: Cap 2
     3300000: //RootNode
-    3300002: Cap 1
-    3300004: Cap 2
-    4300000: Extrude NURBS
-    4300002: Cap 1
-    4300004: Cap 2
-    6400000: //RootNode
-    6400002: Cap 1
-    6400004: Cap 2
+    4300000: pPlane2
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -40,7 +27,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: .00999999978
     meshCompression: 0
-    addColliders: 1
+    addColliders: 0
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
