@@ -82,10 +82,6 @@ public class Netman : Photon.MonoBehaviour {
 				PhotonNetwork.DestroyPlayerObjects( player );
 				photonView.RPC("BackToMenu",PhotonTargets.AllBuffered);
 			}
-			//GameObject[] playerPrefabs = GameObject.FindGameObjectsWithTag("Player");
-			//	foreach( GameObject go in playerPrefabs ) {
-			//		PhotonNetwork.Destroy;
-			//	}
 			
 			// free spawnpoints
 			GameObject[] gos = GameObject.FindGameObjectsWithTag(respawnTag);
@@ -105,13 +101,20 @@ public class Netman : Photon.MonoBehaviour {
 		if( Application.loadedLevelName == gameScene) {
 			// find spawnpoints
 			GameObject[] gos = GameObject.FindGameObjectsWithTag(respawnTag);
+			List<GameObject> spawnPoints = new List<GameObject>(gos);
+			
 			PhotonPlayer[] playerArray = PhotonNetwork.playerList;
 			for( int i=0; i<playerArray.Length; i++) {
+				// choose random spawn point
+				int randIndex = Mathf.RoundToInt(Random.Range(0, spawnPoints.Count));
+				GameObject sp = spawnPoints[randIndex];
+				spawnPoints.RemoveAt(randIndex);
+				
 				// assign spawpoint
-				gos[i].GetPhotonView().RPC("AssignTo",PhotonTargets.AllBuffered,playerArray[i]);
+				sp.GetPhotonView().RPC("AssignTo",PhotonTargets.AllBuffered,playerArray[i]);
 				// spawn player incl. color
 				Vector3 rgb = new Vector3( playerColors[i].r, playerColors[i].g, playerColors[i].b );
-				photonView.RPC("SpawnPlayer",playerArray[i],gos[i].transform.position, rgb);
+				photonView.RPC("SpawnPlayer",playerArray[i],sp.transform.position, rgb);
 				// init score
 				photonView.RPC("SetScore",PhotonTargets.AllBuffered, playerArray[i].ID, 0);
 				//playerScores[playerArray[i].ID] = 0;
