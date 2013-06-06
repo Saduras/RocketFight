@@ -17,8 +17,14 @@ public class Netman : Photon.MonoBehaviour {
 	public float gameTime = 180;
 	
 	public Color[] playerColors = new Color[]{Color.red, Color.blue, Color.green, Color.yellow};
+	public List<Color> freeColors = new List<Color>();
+	public Dictionary<int, Color> usedColors = new Dictionary<int, Color>();
 	
 	public Dictionary<int, int> playerScores = new Dictionary<int, int>();
+	
+	public List<RocketFightPlayer> playerList = new List<RocketFightPlayer>();
+	
+	private int playerCountRoom = 0;
 	
 	/**
 	 * Initialize PhotonNetwork settings.
@@ -29,12 +35,104 @@ public class Netman : Photon.MonoBehaviour {
         PhotonNetwork.autoJoinLobby = false;
 		PhotonNetwork.sendRate = 15;
 		PhotonNetwork.sendRateOnSerialize = 15;
+		
+		foreach( Color col in playerColors ) {
+			freeColors.Add( col );	
+		}
     }
 	
 	public void Update() {
-		if( (startTime + gameTime < Time.time) && PhotonNetwork.isMasterClient && hasSpawn )
-			GameOver();
+		if( PhotonNetwork.isMasterClient ) {			
+			if( (startTime + gameTime < Time.time) && hasSpawn )
+				GameOver();	
+		}
+		
+		if( PhotonNetwork.room != null )
+				if( playerCountRoom > PhotonNetwork.room.playerCount ) {
+						OnPlayerDisconnect();
+						playerCountRoom = PhotonNetwork.room.playerCount;
+					} else if( playerCountRoom < PhotonNetwork.room.playerCount ) {
+						OnPlayerConnect();
+						playerCountRoom = PhotonNetwork.room.playerCount;
+					}
 	}
+	
+	
+	public void OnPlayerDisconnect() {
+		Debug.Log("OnPlayerDisconnect");
+		
+		List<int> validIDs = new List<int>();
+		// get list of connected player IDs
+		foreach( KeyValuePair<int, Color> pair in usedColors ) {
+			validIDs.Add(pair.Key);
+		}
+		
+		// find ID of disconnected player
+		foreach( PhotonPlayer p in PhotonNetwork.playerList ) {
+			validIDs.Remove(p.ID);
+		}
+		
+		List<RocketFightPlayer> removePlayer = new List<RocketFightPlayer>();
+		foreach( RocketFightPlayer rfp in playerList ) {
+			if( validIDs.Contains( rfp.photonPlayer.ID ) ) {
+				removePlayer.Add( rfp );	
+			}
+		}
+		
+		foreach( RocketFightPlayer rfp in removePlayer ) {
+			//playerList.Remove( rfp );	
+			photonView.RPC("RemovePlayer",PhotonTargets.All, rfp.photonPlayer.ID);
+		}
+		
+		// remove free color
+		foreach( int playerID in validIDs ) {
+			Color col = usedColors[playerID];
+			bool check = usedColors.Remove( playerID );
+			freeColors.Add( col );
+		}
+	}
+	
+	public void OnPlayerConnect() {
+		Debug.Log("OnPlayerConnect");
+		
+		// get list of connected player IDs
+		List<int> validIDs = new List<int>();
+		foreach( PhotonPlayer p in PhotonNetwork.playerList ) {
+				validIDs.Add(p.ID);
+		}
+		
+		// find ID of disconnected player
+		foreach( KeyValuePair<int, Color> pair in usedColors ) {
+			validIDs.Remove(pair.Key);
+		}
+		
+		
+		// remove assign to usedColor
+		foreach( int playerID in validIDs ) {
+			// create RocketFightPlayer
+			//playerList.Add(new RocketFightPlayer( PhotonPlayer.Find(playerID) ));
+			
+			if( freeColors.Count > 0 ) {
+				Color col = freeColors[ freeColors.Count - 1 ];
+				freeColors.Remove( col );
+				usedColors[playerID] = col;
+				
+				// masterclient assigns color to player
+				if( PhotonNetwork.isMasterClient ) {
+					Vector3 rgb = new Vector3( col.r, col.g, col.b );
+					
+					foreach( RocketFightPlayer rfp in playerList ) {
+						Vector3 colVec = new Vector3( rfp.color.r, rfp.color.g, rfp.color.b );
+						photonView.RPC("AddPlayer",PhotonPlayer.Find( playerID ), rfp.photonPlayer, colVec );	
+					}
+					
+					photonView.RPC("AddPlayer",PhotonTargets.All, PhotonPlayer.Find( playerID ), rgb );
+				}
+			}
+		}
+	}
+	
+	
 	
 	/**
 	 * This is called when the client fails to connect to the server.
@@ -75,6 +173,11 @@ public class Netman : Photon.MonoBehaviour {
 		PhotonNetwork.LoadLevel(gameScene);
     }
 	
+	public void OnLeftRoom() {
+		playerList.Clear();
+		Application.LoadLevel(0);
+	}
+	
 	public void GameOver() {
 		// kill player objects
 		if( PhotonNetwork.isMasterClient ) {
@@ -103,21 +206,20 @@ public class Netman : Photon.MonoBehaviour {
 			GameObject[] gos = GameObject.FindGameObjectsWithTag(respawnTag);
 			List<GameObject> spawnPoints = new List<GameObject>(gos);
 			
-			PhotonPlayer[] playerArray = PhotonNetwork.playerList;
-			for( int i=0; i<playerArray.Length; i++) {
+			foreach( RocketFightPlayer rfp in playerList ) {
 				// choose random spawn point
 				int randIndex = Mathf.RoundToInt(Random.Range(0, spawnPoints.Count));
 				GameObject sp = spawnPoints[randIndex];
 				spawnPoints.RemoveAt(randIndex);
-				
+					
 				// assign spawpoint
-				sp.GetPhotonView().RPC("AssignTo",PhotonTargets.AllBuffered,playerArray[i]);
+				sp.GetPhotonView().RPC("AssignTo",PhotonTargets.AllBuffered,rfp.photonPlayer);
+				
 				// spawn player incl. color
-				Vector3 rgb = new Vector3( playerColors[i].r, playerColors[i].g, playerColors[i].b );
-				photonView.RPC("SpawnPlayer",playerArray[i],sp.transform.position, rgb);
+				Vector3 rgb = new Vector3( rfp.color.r, rfp.color.g,rfp.color.b );
+				photonView.RPC("SpawnPlayer",rfp.photonPlayer,sp.transform.position, rgb);
 				// init score
-				photonView.RPC("SetScore",PhotonTargets.AllBuffered, playerArray[i].ID, 0);
-				//playerScores[playerArray[i].ID] = 0;
+				photonView.RPC("SetScore",PhotonTargets.AllBuffered, rfp.photonPlayer.ID, 0);
 			}
 		}
 	}
@@ -141,7 +243,7 @@ public class Netman : Photon.MonoBehaviour {
 	public void SpawnPlayer(Vector3 spawnPt, Vector3 rgb) {
 		if( Application.loadedLevelName == gameScene) {
 			startTime = Time.time;
-			Debug.Log("Intatiate player at " + spawnPt);
+			Debug.Log("Instatiate player at " + spawnPt);
 			GameObject handle = PhotonNetwork.Instantiate(playerPrefab.name,spawnPt,Quaternion.identity,0);
 			handle.GetComponent<InputManager>().SendMessage("SetPlayer", PhotonNetwork.player);
 			handle.GetComponent<PlayerManager>().SendMessage("SetSpawnPoint", spawnPt);
@@ -149,5 +251,25 @@ public class Netman : Photon.MonoBehaviour {
 			hasSpawn = true;
 		}
 		
+	}
+	
+	[RPC]
+	public void AddPlayer(PhotonPlayer player, Vector3 rgb) {
+		RocketFightPlayer rfp = new RocketFightPlayer(player);
+		rfp.color = new Color(rgb.x, rgb.y, rgb.z, 1);
+		
+		playerList.Add( rfp);
+	}
+	
+	[RPC]
+	public void RemovePlayer(int playerID) {
+		foreach( RocketFightPlayer rfp in playerList ) {
+			Debug.Log( rfp.ToString() );
+			if( rfp.photonPlayer.ID == playerID ) {
+				playerList.Remove( rfp );	
+				return;
+			} 
+		}
+		Debug.Log("Did not found player: " + playerID);
 	}
 }

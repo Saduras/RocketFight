@@ -16,7 +16,8 @@ public class NetmanGUI : Photon.MonoBehaviour {
 	private string errorMsg = "";
 	private Netman nman;
 	
-	private GUIStyle[] playerStringStyle;
+	//private GUIStyle[] playerStringStyle;
+	private Dictionary<int, GUIStyle> playerStringStyle = new Dictionary<int, GUIStyle>();
 	private Texture2D playerStringBackground;
 	
 	public void Start() {
@@ -26,16 +27,16 @@ public class NetmanGUI : Photon.MonoBehaviour {
 
 	public void OnGUI() {
 		// init playerStringStyle
-		if( playerStringStyle == null ) {
-			playerStringStyle = new GUIStyle[nman.playerColors.Length];
+		if( PhotonNetwork.room != null )
+			/*if( /*playerStringStyle == null || playerStringStyle.Count != PhotonNetwork.room.playerCount*//* true ) {
 		
-			for( int i=0; i<playerStringStyle.Length; i++) {
-				Color color = nman.playerColors[i];
-				playerStringStyle[i] = new GUIStyle(GUI.skin.textArea);
-				playerStringStyle[i].normal.textColor = color;
-				playerStringStyle[i].normal.background = playerStringBackground;
-			}	
-		}
+				/*playerStringStyle.Clear();
+				foreach( RocketFightPlayer rfp in nman.playerList ) {
+					playerStringStyle[rfp.photonPlayer.ID] = new GUIStyle(GUI.skin.textArea);
+					playerStringStyle[rfp.photonPlayer.ID].normal.textColor = rfp.color;
+					playerStringStyle[rfp.photonPlayer.ID].normal.background = playerStringBackground;
+				}
+			}*/
 		
 		
         GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
@@ -63,17 +64,12 @@ public class NetmanGUI : Photon.MonoBehaviour {
 				// Display player list in room
 				if (PhotonNetwork.room != null) {
 					GUILayout.Label("Player list: ");
-					PhotonPlayer[] playerList = PhotonNetwork.playerList;
-					// playerList = SortPlayerList(playerList);
-					for( int i=0; i<playerList.Length; i++) {
-						PhotonPlayer player = playerList[i];
-						int score = 0;
-						nman.playerScores.TryGetValue(player.ID, out score);
-						string playerString = player.name + " [" + player.ID + "]: " + score;
-						if( player.isMasterClient ) {
-							playerString += " *";
-						}
-						GUILayout.TextArea(playerString, playerStringStyle[player.ID - 1]);
+					playerStringStyle.Clear();
+					foreach( RocketFightPlayer rfp in nman.playerList ) {
+						playerStringStyle[rfp.photonPlayer.ID] = new GUIStyle(GUI.skin.textArea);
+						playerStringStyle[rfp.photonPlayer.ID].normal.textColor = rfp.color;
+						//playerStringStyle[rfp.photonPlayer.ID].normal.background = playerStringBackground;
+						GUILayout.Label(rfp.ToString(), playerStringStyle[rfp.photonPlayer.ID]);	
 					}
 				}
 				
@@ -115,8 +111,11 @@ public class NetmanGUI : Photon.MonoBehaviour {
 			GUILayout.BeginArea(new Rect(0, Screen.height - 30, Screen.width, 30), GUI.skin.box);
 				GUILayout.BeginHorizontal();
 					GUILayout.Label("Score ");
-					foreach( KeyValuePair<int, int> score in nman.playerScores ) {
-						GUILayout.Label("" + score.Value, playerStringStyle[score.Key - 1]);
+					playerStringStyle.Clear();
+					foreach( RocketFightPlayer rfp in nman.playerList ) {
+						playerStringStyle[rfp.photonPlayer.ID] = new GUIStyle(GUI.skin.textArea);
+						playerStringStyle[rfp.photonPlayer.ID].normal.textColor = rfp.color;
+						GUILayout.Label("" + rfp.score, playerStringStyle[rfp.photonPlayer.ID]);
 					}
 				GUILayout.EndHorizontal();
 			GUILayout.EndArea();
