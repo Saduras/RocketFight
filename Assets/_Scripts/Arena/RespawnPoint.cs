@@ -19,6 +19,14 @@ public class RespawnPoint : MonoBehaviour {
 		return free;	
 	}
 	
+	public void StartAnimation() {
+		NcCurveAnimation[] animations = gameObject.GetComponentsInChildren<NcCurveAnimation>();	
+		foreach( NcCurveAnimation ani  in animations ) {
+			ani.ResetAnimation();	
+		}
+		Debug.Log("Respawn Animation start");
+	}
+	
 	/**
 	 * Assign this respawn point to the given player if it is free.
 	 * The respawn point is not free anymore.

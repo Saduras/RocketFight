@@ -10,6 +10,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	private Color color;
 	private PhotonPlayer lastHit;
 	private Netman netman;
+	private GameObject spawnPointObj;
 	
 	
 	void Start () {
@@ -50,7 +51,18 @@ public class PlayerManager : Photon.MonoBehaviour {
 			if(lastHit != photonView.owner)
 				netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,lastHit.ID);
 		}
-		this.transform.position = spawnPoint;	
+		if( spawnPointObj == null ) {
+			GameObject[] gos = GameObject.FindGameObjectsWithTag("Respawn");
+			foreach( GameObject go in gos ) {
+				if ( go.GetComponent<RespawnPoint>().player == photonView.owner ) {
+					spawnPointObj = go;
+					break;
+				}
+			}
+		}
+		
+		this.transform.position = spawnPoint + Vector3.up;
+		spawnPointObj.GetComponent<RespawnPoint>().StartAnimation();
 		inman.ResetMoveTo();
 	}
 }
