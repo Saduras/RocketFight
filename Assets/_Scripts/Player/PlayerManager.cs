@@ -2,7 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class PlayerManager : Photon.MonoBehaviour {
-
+	
+	public GameObject playername;
+	
 	private Vector3 spawnPoint;
 	private InputManager inman;
 	private Color color;
@@ -11,6 +13,9 @@ public class PlayerManager : Photon.MonoBehaviour {
 	
 	
 	void Start () {
+		string name = photonView.owner.name;
+		playername.GetComponent<TextMesh>().text = name;
+		
 		if (!(photonView.owner == PhotonNetwork.player) ) {
 			this.enabled = false;
 			
@@ -18,6 +23,10 @@ public class PlayerManager : Photon.MonoBehaviour {
 			inman = gameObject.GetComponent<InputManager>();	
 			netman = GameObject.Find("PhotonNetman").GetComponent<Netman>();
 		}
+	}
+	
+	void Update() {
+		playername.transform.LookAt(- 9000 *  Camera.main.transform.position);	
 	}
 	
 	public void SetSpawnPoint( Vector3 pos ) {
