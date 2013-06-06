@@ -14,7 +14,6 @@ public class RocketController : Photon.MonoBehaviour {
 	public GameObject explosion;
 	public string playerTag = "Player";
 	private float birthTime;
-	private bool localGame = false;
 	
 	public enum FlightPath {
 		linear,
@@ -63,9 +62,6 @@ public class RocketController : Photon.MonoBehaviour {
 		if ( (birthTime + lifetime < Time.time) && ((photonView.owner == PhotonNetwork.player)) ) {
 			PhotonNetwork.Destroy( this.gameObject );	
 		}
-		if ( (birthTime + lifetime < Time.time) || localGame) {
-			Destroy( this.gameObject );	
-		}
 	}
 	
 	void OnCollisionEnter( Collision collision ) {
@@ -73,15 +69,6 @@ public class RocketController : Photon.MonoBehaviour {
 			Explode();
 			PhotonNetwork.Destroy( this.gameObject );
 		}
-		
-		if ( localGame ) {
-			Explode();
-			Destroy( this.gameObject );
-		}
-	}
-	
-	public void SetLocaGame(bool val) {
-		localGame = val;
 	}
 	
 	public void SetRange(float range) {
