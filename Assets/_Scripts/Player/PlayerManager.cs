@@ -17,10 +17,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 		string name = photonView.owner.name;
 		playername.GetComponent<TextMesh>().text = name;
 		
-		if (!(photonView.owner == PhotonNetwork.player) ) {
-			this.enabled = false;
-			
-		} else {
+		if (photonView.owner == PhotonNetwork.player) {
 			inman = gameObject.GetComponent<InputManager>();	
 			netman = GameObject.Find("PhotonNetman").GetComponent<Netman>();
 		}
@@ -46,23 +43,25 @@ public class PlayerManager : Photon.MonoBehaviour {
 	}
 	
 	public void OnDeath() {
-		if ( lastHit != null ) {
-			Debug.Log("Killed by " + lastHit.name + " [" + lastHit.ID + "]");
-			if(lastHit != photonView.owner)
-				netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,lastHit.ID);
-		}
-		if( spawnPointObj == null ) {
-			GameObject[] gos = GameObject.FindGameObjectsWithTag("Respawn");
-			foreach( GameObject go in gos ) {
-				if ( go.GetComponent<RespawnPoint>().player == photonView.owner ) {
-					spawnPointObj = go;
-					break;
+		if( photonView.owner == PhotonNetwork.player ) {
+			if ( lastHit != null ) {
+				Debug.Log("Killed by " + lastHit.name + " [" + lastHit.ID + "]");
+				if(lastHit != photonView.owner)
+					netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,lastHit.ID);
+			}
+			if( spawnPointObj == null ) {
+				GameObject[] gos = GameObject.FindGameObjectsWithTag("Respawn");
+				foreach( GameObject go in gos ) {
+					if ( go.GetComponent<RespawnPoint>().player == photonView.owner ) {
+						spawnPointObj = go;
+						break;
+					}
 				}
 			}
+			
+			this.transform.position = spawnPoint + Vector3.up;
+			spawnPointObj.GetComponent<RespawnPoint>().StartAnimation();
+			inman.ResetMoveTo();
 		}
-		
-		this.transform.position = spawnPoint + Vector3.up;
-		spawnPointObj.GetComponent<RespawnPoint>().StartAnimation();
-		inman.ResetMoveTo();
 	}
 }
