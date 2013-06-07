@@ -16,6 +16,8 @@ public class InputManager : Photon.MonoBehaviour {
 	public string groundTag = "Ground";
 	private float lastShot = 0;
 	
+	private Animator anim;
+	
 	
 	// The client who controls this character
 	private PhotonPlayer controllingPlayer;
@@ -35,6 +37,8 @@ public class InputManager : Photon.MonoBehaviour {
 	public void Awake () {
 		Screen.showCursor = false;
 		moveTo = this.transform.position;
+		anim = GetComponent<Animator>();
+		anim.speed = speed / 2;
 	}
 	
 	// Update is called once per frame
@@ -72,23 +76,27 @@ public class InputManager : Photon.MonoBehaviour {
 			}
 			// apply previous calculated movement
 			this.transform.Translate(movement * speed * Time.deltaTime, Space.World);
+			anim.SetFloat("speed", movement.magnitude );
 			
 			// Get rotation input.
 			hitPoint = GetMouseHitPoint();
 			Vector3 viewDirection = hitPoint - this.transform.position;
 			viewDirection.y = 0;
 			viewDirection.Normalize();
-			this.transform.LookAt(this.transform.position + viewDirection);
+			if( movement.magnitude > 0.1)
+				this.transform.LookAt(this.transform.position + movement);
 
 			if( Input.GetButton("Fire1") ) {
 				if( Time.time > lastShot + cooldown ) {
+					Vector3 pos = this.transform.position + viewDirection.normalized + Vector3.up * 0.5f;
 					PhotonNetwork.Instantiate(muzzleFlash.name,
-												this.transform.Find("RocketStart").position, 
+												pos, 
 												this.transform.rotation, 0);
 					GameObject handle = PhotonNetwork.Instantiate(projectile.name, 
-												this.transform.Find("RocketStart").position, 
+												pos, 
 												this.transform.rotation, 0);
 					handle.SendMessage("SetRange", Vector3.Distance(this.transform.Find("RocketStart").position, hitPoint) );
+					handle.transform.LookAt( handle.transform.position + viewDirection * 9000 );
 					lastShot = Time.time;
 				}
 			}

@@ -34,7 +34,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	[RPC]
 	public void SetColor( Vector3 rgb ) {
 		color = new Color(rgb[0],rgb[1],rgb[2], 1.0f);
-		this.renderer.material.SetColor("_Color",color);
+		GetComponentInChildren<SkinnedMeshRenderer>().material.SetColor("_Color",color);
 	}
 	
 	[RPC]
