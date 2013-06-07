@@ -27,7 +27,8 @@ public class AutoDestructShuriken : Photon.MonoBehaviour {
 					#endif
 				}
 				else
-					PhotonNetwork.Destroy(this.gameObject);
+					if( photonView.owner == PhotonNetwork.player )
+						PhotonNetwork.Destroy(this.gameObject);
 				break;
 			}
 		}
