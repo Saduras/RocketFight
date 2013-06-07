@@ -12,6 +12,7 @@ public class InputManager : Photon.MonoBehaviour {
 	public float cooldown = 0.5f;
 	
 	public GameObject projectile;
+	public GameObject muzzleFlash;
 	public string groundTag = "Ground";
 	private float lastShot = 0;
 	
@@ -81,6 +82,9 @@ public class InputManager : Photon.MonoBehaviour {
 
 			if( Input.GetButton("Fire1") ) {
 				if( Time.time > lastShot + cooldown ) {
+					PhotonNetwork.Instantiate(muzzleFlash.name,
+												this.transform.Find("RocketStart").position, 
+												this.transform.rotation, 0);
 					GameObject handle = PhotonNetwork.Instantiate(projectile.name, 
 												this.transform.Find("RocketStart").position, 
 												this.transform.rotation, 0);
