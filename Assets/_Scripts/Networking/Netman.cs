@@ -170,7 +170,7 @@ public class Netman : Photon.MonoBehaviour {
     public void OnJoinedRoom()
     {
         Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room. From here on, your game would be running. For reference, all callbacks are listed in enum: PhotonNetworkingMessage");
-		PhotonNetwork.LoadLevel(gameScene);
+		PhotonNetwork.LoadLevel("LoadToGame");
     }
 	
 	public void OnLeftRoom() {
