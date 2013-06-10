@@ -1,6 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\VFX\AutoDestructShuriken.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\VFX\LoadingAnimation.cs">
     <Files>
       <File FileName="Assets\Shader\Graphic Power-Up\PostProcessing\PostProcessing.cs" Line="1" Column="1" />
       <File FileName="Assets\_Scripts\Player\PlayerManager.cs" Line="1" Column="1" />
@@ -8,7 +8,13 @@
       <File FileName="Assets\_Scripts\Networking\Netman.cs" Line="1" Column="1" />
       <File FileName="Assets\_Scripts\Networking\NetmanGUI.cs" Line="1" Column="1" />
       <File FileName="Assets\_Scripts\Player\InputManager.cs" Line="1" Column="1" />
+<<<<<<< HEAD
       <File FileName="Assets\_Scripts\VFX\AutoDestructShuriken.cs" Line="31" Column="7" />
+=======
+      <File FileName="Assets\_Scripts\VFX\AutoDestructShuriken.cs" Line="1" Column="1" />
+      <File FileName="Assets\IGSoft_Resources\Scripts\NcEffect\NcCurveAnimation.cs" Line="268" Column="80" />
+      <File FileName="Assets\_Scripts\VFX\LoadingAnimation.cs" Line="13" Column="63" />
+>>>>>>> eee4a6acacf90c3a05e1f58c5f0597d25db3b0eb
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
