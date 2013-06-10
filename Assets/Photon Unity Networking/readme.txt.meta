@@ -1,4 +1,9 @@
 fileFormatVersion: 2
 guid: cc890a16a26b70149b244cc81fe7d250
+labels:
+- ExitGames
+- PUN
+- Photon
+- Networking
 TextScriptImporter:
   userData: 
