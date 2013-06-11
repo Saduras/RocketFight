@@ -42,7 +42,7 @@ public class RocketController : Photon.MonoBehaviour {
 	void Update () {
 		switch( flightPath ) {
 		case FlightPath.linear:
-			this.transform.Translate( Vector3.forward * speed * Time.deltaTime );
+			this.transform.Translate( Vector3.back * speed * Time.deltaTime );
 			break;
 		case FlightPath.ballisitic:
 			// Mathf.Cos and Sin working with radians, so we need to convert the angle
@@ -78,7 +78,7 @@ public class RocketController : Photon.MonoBehaviour {
 			speed = Mathf.Sqrt( (range * Physics.gravity.magnitude) / Mathf.Sin(2 * alpha) );
 			// Vector3 force = (Vector3.forward * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha));
 			Debug.Log( Vector3.forward );
-			this.rigidbody.AddRelativeForce( Vector3.forward * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha), ForceMode.VelocityChange );
+			this.rigidbody.AddRelativeForce( Vector3.back * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha), ForceMode.VelocityChange );
 		}
 	}
 	

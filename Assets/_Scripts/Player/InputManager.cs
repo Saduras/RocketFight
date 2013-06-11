@@ -95,7 +95,10 @@ public class InputManager : Photon.MonoBehaviour {
 					GameObject handle = PhotonNetwork.Instantiate(projectile.name, 
 												pos, 
 												this.transform.rotation, 0);
-					handle.transform.LookAt( handle.transform.position + viewDirection );
+					// handle.transform.LookAt( handle.transform.position + viewDirection );
+					// hack for strange model...
+					handle.transform.LookAt( handle.transform.position - viewDirection );
+					
 					handle.SendMessage("SetRange", Vector3.Distance(pos, hitPoint) );
 					lastShot = Time.time;
 				}
