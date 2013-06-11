@@ -77,6 +77,7 @@ public class RocketController : Photon.MonoBehaviour {
 			float alpha = Mathf.Deg2Rad * ballisticAngle;
 			speed = Mathf.Sqrt( (range * Physics.gravity.magnitude) / Mathf.Sin(2 * alpha) );
 			// Vector3 force = (Vector3.forward * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha));
+			Debug.Log( Vector3.forward );
 			this.rigidbody.AddRelativeForce( Vector3.forward * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha), ForceMode.VelocityChange );
 		}
 	}

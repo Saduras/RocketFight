@@ -95,8 +95,8 @@ public class InputManager : Photon.MonoBehaviour {
 					GameObject handle = PhotonNetwork.Instantiate(projectile.name, 
 												pos, 
 												this.transform.rotation, 0);
-					handle.SendMessage("SetRange", Vector3.Distance(this.transform.Find("RocketStart").position, hitPoint) );
-					handle.transform.LookAt( handle.transform.position + viewDirection * 9000 );
+					handle.transform.LookAt( handle.transform.position + viewDirection );
+					handle.SendMessage("SetRange", Vector3.Distance(pos, hitPoint) );
 					lastShot = Time.time;
 				}
 			}
