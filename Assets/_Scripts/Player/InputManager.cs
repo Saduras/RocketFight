@@ -47,7 +47,8 @@ public class InputManager : Photon.MonoBehaviour {
 		// Check for input updates
 		if( (PhotonNetwork.player == controllingPlayer) ) {
 			if( Time.time - lastShot < 0.2f ) {
-				transform.LookAt( shotDir );	
+				transform.LookAt( shotDir );
+				Debug.Log( shotDir );
 			} else {
 				// Get movement input.
 				Vector3 movement = Vector3.zero;
@@ -92,7 +93,7 @@ public class InputManager : Photon.MonoBehaviour {
 	
 				if( Input.GetButton("Fire1") ) {
 					if( Time.time > lastShot + cooldown ) {
-						Vector3 pos = this.transform.position + viewDirection.normalized * 0.5f + Vector3.up * 0.5f;
+						Vector3 pos = this.transform.position + viewDirection.normalized * 0.7f + Vector3.up * 0.5f;
 						PhotonNetwork.Instantiate(muzzleFlash.name,
 													pos, 
 													this.transform.rotation, 0);
@@ -105,9 +106,9 @@ public class InputManager : Photon.MonoBehaviour {
 						
 						handle.SendMessage("SetRange", Vector3.Distance(pos, hitPoint) );
 						lastShot = Time.time;
-						shotDir = handle.transform.position + viewDirection;
+						shotDir = transform.position + viewDirection;
 					}
-			}
+				}
 			}
 		}
 	}
