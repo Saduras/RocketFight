@@ -231,7 +231,11 @@ public class Netman : Photon.MonoBehaviour {
 	
 	[RPC]
 	public void IncreaseScore(int playerID) {
-		playerScores[playerID]++;
+		foreach( RocketFightPlayer rfp in playerList ) {
+			if( rfp.photonPlayer.ID == playerID ) {
+				rfp.score++;	
+			}
+		}
 	}
 	
 	/**
