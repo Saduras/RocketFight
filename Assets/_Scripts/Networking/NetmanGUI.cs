@@ -26,19 +26,6 @@ public class NetmanGUI : Photon.MonoBehaviour {
 	}
 
 	public void OnGUI() {
-		// init playerStringStyle
-		if( PhotonNetwork.room != null )
-			/*if( /*playerStringStyle == null || playerStringStyle.Count != PhotonNetwork.room.playerCount*//* true ) {
-		
-				/*playerStringStyle.Clear();
-				foreach( RocketFightPlayer rfp in nman.playerList ) {
-					playerStringStyle[rfp.photonPlayer.ID] = new GUIStyle(GUI.skin.textArea);
-					playerStringStyle[rfp.photonPlayer.ID].normal.textColor = rfp.color;
-					playerStringStyle[rfp.photonPlayer.ID].normal.background = playerStringBackground;
-				}
-			}*/
-		
-		
         GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
 		
 		// Display ping in the upper right corner
@@ -69,7 +56,11 @@ public class NetmanGUI : Photon.MonoBehaviour {
 						playerStringStyle[rfp.photonPlayer.ID] = new GUIStyle(GUI.skin.textArea);
 						playerStringStyle[rfp.photonPlayer.ID].normal.textColor = rfp.color;
 						//playerStringStyle[rfp.photonPlayer.ID].normal.background = playerStringBackground;
-						GUILayout.Label(rfp.ToString(), playerStringStyle[rfp.photonPlayer.ID]);	
+						string str = "";
+						str += "[" + rfp.photonPlayer.ID + "] " + rfp.photonPlayer.name + ": " + rfp.score;
+						if( rfp.photonPlayer.isMasterClient )
+							str += " (Master)";
+						GUILayout.Label(str, playerStringStyle[rfp.photonPlayer.ID]);	
 					}
 				}
 				
