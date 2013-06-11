@@ -200,6 +200,14 @@ public class Netman : Photon.MonoBehaviour {
 		Screen.showCursor = true;
 	}
 	
+	public RocketFightPlayer GetPlayer( int playerID ) {
+		foreach( RocketFightPlayer rfp in playerList ) {
+			if( rfp.photonPlayer.ID == playerID )
+				return rfp;
+		}
+		return null;
+	}
+	
 	public void OrganizeSpawning() {
 		if( Application.loadedLevelName == gameScene) {
 			// find spawnpoints

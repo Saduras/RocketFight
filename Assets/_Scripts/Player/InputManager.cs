@@ -92,7 +92,7 @@ public class InputManager : Photon.MonoBehaviour {
 	
 				if( Input.GetButton("Fire1") ) {
 					if( Time.time > lastShot + cooldown ) {
-						Vector3 pos = this.transform.position + viewDirection.normalized + Vector3.up * 0.5f;
+						Vector3 pos = this.transform.position + viewDirection.normalized * 0.5f + Vector3.up * 0.5f;
 						PhotonNetwork.Instantiate(muzzleFlash.name,
 													pos, 
 													this.transform.rotation, 0);

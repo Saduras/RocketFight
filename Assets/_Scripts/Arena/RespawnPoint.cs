@@ -39,6 +39,15 @@ public class RespawnPoint : MonoBehaviour {
 		free = false;
 		//photonView.RPC("AssignTo",PhotonTargets.OthersBuffered, assignedPlayer);
 		Debug.Log("Assigned respawn point to: " + player.name);
+		
+		particleSystem.SetActive( true );
+		ParticleSystem[] ps = GetComponentsInChildren<ParticleSystem>();
+		Debug.Log("size: " + ps.Length);
+		foreach( ParticleSystem particle in ps ) {
+			particle.startColor = GameObject.Find("PhotonNetman").GetComponent<Netman>().GetPlayer( player.ID ).color;
+			Debug.Log("Set particle color");
+		}
+		
 		return true;
 	}
 	
