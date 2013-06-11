@@ -6,6 +6,7 @@ public class RespawnPoint : MonoBehaviour {
 	
 	public bool free = true;
 	public PhotonPlayer player;
+	public GameObject particleSystem;
 	private PhotonView photonView;
 	
 	public virtual void Awake () {
@@ -20,10 +21,7 @@ public class RespawnPoint : MonoBehaviour {
 	}
 	
 	public void StartAnimation() {
-		NcCurveAnimation[] animations = gameObject.GetComponentsInChildren<NcCurveAnimation>();	
-		foreach( NcCurveAnimation ani  in animations ) {
-			ani.ResetAnimation();	
-		}
+		particleSystem.SetActive(true);
 		Debug.Log("Respawn Animation start");
 	}
 	
