@@ -20,6 +20,7 @@ public class RespawnPoint : MonoBehaviour {
 		return free;	
 	}
 	
+	[RPC]
 	public void StartAnimation() {
 		particleSystem.SetActive(true);
 		Debug.Log("Respawn Animation start");

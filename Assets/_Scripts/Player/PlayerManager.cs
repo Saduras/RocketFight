@@ -62,7 +62,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 			transform.position = spawnPoint + Vector3.up;
 			transform.rotation = Quaternion.identity;
 			rigidbody.velocity = Vector3.zero;
-			spawnPointObj.GetComponent<RespawnPoint>().StartAnimation();
+			spawnPointObj.GetPhotonView().RPC("StartAnimation",PhotonTargets.All);
 			inman.ResetMoveTo();
 		}
 	}
