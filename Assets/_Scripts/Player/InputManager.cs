@@ -5,6 +5,7 @@ public class InputManager : Photon.MonoBehaviour {
 	
 	public float speed = 5;
 	public Controls moveControl = Controls.mouse;
+	public bool controlable = true;
 	
 	private Vector3 moveTo;
 	private float moveEpsilon = 0.05f;
@@ -45,7 +46,7 @@ public class InputManager : Photon.MonoBehaviour {
 	// Update is called once per frame
 	public void Update () {
 		// Check for input updates
-		if( (PhotonNetwork.player == controllingPlayer) ) {
+		if( (PhotonNetwork.player == controllingPlayer && controlable) ) {
 			if( Time.time - lastShot < 0.2f ) {
 				transform.LookAt( shotDir );
 				Debug.Log( shotDir );
