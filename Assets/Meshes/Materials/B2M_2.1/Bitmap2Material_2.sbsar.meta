@@ -637,7 +637,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Sharpen
       value:
-        scalar[0]: .119999997
+        scalar[0]: .00999999978
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -679,7 +679,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Depth_Balance
       value:
-        scalar[0]: .409999996
+        scalar[0]: -1
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -805,7 +805,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Specular_Diffuse_Influence
       value:
-        scalar[0]: .300000012
+        scalar[0]: .25999999
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -840,7 +840,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: AO_Multiply
       value:
-        scalar[0]: .730000019
+        scalar[0]: .379999995
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -903,7 +903,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Light_Equalizer
       value:
-        scalar[0]: .75999999
+        scalar[0]: .540000021
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -1029,7 +1029,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Details_Input_Intensity
       value:
-        scalar[0]: .910000026
+        scalar[0]: .839999974
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -1140,8 +1140,8 @@ SubstanceImporter:
     buildTargetSettings:
     - serializedVersion: 2
       buildTarget: 
-      textureWidth: 1024
-      textureHeight: 1024
+      textureWidth: 512
+      textureHeight: 512
       textureFormat: 0
       loadingBehavior: 1
   - serializedVersion: 7
@@ -1200,7 +1200,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Sharpen
       value:
-        scalar[0]: .25
+        scalar[0]: .119999997
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -1242,7 +1242,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Depth_Balance
       value:
-        scalar[0]: 1
+        scalar[0]: -.860000014
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -1592,7 +1592,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Details_Input_Intensity
       value:
-        scalar[0]: .349999994
+        scalar[0]: .800000012
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -1703,8 +1703,8 @@ SubstanceImporter:
     buildTargetSettings:
     - serializedVersion: 2
       buildTarget: 
-      textureWidth: 1024
-      textureHeight: 1024
+      textureWidth: 512
+      textureHeight: 512
       textureFormat: 0
       loadingBehavior: 1
   - serializedVersion: 7
@@ -1763,7 +1763,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Sharpen
       value:
-        scalar[0]: .25
+        scalar[0]: .100000001
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -1805,7 +1805,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Depth_Balance
       value:
-        scalar[0]: 1
+        scalar[0]: -.75999999
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -2155,7 +2155,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Details_Input_Intensity
       value:
-        scalar[0]: .349999994
+        scalar[0]: .839999974
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -2281,8 +2281,8 @@ SubstanceImporter:
     buildTargetSettings:
     - serializedVersion: 2
       buildTarget: 
-      textureWidth: 1024
-      textureHeight: 1024
+      textureWidth: 512
+      textureHeight: 512
       textureFormat: 0
       loadingBehavior: 1
   - serializedVersion: 7
@@ -2904,7 +2904,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Sharpen
       value:
-        scalar[0]: .25
+        scalar[0]: .0900000036
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -3296,7 +3296,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Details_Input_Intensity
       value:
-        scalar[0]: .349999994
+        scalar[0]: .870000005
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -3422,8 +3422,8 @@ SubstanceImporter:
     buildTargetSettings:
     - serializedVersion: 2
       buildTarget: 
-      textureWidth: 1024
-      textureHeight: 1024
+      textureWidth: 512
+      textureHeight: 512
       textureFormat: 0
       loadingBehavior: 1
   - serializedVersion: 7
@@ -3482,7 +3482,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Sharpen
       value:
-        scalar[0]: .519999981
+        scalar[0]: .300000012
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -3524,7 +3524,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Depth_Balance
       value:
-        scalar[0]: -.610000014
+        scalar[0]: -.819999993
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -3748,7 +3748,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Light_Equalizer
       value:
-        scalar[0]: .270000011
+        scalar[0]: .140000001
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -3874,7 +3874,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Details_Input_Intensity
       value:
-        scalar[0]: .400000006
+        scalar[0]: .689999998
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -3985,8 +3985,8 @@ SubstanceImporter:
     buildTargetSettings:
     - serializedVersion: 2
       buildTarget: 
-      textureWidth: 1024
-      textureHeight: 1024
+      textureWidth: 512
+      textureHeight: 512
       textureFormat: 0
       loadingBehavior: 1
   - serializedVersion: 7
