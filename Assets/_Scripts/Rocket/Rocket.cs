@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 
 [RequireComponent(typeof(PhotonView))]
-public class RocketController : Photon.MonoBehaviour {
+public class Rocket : Photon.MonoBehaviour {
 	
 	public float speed = 10;
 	public float lifetime = 3;
@@ -13,6 +14,10 @@ public class RocketController : Photon.MonoBehaviour {
 	public float ballisticAngle = 60f;
 	public GameObject explosion;
 	public string playerTag = "Player";
+	
+	public List<float> radii = new List<float>();
+	public List<float> strength = new List<float>();
+	
 	private float birthTime;
 	
 	public enum FlightPath {
@@ -24,6 +29,10 @@ public class RocketController : Photon.MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		birthTime = Time.time;
+		
+		if(radii.Count < 1 || strength.Count != radii.Count ) {
+			Debug.LogError("You must define atleast one explosion zone (radius & strength) for the Rocket!");	
+		}
 		
 		switch( flightPath ) {
 		case FlightPath.linear:
@@ -90,14 +99,33 @@ public class RocketController : Photon.MonoBehaviour {
 		foreach( GameObject playerGo in gos ) {
 			Vector3 direction = playerGo.transform.position - this.transform.position;
 			direction.y = 0;
-			if( direction.magnitude <= explosionRange ) {
+			/*if( direction.magnitude <= explosionRange ) {
 				float strengh = explosionForce * (1 - (direction.magnitude / explosionRange));
 				Debug.Log("Explosion strength: " + strengh );
 				Vector3 playerForce = direction.normalized * strengh;
 				
 				playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.AllBuffered,playerForce);	
 				playerGo.gameObject.GetPhotonView().RPC("HitBy",PhotonTargets.AllBuffered, photonView.owner);
+			}*/
+			for( int i=0; i<radii.Count; i++ ) {
+				if( direction.magnitude < radii[i] ) {
+					Vector3 playerForce = direction.normalized * explosionForce * strength[i];
+					Debug.Log("Explosion strength: " + playerForce.magnitude );
+					
+					playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.AllBuffered,playerForce);	
+					playerGo.gameObject.GetPhotonView().RPC("HitBy",PhotonTargets.AllBuffered, photonView.owner);
+					break;
+				}
 			}
+		}
+	}
+	
+	void OnDrawGizmos() {
+		Color sceneViewDisplayColor = new Color(0.9f, 0.0f, 0.0f, 0.5f);
+		
+		for( int i=0; i<radii.Count; i++ ) {
+			Gizmos.color = new Color( 1f, 1-strength[i], 0f, 1f );
+			Gizmos.DrawWireSphere( transform.position, radii[i] );	
 		}
 	}
 }

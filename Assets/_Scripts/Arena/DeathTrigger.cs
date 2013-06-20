@@ -40,6 +40,5 @@ public class DeathTrigger : MonoBehaviour {
 		Gizmos.DrawLine(topFrontRight,bottomFrontRight);
 		Gizmos.DrawLine(topBackLeft,bottomBackLeft);
 		Gizmos.DrawLine(topBackRight,bottomBackRight);
-		
 	}
 }
