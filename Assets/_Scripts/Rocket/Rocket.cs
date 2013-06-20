@@ -15,8 +15,8 @@ public class Rocket : Photon.MonoBehaviour {
 	public GameObject explosion;
 	public string playerTag = "Player";
 	
-	public List<float> radii = new List<float>();
-	public List<float> strength = new List<float>();
+	public List<float> zoneRadii = new List<float>();
+	public List<float> zoneStrength = new List<float>();
 	
 	private float birthTime;
 	
@@ -30,7 +30,7 @@ public class Rocket : Photon.MonoBehaviour {
 	void Start () {
 		birthTime = Time.time;
 		
-		if(radii.Count < 1 || strength.Count != radii.Count ) {
+		if(zoneRadii.Count < 1 || zoneStrength.Count != zoneRadii.Count ) {
 			Debug.LogError("You must define atleast one explosion zone (radius & strength) for the Rocket!");	
 		}
 		
@@ -107,9 +107,9 @@ public class Rocket : Photon.MonoBehaviour {
 				playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.AllBuffered,playerForce);	
 				playerGo.gameObject.GetPhotonView().RPC("HitBy",PhotonTargets.AllBuffered, photonView.owner);
 			}*/
-			for( int i=0; i<radii.Count; i++ ) {
-				if( direction.magnitude < radii[i] ) {
-					Vector3 playerForce = direction.normalized * explosionForce * strength[i];
+			for( int i=0; i<zoneRadii.Count; i++ ) {
+				if( direction.magnitude < zoneRadii[i] ) {
+					Vector3 playerForce = direction.normalized * explosionForce * zoneStrength[i];
 					Debug.Log("Explosion strength: " + playerForce.magnitude );
 					
 					playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.AllBuffered,playerForce);	
@@ -123,9 +123,9 @@ public class Rocket : Photon.MonoBehaviour {
 	void OnDrawGizmos() {
 		Color sceneViewDisplayColor = new Color(0.9f, 0.0f, 0.0f, 0.5f);
 		
-		for( int i=0; i<radii.Count; i++ ) {
-			Gizmos.color = new Color( 1f, 1-strength[i], 0f, 1f );
-			Gizmos.DrawWireSphere( transform.position, radii[i] );	
+		for( int i=0; i<zoneRadii.Count; i++ ) {
+			Gizmos.color = new Color( 1f, 1-zoneStrength[i], 0f, 1f );
+			Gizmos.DrawWireSphere( transform.position, zoneRadii[i] );	
 		}
 	}
 }
