@@ -99,14 +99,6 @@ public class Rocket : Photon.MonoBehaviour {
 		foreach( GameObject playerGo in gos ) {
 			Vector3 direction = playerGo.transform.position - this.transform.position;
 			direction.y = 0;
-			/*if( direction.magnitude <= explosionRange ) {
-				float strengh = explosionForce * (1 - (direction.magnitude / explosionRange));
-				Debug.Log("Explosion strength: " + strengh );
-				Vector3 playerForce = direction.normalized * strengh;
-				
-				playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.AllBuffered,playerForce);	
-				playerGo.gameObject.GetPhotonView().RPC("HitBy",PhotonTargets.AllBuffered, photonView.owner);
-			}*/
 			for( int i=0; i<zoneRadii.Count; i++ ) {
 				if( direction.magnitude < zoneRadii[i] ) {
 					Vector3 playerForce = direction.normalized * explosionForce * zoneStrength[i];

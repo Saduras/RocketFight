@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(PlayerMover))]
 public class InputManager : Photon.MonoBehaviour {
 	
 	public float speed = 5;
-	public Controls moveControl = Controls.mouse;
+	//public Controls moveControl = Controls.mouse;
 	public bool controlable = true;
 	
 	private Vector3 moveTo;
@@ -19,6 +20,7 @@ public class InputManager : Photon.MonoBehaviour {
 	private Vector3 shotDir = Vector3.forward;
 	
 	private Animator anim;
+	private PlayerMover mover;
 	
 	
 	// The client who controls this character
@@ -30,17 +32,13 @@ public class InputManager : Photon.MonoBehaviour {
 	public int cursorSizeX = 32;  // set to width of your cursor texture
 	public int cursorSizeY= 32;  // set to height of your cursor texture
 	
-	public enum Controls {
-		mouse,
-		keyboard
-	}
-	
 	// Use this for initialization
 	public void Awake () {
 		Screen.showCursor = false;
 		moveTo = this.transform.position;
 		anim = GetComponent<Animator>();
 		anim.speed = speed / 2;
+		mover = GetComponent<PlayerMover>();
 	}
 	
 	// Update is called once per frame
@@ -49,39 +47,14 @@ public class InputManager : Photon.MonoBehaviour {
 		if( (PhotonNetwork.player == controllingPlayer && controlable) ) {
 			if( Time.time - lastShot < 0.2f ) {
 				transform.LookAt( shotDir );
-				Debug.Log( shotDir );
 			} else {
 				// Get movement input.
-				Vector3 movement = Vector3.zero;
 				Vector3 hitPoint;
-				switch(moveControl) {
-					case Controls.keyboard:
-						// calculate movement vector from keyboard input
-						Vector3 moveDirection = new Vector3(Input.GetAxis("Horizontal"),Input.GetAxis("Vertical"),0);
-						movement = new Vector3(moveDirection.x, 0, moveDirection.y);
-						movement.Normalize();
-						break;
-					case Controls.mouse:
-						// update destination (projected to the x-z-plane)
-						if( Input.GetButton("Fire2") ) {
-							moveTo = GetMouseHitPoint();
-						}
-						// project current position tp the x-z plane
-						Vector3 pos = this.transform.position;
-						pos.y = 0;
-						moveTo.y = 0;
-						// calculate movement vector to destination if we are not already there
-						if( Vector3.Distance(moveTo,pos) > moveEpsilon ) {
-							movement = moveTo - pos;
-							movement.y = 0;
-							movement.Normalize();
-						} else {
-							movement = Vector3.zero;					
-						}
-						break;
-				}
+				// calculate movement vector from keyboard input
+				Vector3 movement = new Vector3(Input.GetAxis("Horizontal"),0,Input.GetAxis("Vertical"));
+				movement.Normalize();
 				// apply previous calculated movement
-				this.transform.Translate(movement * speed * Time.deltaTime, Space.World);
+				mover.SetInputMovement( movement );
 				anim.SetFloat("speed", movement.magnitude );
 				
 				// Get rotation input.
@@ -136,18 +109,6 @@ public class InputManager : Photon.MonoBehaviour {
 		}
 		hitPoint.y = 0;
 		return hitPoint;
-	}
-	
-	public void AddToMoveTo( Vector3 vec ) {
-		if( moveControl == Controls.mouse) {
-			moveTo += vec;	
-		}
-	}
-	
-	public void ResetMoveTo() {
-		if( moveControl == Controls.mouse) {
-			moveTo = this.transform.position;	
-		}
 	}
 	
 	[RPC]

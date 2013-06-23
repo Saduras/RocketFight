@@ -17,14 +17,17 @@ public class PlayerManager : Photon.MonoBehaviour {
 	private float deathTime;
 	private bool requestSpawn = false;
 	
+	private PlayerMover mover;
+	
 	
 	void Start () {
-		string name = photonView.owner.name;
+		//string name = photonView.owner.name;
 		playername.GetComponent<TextMesh>().text = name;
 		
 		if (photonView.owner == PhotonNetwork.player) {
-			inman = gameObject.GetComponent<InputManager>();	
+			inman = GetComponent<InputManager>();	
 			netman = GameObject.Find("PhotonNetman").GetComponent<Netman>();
+			mover = GetComponent<PlayerMover>();
 		}
 	}
 	
@@ -40,7 +43,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	}
 	
 	public void SetSpawnPoint( Vector3 pos ) {
-		spawnPoint = pos;	
+		spawnPoint = pos + Vector3.up;	
 	}
 	
 	[RPC]
@@ -78,11 +81,10 @@ public class PlayerManager : Photon.MonoBehaviour {
 	}
 	
 	private void Respawn() {
-			transform.position = spawnPoint + Vector3.up;
+			mover.Teleport( spawnPoint );
 			transform.rotation = Quaternion.identity;
 			rigidbody.velocity = Vector3.zero;
 			spawnPointObj.GetPhotonView().RPC("StartAnimation",PhotonTargets.All);
-			inman.ResetMoveTo();
 			inman.controlable = true;
 	}
 }
