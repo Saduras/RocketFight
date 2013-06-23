@@ -50,4 +50,11 @@ public class PlayerMover : MonoBehaviour {
 	public void Teleport( Vector3 pos ) {
 		transform.position = pos;	
 	}
+	
+	/**
+	 * Gives the max speed of character movement through play input.
+	 */
+	public float GetMovementSpeed() {
+		return movementSpeed;	
+	}
 }

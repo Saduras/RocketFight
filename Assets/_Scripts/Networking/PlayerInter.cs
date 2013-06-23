@@ -23,11 +23,16 @@ public class PlayerInter : Photon.MonoBehaviour {
     State[] m_BufferedState = new State[20];
     // Keep track of what slots are used
     int m_TimestampCount;
+	
+	private Animator anim;
 
     void Awake()
     {
         if (photonView.isMine)
             this.enabled = false;//Only enable inter/extrapol for remote players
+		
+		anim = GetComponent<Animator>();
+		anim.speed = GetComponent<PlayerMover>().GetMovementSpeed() / 2;
     }
 
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -89,7 +94,7 @@ public class PlayerInter : Photon.MonoBehaviour {
         // it is too old and extrapolation should be used
         if (m_BufferedState[0].timestamp > interpolationTime)
         {
-			 for (int i = 0; i < m_TimestampCount; i++)
+			for (int i = 0; i < m_TimestampCount; i++)
             {
                 // Find the state which matches the interpolation time (time+0.1) or use last state
                 if (m_BufferedState[i].timestamp <= interpolationTime || i == m_TimestampCount - 1)
@@ -110,6 +115,9 @@ public class PlayerInter : Photon.MonoBehaviour {
                     // if t=0 => lhs is used directly
                     transform.localPosition = Vector3.Lerp(lhs.pos, rhs.pos, t);
                     transform.localRotation = Quaternion.Slerp(lhs.rot, rhs.rot, t);
+					
+					float speed = Mathf.Abs((lhs.pos - rhs.pos).magnitude) / (float)length;
+					anim.SetFloat("speed", speed );
 					return;
                 }
             }
@@ -122,6 +130,9 @@ public class PlayerInter : Photon.MonoBehaviour {
 
             transform.localPosition = Vector3.Lerp(transform.localPosition, latest.pos, Time.deltaTime * 20 );
             transform.localRotation = latest.rot;
+			
+			float speed = Mathf.Abs((transform.localPosition - latest.pos).magnitude) / Time.deltaTime;
+			anim.SetFloat("speed", speed );
         }
     }
 }
