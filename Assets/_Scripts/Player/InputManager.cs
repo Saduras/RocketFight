@@ -4,8 +4,6 @@ using System.Collections;
 [RequireComponent(typeof(PlayerMover))]
 public class InputManager : Photon.MonoBehaviour {
 	
-	public float speed = 5;
-	//public Controls moveControl = Controls.mouse;
 	public bool controlable = true;
 	
 	private Vector3 moveTo;
