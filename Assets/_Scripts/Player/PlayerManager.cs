@@ -77,6 +77,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 			deathTime = Time.time;
 			requestSpawn = true;
 			inman.controlable = false;
+			mover.SetControllerMovement( Vector3.zero );
 		}
 	}
 	
