@@ -32,7 +32,7 @@ public class PlayerInter : Photon.MonoBehaviour {
             this.enabled = false;//Only enable inter/extrapol for remote players
 		
 		anim = GetComponent<Animator>();
-		anim.speed = GetComponent<PlayerMover>().GetMovementSpeed() / 2;
+		anim.speed = GetComponent<Mover>().GetMovementSpeed() / 2;
     }
 
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

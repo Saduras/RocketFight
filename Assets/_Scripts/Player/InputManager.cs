@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(PlayerMover))]
+[RequireComponent(typeof(Mover))]
 public class InputManager : Photon.MonoBehaviour {
 	
 	public float speed = 5;
@@ -19,7 +19,7 @@ public class InputManager : Photon.MonoBehaviour {
 	private Vector3 shotDir = Vector3.forward;
 	
 	private Animator anim;
-	private PlayerMover mover;
+	private Mover mover;
 	
 	
 	// The client who controls this character
@@ -37,7 +37,7 @@ public class InputManager : Photon.MonoBehaviour {
 		moveTo = this.transform.position;
 		anim = GetComponent<Animator>();
 		anim.speed = speed / 2;
-		mover = GetComponent<PlayerMover>();
+		mover = GetComponent<Mover>();
 	}
 	
 	// Update is called once per frame
@@ -53,34 +53,17 @@ public class InputManager : Photon.MonoBehaviour {
 				Vector3 movement = new Vector3(Input.GetAxis("Horizontal"),0,Input.GetAxis("Vertical"));
 				movement.Normalize();
 				// apply previous calculated movement
-				mover.SetInputMovement( movement );
+				mover.SetControllerMovement( movement );
 				anim.SetFloat("speed", movement.magnitude );
 				
-				// Get rotation input.
-				hitPoint = GetMouseHitPoint();
-				Vector3 viewDirection = hitPoint - this.transform.position;
-				viewDirection.y = 0;
-				viewDirection.Normalize();
+				
+				// rotate in movement direction
 				if( movement.magnitude > 0.1)
 					this.transform.LookAt(this.transform.position + movement);
 	
 				if( Input.GetButton("Fire1") ) {
-					if( Time.time > lastShot + cooldown ) {
-						Vector3 pos = this.transform.position + viewDirection.normalized * 0.7f + Vector3.up * 0.5f;
-						PhotonNetwork.Instantiate(muzzleFlash.name,
-													pos, 
-													this.transform.rotation, 0);
-						GameObject handle = PhotonNetwork.Instantiate(projectile.name, 
-													pos, 
-													this.transform.rotation, 0);
-						// handle.transform.LookAt( handle.transform.position + viewDirection );
-						// hack for strange model...
-						handle.transform.LookAt( handle.transform.position - viewDirection );
-						
-						handle.SendMessage("SetRange", Vector3.Distance(pos, hitPoint) );
-						lastShot = Time.time;
-						shotDir = transform.position + viewDirection;
-					}
+					hitPoint = GetMouseHitPoint();
+					Shoot(hitPoint);
 				}
 			}
 		}
@@ -108,6 +91,34 @@ public class InputManager : Photon.MonoBehaviour {
 		}
 		hitPoint.y = 0;
 		return hitPoint;
+	}
+	
+	/**
+	 * Proceed shoot into mouse cursour direction!
+	 * Check for cooldown; then intantiate and setup rocket.
+	 * @param	mousePos	Current position of the mouse cursour.
+	 */
+	private void Shoot(Vector3 mousePos) {
+		if( Time.time > lastShot + cooldown ) {
+			Vector3 direction = mousePos - this.transform.position;
+			direction.y = 0;
+			direction.Normalize();
+			
+			Vector3 pos = this.transform.position + direction.normalized * 0.7f + Vector3.up * 0.5f;
+			PhotonNetwork.Instantiate(muzzleFlash.name,
+										pos, 
+										this.transform.rotation, 0);
+			GameObject handle = PhotonNetwork.Instantiate(projectile.name, 
+										pos, 
+										this.transform.rotation, 0);
+			// handle.transform.LookAt( handle.transform.position + viewDirection );
+			// hack for strange model...
+			handle.transform.LookAt( handle.transform.position - direction );
+			
+			handle.SendMessage("SetRange", Vector3.Distance(pos, mousePos) );
+			lastShot = Time.time;
+			shotDir = transform.position + direction;
+		}
 	}
 	
 	[RPC]

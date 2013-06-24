@@ -4,10 +4,10 @@ using System.Collections;
 /**
  * This class holds all information about current player movement and executes them.
  */
-public class PlayerMover : MonoBehaviour {
+public class Mover : MonoBehaviour {
 	
 	// direction we get from the player input
-	Vector3 inputMovement = Vector3.zero;
+	Vector3 controllerMovement = Vector3.zero;
 	// sum of all forces which influence the character now
 	Vector3 physicMovement = Vector3.zero;
 	
@@ -19,7 +19,7 @@ public class PlayerMover : MonoBehaviour {
 	 * Apply movement from input and physics to the player
 	 */
 	void Update () {
-		Vector3 frameMove = inputMovement * movementSpeed;
+		Vector3 frameMove = controllerMovement * movementSpeed;
 		frameMove += physicMovement;
 		transform.Translate( frameMove * Time.deltaTime,Space.World);
 	}
@@ -28,12 +28,12 @@ public class PlayerMover : MonoBehaviour {
 	 * Set the vector value of inputMovement.
 	 * It will be normalized, if it isn't already since we only use the direction.
 	 */
-	public void SetInputMovement( Vector3 vector ) {
+	public void SetControllerMovement( Vector3 vector ) {
 		if( vector.magnitude != 1 )
 			vector.Normalize();
 		
-		if( vector != inputMovement )
-			inputMovement = vector;
+		if( vector != controllerMovement )
+			controllerMovement = vector;
 	}
 	
 	/**

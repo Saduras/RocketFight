@@ -12,7 +12,7 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	
 	private List<Force> forceSet = new List<Force>();
 	
-	private PlayerMover mover;
+	private Mover mover;
 	
 	// Use this for initialization
 	void Start () {
@@ -22,7 +22,7 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 		} else {
 			inman = this.gameObject.GetComponent<InputManager>();	
 		}
-		mover = GetComponent<PlayerMover>();
+		mover = GetComponent<Mover>();
 	}
 	
 	// Update is called once per frame
@@ -39,7 +39,7 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 				this.gameObject.GetComponent<InputManager>().enabled = true;
 			}
 		}
-		//CleanUpForceSet();
+		CleanUpForceSet();
 	}
 	
 	private Vector3 CalculateFrameForce() {
