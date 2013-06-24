@@ -46,6 +46,7 @@ public class InputManager : Photon.MonoBehaviour {
 		if( (PhotonNetwork.player == controllingPlayer && controlable) ) {
 			if( Time.time - lastShot < 0.2f ) {
 				transform.LookAt( shotDir );
+				mover.SetControllerMovement( Vector3.zero );
 			} else {
 				// Get movement input.
 				Vector3 hitPoint;
