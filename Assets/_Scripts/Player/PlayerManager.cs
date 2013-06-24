@@ -17,7 +17,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	private float deathTime;
 	private bool requestSpawn = false;
 	
-	private PlayerMover mover;
+	private Mover mover;
 	
 	
 	void Start () {
@@ -27,7 +27,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 		if (photonView.owner == PhotonNetwork.player) {
 			inman = GetComponent<InputManager>();	
 			netman = GameObject.Find("PhotonNetman").GetComponent<Netman>();
-			mover = GetComponent<PlayerMover>();
+			mover = GetComponent<Mover>();
 		}
 	}
 	
