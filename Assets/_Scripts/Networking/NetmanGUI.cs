@@ -12,9 +12,11 @@ public class NetmanGUI : Photon.MonoBehaviour {
 	public GUIStyle errorStyle;
 	
 	private string playerName = "RocketFighter01";
+	private string message = "";
 	private bool displayError = false;
 	private string errorMsg = "";
 	private Netman nman;
+	private Dictionary<float,string> chatLog = new Dictionary<float, string>();
 	
 	//private GUIStyle[] playerStringStyle;
 	private Dictionary<int, GUIStyle> playerStringStyle = new Dictionary<int, GUIStyle>();
@@ -45,6 +47,7 @@ public class NetmanGUI : Photon.MonoBehaviour {
 				// Display Inputfiel to choos player name
 				if( PhotonNetwork.connectionState == ConnectionState.Disconnected ) {
 					GUILayout.Label("Username:");
+					GUI.SetNextControlName("user");
 					playerName = GUILayout.TextField(playerName, 32);
 				}
 			
@@ -80,7 +83,7 @@ public class NetmanGUI : Photon.MonoBehaviour {
 					if (PhotonNetwork.connectionState == ConnectionState.Disconnected)
 			        {
 			            if (GUILayout.Button("Connect") 
-							|| (Event.current.isKey && Event.current.keyCode == KeyCode.Return) ) {
+							|| (Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "user") ) {
 							connectPlayer();
 			            }
 			        } else {
@@ -91,6 +94,27 @@ public class NetmanGUI : Photon.MonoBehaviour {
 			        }
 				GUILayout.EndArea();
 			GUILayout.EndArea();
+			
+			if( PhotonNetwork.room != null) {
+				GUILayout.BeginArea( new Rect(0,Screen.height - 300, 300,300),GUI.skin.box);
+					GUILayout.Label("Chat area:");
+					string chat = "";
+					foreach( KeyValuePair<float, string> pair in chatLog ) {
+						chat += "[" + pair.Key + "] " + pair.Value + " \n";
+					}
+					GUILayout.Label(chat);
+				
+					GUILayout.BeginArea( new Rect(0, 280,300,20));
+						GUI.SetNextControlName("chat");
+						message = GUILayout.TextField(message, 128);
+				
+						if( Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "chat" && message != "") {
+							photonView.RPC("AddChatMessage",PhotonTargets.All,message,Time.time);
+							message = "";
+						}
+					GUILayout.EndArea();
+				GUILayout.EndArea();
+			}
 		} else {
 			GUILayout.BeginArea(new Rect(Screen.width/2 - 100, 5, 200, 60));
 				float timer = (nman.gameTime - Time.time + nman.startTime);
@@ -144,5 +168,10 @@ public class NetmanGUI : Photon.MonoBehaviour {
 			sortedPlayerList[i] = PhotonPlayer.Find(playerIDs[i]);
 		}
 		return sortedPlayerList;
+	}
+	
+	[RPC]
+	public void AddChatMessage(string msg, float time) {
+		chatLog.Add(time, msg );
 	}
 }
