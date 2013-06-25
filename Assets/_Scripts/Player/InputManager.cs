@@ -23,7 +23,7 @@ public class InputManager : Photon.MonoBehaviour {
 	
 	
 	// The client who controls this character
-	private PhotonPlayer controllingPlayer;
+	public PhotonPlayer controllingPlayer;
 	//private PhotonView photonView;
 	
 	// Custom cursor texture
