@@ -25,16 +25,20 @@ public class ScoreBuff : MonoBehaviour {
 	void Update () {
 		if(pickedUp) {
 			if(Time.time - pickupTime > buffDuration) {
-				pickedUp = false;
-				transform.parent = null;
-				transform.position = startPos;
-				staticVFX.SetActive( true );
+				Reset();
 			}
 			if( scoreTime + 1 < Time.time ) {
 				netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,player.ID);
 				scoreTime = Time.time;
 			}
 		}
+	}
+	
+	public void Reset() {
+		pickedUp = false;
+		transform.parent = null;
+		transform.position = startPos;
+		staticVFX.SetActive( true );
 	}
 	
 	public void OnTriggerEnter(Collider other) {

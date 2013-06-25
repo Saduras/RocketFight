@@ -78,6 +78,11 @@ public class PlayerManager : Photon.MonoBehaviour {
 			requestSpawn = true;
 			inman.controlable = false;
 			mover.SetControllerMovement( Vector3.zero );
+			
+			// Reset buff if we carry it
+			ScoreBuff sb = gameObject.GetComponentInChildren<ScoreBuff>();
+			if( sb != null )
+				sb.Reset();
 		}
 	}
 	
