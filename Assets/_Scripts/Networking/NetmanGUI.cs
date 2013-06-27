@@ -37,7 +37,7 @@ public class NetmanGUI : Photon.MonoBehaviour {
 		GUILayout.EndArea();
 		
 		// display lobby and login information and hidde them ingame
-		if( !nman.hasSpawn ) {
+		if( !nman.hasSpawn && !(PhotonNetwork.connectionState == ConnectionState.Disconnected) ) {
 			GUILayout.BeginArea( new Rect(Screen.width/2 - 100, Screen.height/2 - 100, 200, 200), GUI.skin.box );
 				// Display errors here if there are any
 				if (displayError) {
@@ -45,11 +45,11 @@ public class NetmanGUI : Photon.MonoBehaviour {
 				}
 			
 				// Display Inputfiel to choos player name
-				if( PhotonNetwork.connectionState == ConnectionState.Disconnected ) {
+				/*if( PhotonNetwork.connectionState == ConnectionState.Disconnected ) {
 					GUILayout.Label("Username:");
 					GUI.SetNextControlName("user");
 					playerName = GUILayout.TextField(playerName, 32);
-				}
+				}*/
 			
 				// Display player list in room
 				if (PhotonNetwork.room != null) {
