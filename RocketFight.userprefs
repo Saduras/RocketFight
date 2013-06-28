@@ -1,10 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\UI\ConnectButton.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\UI\MenuPanelController.cs">
     <Files>
-      <File FileName="Assets\_Scripts\Networking\NetmanGUI.cs" Line="40" Column="24" />
-      <File FileName="Assets\NGUI\Scripts\Interaction\UIButtonScale.cs" Line="33" Column="23" />
-      <File FileName="Assets\_Scripts\UI\ConnectButton.cs" Line="10" Column="45" />
+      <File FileName="Assets\_Scripts\Networking\NetmanGUI.cs" Line="123" Column="58" />
+      <File FileName="Assets\_Scripts\UI\ConnectionPanelController.cs" Line="10" Column="23" />
+      <File FileName="Assets\_Scripts\UI\MenuPanelController.cs" Line="4" Column="33" />
+      <File FileName="Assets\_Scripts\Networking\Netman.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Scripts\Player\PlayerManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Scripts\UI\PingLabel.cs" Line="20" Column="32" />
+      <File FileName="Assets\_Scripts\UI\GameTimerLabel.cs" Line="13" Column="65" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

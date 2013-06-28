@@ -13,6 +13,8 @@ public class Netman : Photon.MonoBehaviour {
 	// Tells you if the player had spawn a character or not.
 	public bool hasSpawn = false;
 	
+	public UILabel playerListLabel;
+	
 	public float startTime;
 	public float gameTime = 180;
 	
@@ -55,6 +57,8 @@ public class Netman : Photon.MonoBehaviour {
 						OnPlayerConnect();
 						playerCountRoom = PhotonNetwork.room.playerCount;
 					}
+		
+		DisplayPlayerList();
 	}
 	
 	
@@ -175,7 +179,7 @@ public class Netman : Photon.MonoBehaviour {
 	
 	public void OnLeftRoom() {
 		playerList.Clear();
-		Application.LoadLevel(0);
+		//Application.LoadLevel(0);
 	}
 	
 	public void GameOver() {
@@ -192,6 +196,20 @@ public class Netman : Photon.MonoBehaviour {
 				gos[i].GetPhotonView().RPC("SetFree",PhotonTargets.AllBuffered);
 			}
 		}
+	}
+	
+	private void DisplayPlayerList() {
+		string labelString = "Playerlist:\n";
+		foreach( RocketFightPlayer rfp in playerList ) {
+			labelString += "[" + ColorX.RGBToHex(rfp.color) + "]";
+			labelString += rfp.photonPlayer.name;
+			labelString += "[ffffff]";
+			if( rfp.photonPlayer.isMasterClient ) 
+				labelString += " (Master)";
+			labelString += "\n";
+		}
+		
+		playerListLabel.text = labelString;
 	}
 	
 	[RPC]
@@ -284,4 +302,8 @@ public class Netman : Photon.MonoBehaviour {
 		}
 		Debug.Log("Did not found player: " + playerID);
 	}
+	
+	
+	
+	
 }
