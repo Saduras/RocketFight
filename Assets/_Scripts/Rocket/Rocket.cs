@@ -34,7 +34,7 @@ public class Rocket : Photon.MonoBehaviour {
 			Debug.LogError("You must define atleast one explosion zone (radius & strength) for the Rocket!");	
 		}
 		
-		switch( flightPath ) {
+		/*switch( flightPath ) {
 		case FlightPath.linear:
 			this.rigidbody.useGravity = false;
 			break;
@@ -44,7 +44,7 @@ public class Rocket : Photon.MonoBehaviour {
 		case FlightPath.controlled:
 			this.rigidbody.useGravity = false;
 			break;
-		}
+		}*/
 	}
 	
 	// Update is called once per frame
@@ -113,8 +113,6 @@ public class Rocket : Photon.MonoBehaviour {
 	}
 	
 	void OnDrawGizmos() {
-		Color sceneViewDisplayColor = new Color(0.9f, 0.0f, 0.0f, 0.5f);
-		
 		for( int i=0; i<zoneRadii.Count; i++ ) {
 			Gizmos.color = new Color( 1f, 1-zoneStrength[i], 0f, 1f );
 			Gizmos.DrawWireSphere( transform.position, zoneRadii[i] );	

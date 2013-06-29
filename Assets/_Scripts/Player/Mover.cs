@@ -21,7 +21,9 @@ public class Mover : MonoBehaviour {
 	void Update () {
 		Vector3 frameMove = controllerMovement * movementSpeed;
 		frameMove += physicMovement;
-		transform.Translate( frameMove * Time.deltaTime,Space.World);
+		//transform.Translate( frameMove * Time.deltaTime,Space.World);
+		CharacterController controller = GetComponent<CharacterController>();
+		controller.Move( frameMove * Time.deltaTime );
 	}
 	
 	/**

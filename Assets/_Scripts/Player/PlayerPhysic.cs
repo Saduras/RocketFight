@@ -7,7 +7,6 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	
 	public float fadeTime = 1f;
 	public bool controlableWhileForce = false;
-	private InputManager inman;
 	private float curvePower = 2f;
 	
 	private List<Force> forceSet = new List<Force>();
@@ -18,9 +17,6 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	void Start () {
 		if (!(photonView.owner == PhotonNetwork.player) ) {
 			this.enabled = false;
-			
-		} else {
-			inman = this.gameObject.GetComponent<InputManager>();	
 		}
 		mover = GetComponent<Mover>();
 	}

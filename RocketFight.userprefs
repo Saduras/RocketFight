@@ -1,14 +1,17 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\UI\MenuPanelController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\Player\Mover.cs">
     <Files>
-      <File FileName="Assets\_Scripts\Networking\NetmanGUI.cs" Line="123" Column="58" />
-      <File FileName="Assets\_Scripts\UI\ConnectionPanelController.cs" Line="10" Column="23" />
-      <File FileName="Assets\_Scripts\UI\MenuPanelController.cs" Line="4" Column="33" />
-      <File FileName="Assets\_Scripts\Networking\Netman.cs" Line="1" Column="1" />
-      <File FileName="Assets\_Scripts\Player\PlayerManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\_Scripts\UI\PingLabel.cs" Line="20" Column="32" />
-      <File FileName="Assets\_Scripts\UI\GameTimerLabel.cs" Line="13" Column="65" />
+      <File FileName="Assets\_Scripts\Networking\NetmanGUI.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Scripts\UI\ConnectionPanelController.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Scripts\UI\MenuPanelController.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Scripts\Networking\Netman.cs" Line="22" Column="27" />
+      <File FileName="Assets\_Scripts\Player\PlayerManager.cs" Line="90" Column="52" />
+      <File FileName="Assets\_Scripts\UI\PingLabel.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Scripts\UI\GameTimerLabel.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Scripts\Arena\DeathTrigger.cs" Line="7" Column="84" />
+      <File FileName="Assets\_Scripts\Arena\ScoreBuff.cs" Line="40" Column="19" />
+      <File FileName="Assets\_Scripts\Player\Mover.cs" Line="24" Column="5" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerManager : Photon.MonoBehaviour {
 	
-	public GameObject playername;
+	//public GameObject playername;
 	
 	private Vector3 spawnPoint;
 	private InputManager inman;
@@ -22,7 +22,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	
 	void Start () {
 		//string name = photonView.owner.name;
-		playername.GetComponent<TextMesh>().text = name;
+		//playername.GetComponent<TextMesh>().text = name;
 		
 		if (photonView.owner == PhotonNetwork.player) {
 			inman = GetComponent<InputManager>();	
@@ -32,7 +32,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	}
 	
 	void Update() {
-		playername.transform.LookAt(- 9000 *  Camera.main.transform.position);
+		//playername.transform.LookAt(- 9000 *  Camera.main.transform.position);
 		
 		if( requestSpawn && photonView.owner == PhotonNetwork.player ) {
 			if( Time.time > deathTime + respawnTime ) {
@@ -87,9 +87,9 @@ public class PlayerManager : Photon.MonoBehaviour {
 	}
 	
 	private void Respawn() {
-			mover.Teleport( spawnPoint );
+			mover.Teleport( spawnPointObj.transform.position );
 			transform.rotation = Quaternion.identity;
-			rigidbody.velocity = Vector3.zero;
+			//rigidbody.velocity = Vector3.zero;
 			spawnPointObj.GetPhotonView().RPC("StartAnimation",PhotonTargets.All);
 			inman.controlable = true;
 	}

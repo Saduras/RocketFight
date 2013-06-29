@@ -6,14 +6,14 @@ public class RespawnPoint : MonoBehaviour {
 	
 	public bool free = true;
 	public PhotonPlayer player;
-	public GameObject particleSystem;
+	public GameObject particleEffectSystem;
 	private PhotonView photonView;
 	
 	public virtual void Awake () {
 		photonView = this.gameObject.GetPhotonView();	
 	}
 	
-	/**
+	/** 
 	 * Check if the respawn point is still free.
 	 */
 	public bool IsFree() {
@@ -22,7 +22,7 @@ public class RespawnPoint : MonoBehaviour {
 	
 	[RPC]
 	public void StartAnimation() {
-		particleSystem.SetActive(true);
+		particleEffectSystem.SetActive(true);
 		Debug.Log("Respawn Animation start");
 	}
 	
@@ -41,7 +41,7 @@ public class RespawnPoint : MonoBehaviour {
 		//photonView.RPC("AssignTo",PhotonTargets.OthersBuffered, assignedPlayer);
 		Debug.Log("Assigned respawn point to: " + player.name);
 		
-		particleSystem.SetActive( true );
+		particleEffectSystem.SetActive( true );
 		ParticleSystem[] ps = GetComponentsInChildren<ParticleSystem>();
 		Debug.Log("size: " + ps.Length);
 		foreach( ParticleSystem particle in ps ) {

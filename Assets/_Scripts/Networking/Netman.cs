@@ -91,7 +91,6 @@ public class Netman : Photon.MonoBehaviour {
 		// remove free color
 		foreach( int playerID in validIDs ) {
 			Color col = usedColors[playerID];
-			bool check = usedColors.Remove( playerID );
 			freeColors.Add( col );
 		}
 	}

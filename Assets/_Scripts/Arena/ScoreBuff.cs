@@ -39,6 +39,7 @@ public class ScoreBuff : MonoBehaviour {
 		transform.parent = null;
 		transform.position = startPos;
 		staticVFX.SetActive( true );
+		collider.enabled = true;
 	}
 	
 	public void OnTriggerEnter(Collider other) {
@@ -47,6 +48,7 @@ public class ScoreBuff : MonoBehaviour {
 			transform.parent = other.gameObject.transform;
 			renderer.enabled = false;
 			pickedUp = true;
+			collider.enabled = false;
 			pickupTime = Time.time;
 			staticVFX.SetActive( false );
 			

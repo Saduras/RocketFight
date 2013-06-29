@@ -7,9 +7,6 @@ public class InputManager : Photon.MonoBehaviour {
 	public float speed = 5;
 	public bool controlable = true;
 	
-	private Vector3 moveTo;
-	private float moveEpsilon = 0.05f;
-	
 	public float cooldown = 0.5f;
 	
 	public GameObject projectile;
@@ -34,7 +31,6 @@ public class InputManager : Photon.MonoBehaviour {
 	// Use this for initialization
 	public void Awake () {
 		Screen.showCursor = false;
-		moveTo = this.transform.position;
 		anim = GetComponent<Animator>();
 		anim.speed = speed / 2;
 		mover = GetComponent<Mover>();
