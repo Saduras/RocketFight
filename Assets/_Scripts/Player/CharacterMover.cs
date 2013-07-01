@@ -4,7 +4,8 @@ using System.Collections;
 /**
  * This class holds all information about current player movement and executes them.
  */
-public class Mover : MonoBehaviour {
+[RequireComponent(typeof(CharacterController))]
+public class CharacterMover : MonoBehaviour {
 	
 	// direction we get from the player input
 	Vector3 controllerMovement = Vector3.zero;
@@ -13,16 +14,28 @@ public class Mover : MonoBehaviour {
 	
 	// speed of the character movement through player input
 	public float movementSpeed = 5;
+	// enable/disable controller movement
+	public bool controlable = true;
+	
+	private CharacterController controller;
+	
+	void Awake() {
+		controller = GetComponent<CharacterController>();
+	}
 
 	/**
 	 * Update is called once per frame
 	 * Apply movement from input and physics to the player
 	 */
 	void Update () {
-		Vector3 frameMove = controllerMovement * movementSpeed;
+		Vector3 frameMove = Vector3.zero;
+		// add controller movement if controlable
+		if( controlable )
+			frameMove += controllerMovement * movementSpeed;
+		// add physic movement
 		frameMove += physicMovement;
-		//transform.Translate( frameMove * Time.deltaTime,Space.World);
-		CharacterController controller = GetComponent<CharacterController>();
+		
+		// move character respecting collision
 		controller.Move( frameMove * Time.deltaTime );
 	}
 	
@@ -51,12 +64,5 @@ public class Mover : MonoBehaviour {
 	 */
 	public void Teleport( Vector3 pos ) {
 		transform.position = pos;	
-	}
-	
-	/**
-	 * Gives the max speed of character movement through play input.
-	 */
-	public float GetMovementSpeed() {
-		return movementSpeed;	
 	}
 }

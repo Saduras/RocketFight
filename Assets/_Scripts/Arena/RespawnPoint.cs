@@ -2,22 +2,22 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(PhotonView))]
-public class RespawnPoint : MonoBehaviour {
+public class RespawnPoint : Photon.MonoBehaviour {
 	
-	public bool free = true;
-	public PhotonPlayer player;
 	public GameObject particleEffectSystem;
-	private PhotonView photonView;
+	public Color color;
+	public PhotonPlayer player;
+
 	
-	public virtual void Awake () {
-		photonView = this.gameObject.GetPhotonView();	
-	}
-	
-	/** 
-	 * Check if the respawn point is still free.
-	 */
-	public bool IsFree() {
-		return free;	
+	[RPC]
+	public void SetColor( Vector3 rgb ) {
+		color = new Color( rgb.x, rgb.y, rgb.z, 1);
+		Debug.Log("Set Color");
+		particleEffectSystem.SetActive( true );
+		ParticleSystem[] ps = GetComponentsInChildren<ParticleSystem>();
+		foreach( ParticleSystem particle in ps ) {
+			particle.startColor = color;
+		}
 	}
 	
 	[RPC]
@@ -31,34 +31,8 @@ public class RespawnPoint : MonoBehaviour {
 	 * The respawn point is not free anymore.
 	 */
 	[RPC]
-	public bool AssignTo(PhotonPlayer assignedPlayer) {
-		if( !free ) {
-			Debug.LogError("Spawnpoint is not free!");
-			return false;
-		}
+	public void AssignTo(PhotonPlayer assignedPlayer) {
 		player = assignedPlayer;
-		free = false;
-		//photonView.RPC("AssignTo",PhotonTargets.OthersBuffered, assignedPlayer);
 		Debug.Log("Assigned respawn point to: " + player.name);
-		
-		particleEffectSystem.SetActive( true );
-		ParticleSystem[] ps = GetComponentsInChildren<ParticleSystem>();
-		Debug.Log("size: " + ps.Length);
-		foreach( ParticleSystem particle in ps ) {
-			particle.startColor = GameObject.Find("PhotonNetman").GetComponent<Netman>().GetPlayer( player.ID ).color;
-			Debug.Log("Set particle color");
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * Free this respawn point from it assigned player.
-	 */
-	[RPC]
-	public void SetFree() {
-		free = true;
-		player = null;
-		photonView.RPC("SetFree",PhotonTargets.OthersBuffered);
 	}
 }

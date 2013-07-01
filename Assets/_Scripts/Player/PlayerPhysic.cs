@@ -11,14 +11,14 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	
 	private List<Force> forceSet = new List<Force>();
 	
-	private Mover mover;
+	private CharacterMover mover;
 	
 	// Use this for initialization
 	void Start () {
 		if (!(photonView.owner == PhotonNetwork.player) ) {
 			this.enabled = false;
 		}
-		mover = GetComponent<Mover>();
+		mover = GetComponent<CharacterMover>();
 	}
 	
 	// Update is called once per frame

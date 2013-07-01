@@ -7,8 +7,6 @@ public class ConnectionPanelController : MonoBehaviour {
 	public UILabel conncetionStateLabel;
 	public List<UISprite> connectionSprites = new List<UISprite>(4);
 	
-	private PeerState ps;
-	
 	// Use this for initialization
 	void Start () {
 		foreach( UISprite sprite in connectionSprites ) {

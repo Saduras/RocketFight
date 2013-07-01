@@ -237,11 +237,13 @@ public class Netman : Photon.MonoBehaviour {
 				GameObject sp = spawnPoints[randIndex];
 				spawnPoints.RemoveAt(randIndex);
 					
+				Vector3 rgb = new Vector3( rfp.color.r, rfp.color.g,rfp.color.b );
+				
 				// assign spawpoint
 				sp.GetPhotonView().RPC("AssignTo",PhotonTargets.AllBuffered,rfp.photonPlayer);
+				sp.GetPhotonView().RPC("SetColor",PhotonTargets.AllBuffered,rgb);
 				
 				// spawn player incl. color
-				Vector3 rgb = new Vector3( rfp.color.r, rfp.color.g,rfp.color.b );
 				photonView.RPC("SpawnPlayer",rfp.photonPlayer,sp.transform.position, rgb);
 				// init score
 				photonView.RPC("SetScore",PhotonTargets.AllBuffered, rfp.photonPlayer.ID, 0);
@@ -275,7 +277,6 @@ public class Netman : Photon.MonoBehaviour {
 			Debug.Log("Instatiate player at " + spawnPt);
 			GameObject handle = PhotonNetwork.Instantiate(playerPrefab.name,spawnPt,Quaternion.identity,0);
 			handle.GetComponent<InputManager>().SendMessage("SetPlayer", PhotonNetwork.player);
-			handle.GetComponent<PlayerManager>().SendMessage("SetSpawnPoint", spawnPt);
 			handle.GetPhotonView().RPC("SetColor",PhotonTargets.AllBuffered,rgb);
 			hasSpawn = true;
 		}

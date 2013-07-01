@@ -1,10 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Mover))]
+[RequireComponent(typeof(CharacterMover))]
 public class InputManager : Photon.MonoBehaviour {
 	
-	public float speed = 5;
 	public bool controlable = true;
 	
 	public float cooldown = 0.5f;
@@ -16,7 +15,7 @@ public class InputManager : Photon.MonoBehaviour {
 	private Vector3 shotDir = Vector3.forward;
 	
 	private Animator anim;
-	private Mover mover;
+	private CharacterMover mover;
 	
 	
 	// The client who controls this character
@@ -31,9 +30,9 @@ public class InputManager : Photon.MonoBehaviour {
 	// Use this for initialization
 	public void Awake () {
 		Screen.showCursor = false;
+		mover = GetComponent<CharacterMover>();
 		anim = GetComponent<Animator>();
-		anim.speed = speed / 2;
-		mover = GetComponent<Mover>();
+		anim.speed = mover.movementSpeed / 2;
 	}
 	
 	// Update is called once per frame

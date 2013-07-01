@@ -3,10 +3,6 @@ using System.Collections;
 
 public class PlayerManager : Photon.MonoBehaviour {
 	
-	//public GameObject playername;
-	
-	private Vector3 spawnPoint;
-	private InputManager inman;
 	private Color color;
 	private PhotonPlayer lastHit;
 	private Netman netman;
@@ -17,33 +13,23 @@ public class PlayerManager : Photon.MonoBehaviour {
 	private float deathTime;
 	private bool requestSpawn = false;
 	
-	private Mover mover;
+	private CharacterMover mover;
 	
 	
 	void Start () {
-		//string name = photonView.owner.name;
-		//playername.GetComponent<TextMesh>().text = name;
-		
-		if (photonView.owner == PhotonNetwork.player) {
-			inman = GetComponent<InputManager>();	
+		if (photonView.owner == PhotonNetwork.player) {	
 			netman = GameObject.Find("PhotonNetman").GetComponent<Netman>();
-			mover = GetComponent<Mover>();
+			mover = GetComponent<CharacterMover>();
 		}
 	}
 	
-	void Update() {
-		//playername.transform.LookAt(- 9000 *  Camera.main.transform.position);
-		
+	void Update() {	
 		if( requestSpawn && photonView.owner == PhotonNetwork.player ) {
 			if( Time.time > deathTime + respawnTime ) {
 				Respawn();
 				requestSpawn = false;	
 			}
 		}
-	}
-	
-	public void SetSpawnPoint( Vector3 pos ) {
-		spawnPoint = pos + Vector3.up;	
 	}
 	
 	[RPC]
@@ -76,7 +62,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 			
 			deathTime = Time.time;
 			requestSpawn = true;
-			inman.controlable = false;
+			mover.controlable = false;
 			mover.SetControllerMovement( Vector3.zero );
 			
 			// Reset buff if we carry it
@@ -91,6 +77,8 @@ public class PlayerManager : Photon.MonoBehaviour {
 			transform.rotation = Quaternion.identity;
 			//rigidbody.velocity = Vector3.zero;
 			spawnPointObj.GetPhotonView().RPC("StartAnimation",PhotonTargets.All);
-			inman.controlable = true;
+			
+			mover.SetPhysicMovement( Vector3.zero );
+			mover.controlable = true;
 	}
 }
