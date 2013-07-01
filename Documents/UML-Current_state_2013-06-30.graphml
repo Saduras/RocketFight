@@ -15,19 +15,17 @@
   <graph edgedefault="directed" id="G">
     <data key="d7"/>
     <node id="n0">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="358.956077630235" width="410.0190368234986" x="1375.2114827374876" y="-523.674029744637"/>
           <y:Fill color="#FFCC99" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="20" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="185.15234375" x="112.4333465367493" y="4.0">Static Utility Classes</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="20" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="185.15234375" x="112.43334653674924" y="4.0">Static Utility Classes</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
     </node>
     <node id="n1">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="638.382420837589" width="847.4944024514812" x="1375.2114827374876" y="-1222.4167344841685"/>
@@ -42,7 +40,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="62.1875" width="212.0" x="383.0" y="164.90625"/>
+          <y:Geometry height="62.1875" width="212.0" x="1029.3305705762375" y="-283.09332558512597"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="84.90087890625" x="63.549560546875" y="3.0">DeathTrigger<y:LabelModel>
@@ -63,7 +61,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="136.88978208947907" width="212.0" x="1701.195812458503" y="137.73805585814063"/>
+          <y:Geometry height="136.88978208947907" width="212.0" x="1040.251510160391" y="-1065.2001231525453"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="93.5654296875" x="59.21728515625" y="3.0">RespawnPoint<y:LabelModel>
@@ -88,7 +86,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="245.0" width="181.0" x="382.99999999999994" y="266.44780388151173"/>
+          <y:Geometry height="245.0" width="181.0" x="1029.3305705762375" y="-181.55177170361424"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="66.1181640625" x="57.44091796875" y="3.0">ScoreBuff<y:LabelModel>
@@ -121,7 +119,7 @@ OnTriggerEnter(Collider) : void
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="503.78936220633295" width="331.0" x="756.7406741573034" y="97.84043309499492"/>
+          <y:Geometry height="503.78936220633295" width="331.0" x="46.62224839129121" y="-936.4903751291741"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="51.67724609375" x="139.661376953125" y="3.0">Netman<y:LabelModel>
@@ -171,7 +169,7 @@ RemovePlayer(int) : void</y:MethodLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="281.37890625" width="262.4195546475995" x="-98.76171875" y="-187.37890625"/>
+          <y:Geometry height="281.37890625" width="262.4195546475995" x="1844.407714715086" y="-436.71755027664267"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="74.7890625" x="93.81524607379976" y="3.0">NetmanGUI<y:LabelModel>
@@ -206,7 +204,7 @@ AddChatMessage(string, float) : void</y:MethodLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="153.0" width="367.578125" x="-42.35803083503578" y="699.0746582620444"/>
+          <y:Geometry height="153.0" width="367.578125" x="142.8214158622809" y="-350.0643032628192"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="71.20263671875" x="148.187744140625" y="3.0">PlayerInter<y:LabelModel>
@@ -232,7 +230,7 @@ Update() : void</y:MethodLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="86.59375" width="133.203125" x="372.45653245339577" y="741.6393859397376"/>
+          <y:Geometry height="86.59375" width="133.203125" x="557.6359791507125" y="-307.49957558512597"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="35.7890625" x="48.70703125" y="3.0">State<y:LabelModel>
@@ -255,7 +253,7 @@ rot : Quaternion</y:AttributeLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="340.0307204800815" width="252.34375" x="1302.2100037251016" y="469.36623042751955"/>
+          <y:Geometry height="340.0307204800815" width="252.34375" x="717.0929815740667" y="-828.5265115847379"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="89.2236328125" x="81.56005859375" y="3.0">InputManager<y:LabelModel>
@@ -294,7 +292,7 @@ GetPlayer() : PhotoPlayer</y:MethodLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="195.44045962921348" width="266.015625" x="1614.4475927272724" y="609.7620389462217"/>
+          <y:Geometry height="195.44045962921348" width="266.015625" x="1029.3305705762375" y="-688.1307030660358"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="102.9853515625" x="81.51513671875" y="3.0">CharacterMover<y:LabelModel>
@@ -323,7 +321,7 @@ GetPlayer() : PhotoPlayer</y:MethodLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="282.43129193564846" width="212.0" x="1434.8919287251017" y="50.19058966803186"/>
+          <y:Geometry height="282.43129193564846" width="212.0" x="773.9476264269897" y="-1152.747589342654"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="96.49169921875" x="57.754150390625" y="3.0">PlayerManager<y:LabelModel>
@@ -357,7 +355,7 @@ Respawn() : void</y:MethodLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="203.7812499999999" width="212.0" x="268.99023437500045" y="1074.9108072916665"/>
+          <y:Geometry height="203.7812499999999" width="212.0" x="365.87268944076266" y="-140.33302170361412"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="84.9453125" x="63.52734375" y="3.0">PlayerPhysic<y:LabelModel>
@@ -386,7 +384,7 @@ ApplyForce(Vector3) : void</y:MethodLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="110.03125" width="133.203125" x="571.5253906249995" y="1074.9108072916665"/>
+          <y:Geometry height="110.03125" width="133.203125" x="668.4078456907617" y="-140.33302170361412"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="39.40087890625" x="46.901123046875" y="3.0">Force<y:LabelModel>
@@ -409,7 +407,7 @@ ToString() : string</y:MethodLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="121.44561220633301" width="195.703125" x="1147.957091365551" y="287.6680308820982"/>
+          <y:Geometry height="121.44561220633301" width="195.703125" x="437.8386655995388" y="-746.6627773420709"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="118.1435546875" x="38.77978515625" y="3.0">RocketFightPlayer<y:LabelModel>
@@ -433,7 +431,7 @@ ToString() : string</y:MethodLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="139.328125" width="195.703125" x="193.6578358975995" y="-264.8487376175732"/>
+          <y:Geometry height="139.328125" width="195.703125" x="2136.8272693626855" y="-514.1873816442157"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="129.6708984375" x="33.01611328125" y="3.0">ExplosionAnimation<y:LabelModel>
@@ -458,7 +456,7 @@ Update() : void</y:MethodLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="294.2210777579161" width="200.28125" x="1971.4051484390957" y="469.3662304275195"/>
+          <y:Geometry height="294.2210777579161" width="200.28125" x="516.8117315740667" y="-1152.747589342654"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="47.34814453125" x="76.466552734375" y="3.0">Rocket<y:LabelModel>
@@ -519,7 +517,7 @@ HexToRGB(string) : Color</y:MethodLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="62.1875" width="195.703125" x="193.6578358975995" y="-106.0472071017407"/>
+          <y:Geometry height="62.1875" width="195.703125" x="2136.8272693626855" y="-355.38585112838336"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="87.0654296875" x="54.31884765625" y="3.0">LoadToGame<y:LabelModel>
@@ -561,7 +559,7 @@ HexToRGB(string) : Color</y:MethodLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="91.08337992849846" width="212.0" x="383.0" y="39.33357978485674"/>
+          <y:Geometry height="91.08337992849846" width="212.0" x="1029.3305705762375" y="-408.66599580026923"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="141.9599609375" x="35.02001953125" y="3.0">AutoDestructShuriken<y:LabelModel>
@@ -583,7 +581,7 @@ CheckIfAlive() : IEnumerator</y:MethodLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="62.1875" width="262.4195546475995" x="-98.76171875" y="-265.1779439851464"/>
+          <y:Geometry height="62.1875" width="262.4195546475995" x="1844.407714715086" y="-514.516588011789"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="custom" textColor="#000000" visible="true" width="118.09912109375" x="72.16021677692476" y="3.0">LoadingAnimation<y:LabelModel>
@@ -781,7 +779,6 @@ OnClick() : void</y:MethodLabel>
       </data>
     </node>
     <edge id="e0" source="n7" target="n8">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="176.68381041879468" sy="-20.39362390045119" tx="-1.179061483869532" ty="-29.755226578144402"/>
@@ -792,12 +789,11 @@ OnClick() : void</y:MethodLabel>
       </data>
     </edge>
     <edge id="e1" source="n12" target="n13">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="91.73166798114494" sy="-21.68003766449965" tx="-3.8216665809072765" ty="-43.859497480638765">
-            <y:Point x="527.3550865849503" y="1155.1213946271669"/>
-            <y:Point x="527.3550865849503" y="1086.0669348110277"/>
+            <y:Point x="624.2375416507125" y="-60.12243436811377"/>
+            <y:Point x="624.2375416507125" y="-129.1768941842529"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="white_diamond" target="none"/>
@@ -807,7 +803,6 @@ OnClick() : void</y:MethodLabel>
     </edge>
     <edge id="e2" source="n5" target="n14">
       <data key="d8"/>
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="144.17884879128474" sy="-52.85913414457889" tx="-36.22744593228458" ty="-51.51485693168216"/>
@@ -819,7 +814,6 @@ OnClick() : void</y:MethodLabel>
     </edge>
     <edge id="e3" source="n9" target="n10">
       <data key="d8"/>
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="112.66831368347903" sy="-15.012850173621443" tx="-111.58164970531107" ty="-83.11352826688949"/>
@@ -831,7 +825,6 @@ OnClick() : void</y:MethodLabel>
     </edge>
     <edge id="e4" source="n11" target="n3">
       <data key="d8"/>
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="87.42621626093273" sy="-42.442801294677764" tx="-81.82926818067494" ty="-57.9237188087219"/>
