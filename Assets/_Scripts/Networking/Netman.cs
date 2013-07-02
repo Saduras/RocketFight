@@ -188,12 +188,6 @@ public class Netman : Photon.MonoBehaviour {
 				PhotonNetwork.DestroyPlayerObjects( player );
 				photonView.RPC("BackToMenu",PhotonTargets.AllBuffered);
 			}
-			
-			// free spawnpoints
-			GameObject[] gos = GameObject.FindGameObjectsWithTag(respawnTag);
-			for( int i=0; i<gos.Length; i++) {
-				gos[i].GetPhotonView().RPC("SetFree",PhotonTargets.AllBuffered);
-			}
 		}
 	}
 	
@@ -260,7 +254,16 @@ public class Netman : Photon.MonoBehaviour {
 	public void IncreaseScore(int playerID) {
 		foreach( RocketFightPlayer rfp in playerList ) {
 			if( rfp.photonPlayer.ID == playerID ) {
-				rfp.score++;	
+				rfp.score++;
+				
+				if( rfp.photonPlayer == PhotonNetwork.player ) {
+					GameObject[] characterObjects = GameObject.FindGameObjectsWithTag("Player");
+					foreach( GameObject character in characterObjects ) {
+						if( character.GetPhotonView().owner == rfp.photonPlayer ) {
+							character.GetComponent<PlayerManager>().PopupScore( 1 );
+						}
+					}
+				}
 			}
 		}
 	}

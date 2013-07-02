@@ -3,6 +3,8 @@ using System.Collections;
 
 public class PlayerManager : Photon.MonoBehaviour {
 	
+	public GameObject scorePopup;
+	
 	private Color color;
 	private PhotonPlayer lastHit;
 	private Netman netman;
@@ -41,6 +43,14 @@ public class PlayerManager : Photon.MonoBehaviour {
 	[RPC]
 	public void HitBy( PhotonPlayer player ) {
 		lastHit = player;	
+	}
+	
+	[RPC]
+	public void PopupScore(int score) {
+	 	GameObject handle = (GameObject) Instantiate(scorePopup, transform.position + Vector3.up, Quaternion.identity);
+		handle.GetComponent<UILabel>().text = "+" + score;
+		handle.GetComponent<UILabel>().color = color;
+		handle.transform.parent = GameObject.Find("UI Root 3D").transform;	
 	}
 	
 	public void OnDeath() {
