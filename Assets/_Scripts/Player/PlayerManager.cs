@@ -55,30 +55,32 @@ public class PlayerManager : Photon.MonoBehaviour {
 	
 	public void OnDeath() {
 		if( photonView.owner == PhotonNetwork.player ) {
-			if ( lastHit != null ) {
-				Debug.Log("Killed by " + lastHit.name + " [" + lastHit.ID + "]");
-				if(lastHit != photonView.owner)
-					netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,lastHit.ID);
-			}
-			if( spawnPointObj == null ) {
-				GameObject[] gos = GameObject.FindGameObjectsWithTag("Respawn");
-				foreach( GameObject go in gos ) {
-					if ( go.GetComponent<RespawnPoint>().player == photonView.owner ) {
-						spawnPointObj = go;
-						break;
+			if( requestSpawn == false ) {
+				if ( lastHit != null ) {
+					Debug.Log("Killed by " + lastHit.name + " [" + lastHit.ID + "]");
+					if(lastHit != photonView.owner)
+						netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,lastHit.ID);
+				}
+				if( spawnPointObj == null ) {
+					GameObject[] gos = GameObject.FindGameObjectsWithTag("Respawn");
+					foreach( GameObject go in gos ) {
+						if ( go.GetComponent<RespawnPoint>().player == photonView.owner ) {
+							spawnPointObj = go;
+							break;
+						}
 					}
 				}
-			}
-			
-			deathTime = Time.time;
-			requestSpawn = true;
-			mover.controlable = false;
-			mover.SetControllerMovement( Vector3.zero );
-			
-			// Reset buff if we carry it
-			ScoreBuff sb = gameObject.GetComponentInChildren<ScoreBuff>();
-			if( sb != null )
-				sb.Reset();
+				
+				deathTime = Time.time;
+				requestSpawn = true;
+				mover.controlable = false;
+				mover.SetControllerMovement( Vector3.zero );
+				
+				// Reset buff if we carry it
+				ScoreBuff sb = gameObject.GetComponentInChildren<ScoreBuff>();
+				if( sb != null )
+					sb.Reset();
+				}
 		}
 	}
 	
