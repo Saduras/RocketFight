@@ -6,7 +6,9 @@ public class ScoreBuff : MonoBehaviour {
 	public GameObject staticVFX;
 	public GameObject mobileVFX;
 	
-	public float buffDuration = 5;
+	public float buffDuration = 30;
+	public float buffIntervall = 5;
+	public int buffScoreValue = 2;
 	
 	private PhotonPlayer player;
 	private bool pickedUp = false;
@@ -27,8 +29,8 @@ public class ScoreBuff : MonoBehaviour {
 			if(Time.time - pickupTime > buffDuration) {
 				Reset();
 			}
-			if( scoreTime + 1 < Time.time ) {
-				netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,player.ID);
+			if( scoreTime + buffIntervall < Time.time ) {
+				netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,player.ID, buffScoreValue);
 				scoreTime = Time.time;
 			}
 		}

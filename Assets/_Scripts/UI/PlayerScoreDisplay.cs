@@ -6,13 +6,7 @@ public class PlayerScoreDisplay : MonoBehaviour {
 	
 	public List<GameObject> scoreElements = new List<GameObject>();
 	
-	private Netman nman;
-	
-	
-	// Use this for initialization
-	void Start () {
-		nman = GameObject.Find("PhotonNetman").GetComponent<Netman>();
-	}
+	public Netman nman;
 	
 	void OnEnable() {
 		for( int i=0; i<scoreElements.Count; i++ ) {
@@ -27,6 +21,9 @@ public class PlayerScoreDisplay : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		for( int i=0; i<nman.playerList.Count; i++ ) {
+			if(!scoreElements[i].activeSelf)
+				scoreElements[i].SetActive(true);
+			
 			scoreElements[i].GetComponentInChildren<UILabel>().text = nman.playerList[i].photonPlayer.name + ": " + nman.playerList[i].score;
 		}
 	}

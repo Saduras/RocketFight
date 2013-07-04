@@ -2,12 +2,15 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\Player\PlayerManager.cs">
     <Files>
-      <File FileName="Assets\_Scripts\UI\GameTimerLabel.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Scripts\UI\GameTimerLabel.cs" Line="24" Column="1" />
       <File FileName="Assets\_Scripts\VFX\LoadingAnimation.cs" Line="1" Column="1" />
       <File FileName="Assets\_Scripts\Arena\RespawnPoint.cs" Line="1" Column="1" />
       <File FileName="Assets\_Scripts\Networking\NetmanGUI.cs" Line="1" Column="1" />
       <File FileName="Assets\_Scripts\Networking\Netman.cs" Line="1" Column="1" />
-      <File FileName="Assets\_Scripts\Player\PlayerManager.cs" Line="50" Column="115" />
+      <File FileName="Assets\_Scripts\Player\PlayerManager.cs" Line="75" Column="27" />
+      <File FileName="Assets\_Scripts\Arena\ScoreBuff.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Scripts\UI\PlayerScoreDisplay.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Scripts\Rocket\Rocket.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -15,19 +18,10 @@
           <Node name="Assembly-CSharp" expanded="True">
             <Node name="Assets" expanded="True">
               <Node name="_Scripts" expanded="True">
-                <Node name="Arena" expanded="True" />
-                <Node name="Networking" expanded="True" />
-                <Node name="Player" expanded="True" />
-                <Node name="Rocket" expanded="True" />
-                <Node name="UI" expanded="True" selected="True">
-                  <Node name="Buttons" expanded="True" />
+                <Node name="Player" expanded="True">
+                  <Node name="PlayerManager.cs" selected="True" />
                 </Node>
-                <Node name="VFX" expanded="True" />
-              </Node>
-              <Node name="Photon Unity Networking" expanded="True">
-                <Node name="Plugins" expanded="True">
-                  <Node name="PhotonNetwork" expanded="True" />
-                </Node>
+                <Node name="UI" expanded="True" />
               </Node>
             </Node>
           </Node>

@@ -251,16 +251,16 @@ public class Netman : Photon.MonoBehaviour {
 	}
 	
 	[RPC]
-	public void IncreaseScore(int playerID) {
+	public void IncreaseScore(int playerID, int val) {
 		foreach( RocketFightPlayer rfp in playerList ) {
 			if( rfp.photonPlayer.ID == playerID ) {
-				rfp.score++;
+				rfp.score += val;
 				
 				if( rfp.photonPlayer == PhotonNetwork.player ) {
 					GameObject[] characterObjects = GameObject.FindGameObjectsWithTag("Player");
 					foreach( GameObject character in characterObjects ) {
 						if( character.GetPhotonView().owner == rfp.photonPlayer ) {
-							character.GetComponent<PlayerManager>().PopupScore( 1 );
+							character.GetComponent<PlayerManager>().PopupScore( val );
 						}
 					}
 				}
