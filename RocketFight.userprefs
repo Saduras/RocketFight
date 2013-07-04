@@ -2,30 +2,19 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\Player\PlayerManager.cs">
     <Files>
-      <File FileName="Assets\_Scripts\UI\GameTimerLabel.cs" Line="24" Column="1" />
+      <File FileName="Assets\_Scripts\UI\GameTimerLabel.cs" Line="1" Column="1" />
       <File FileName="Assets\_Scripts\VFX\LoadingAnimation.cs" Line="1" Column="1" />
       <File FileName="Assets\_Scripts\Arena\RespawnPoint.cs" Line="1" Column="1" />
       <File FileName="Assets\_Scripts\Networking\NetmanGUI.cs" Line="1" Column="1" />
       <File FileName="Assets\_Scripts\Networking\Netman.cs" Line="1" Column="1" />
-      <File FileName="Assets\_Scripts\Player\PlayerManager.cs" Line="75" Column="27" />
+      <File FileName="Assets\_Scripts\Player\PlayerManager.cs" Line="73" Column="7" />
       <File FileName="Assets\_Scripts\Arena\ScoreBuff.cs" Line="1" Column="1" />
       <File FileName="Assets\_Scripts\UI\PlayerScoreDisplay.cs" Line="1" Column="1" />
       <File FileName="Assets\_Scripts\Rocket\Rocket.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Assembly-CSharp" expanded="True">
-            <Node name="Assets" expanded="True">
-              <Node name="_Scripts" expanded="True">
-                <Node name="Player" expanded="True">
-                  <Node name="PlayerManager.cs" selected="True" />
-                </Node>
-                <Node name="UI" expanded="True" />
-              </Node>
-            </Node>
-          </Node>
-        </State>
+        <State expanded="True" />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

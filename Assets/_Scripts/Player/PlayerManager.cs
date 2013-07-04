@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerManager : Photon.MonoBehaviour {
 	
@@ -7,10 +8,12 @@ public class PlayerManager : Photon.MonoBehaviour {
 	
 	private Color color;
 	private PhotonPlayer lastHit;
+	private Hit[] hitList = new Hit[3];
 	private Netman netman;
 	private GameObject spawnPointObj;
 	
 	
+	public float assistTime = 3f;
 	public float respawnTime = 3f;
 	private float deathTime;
 	private bool requestSpawn = false;
@@ -42,7 +45,13 @@ public class PlayerManager : Photon.MonoBehaviour {
 	
 	[RPC]
 	public void HitBy( PhotonPlayer player ) {
-		lastHit = player;	
+		if( player != photonView.owner) {
+			for( int i=0; i<hitList.Length - 1; i++ ) {
+				hitList[i+1] = hitList[i];
+			}
+			
+			hitList[0] = new Hit(Time.time, player);
+		}
 	}
 	
 	[RPC]
@@ -56,10 +65,15 @@ public class PlayerManager : Photon.MonoBehaviour {
 	public void OnDeath() {
 		if( photonView.owner == PhotonNetwork.player ) {
 			if( requestSpawn == false ) {
-				if ( lastHit != null ) {
-					Debug.Log("Killed by " + lastHit.name + " [" + lastHit.ID + "]");
-					if(lastHit != photonView.owner)
-						netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,lastHit.ID);
+				if ( hitList[0] != null ) {
+					Debug.Log("Killed by " + hitList[0].player.name + " [" + hitList[0].player.ID + "]");
+					netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,hitList[0].player.ID, 2);
+					for( int i=1; i<hitList.Length; i++) {
+						if( hitList[i] != null && hitList[i].timestamp > (Time.time - assistTime) )
+							netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,hitList[i].player.ID, 1);
+					}
+					
+					hitList = new Hit[3];
 				}
 				if( spawnPointObj == null ) {
 					GameObject[] gos = GameObject.FindGameObjectsWithTag("Respawn");
@@ -87,10 +101,20 @@ public class PlayerManager : Photon.MonoBehaviour {
 	private void Respawn() {
 			mover.Teleport( spawnPointObj.transform.position );
 			transform.rotation = Quaternion.identity;
-			//rigidbody.velocity = Vector3.zero;
 			spawnPointObj.GetPhotonView().RPC("StartAnimation",PhotonTargets.All);
 			
 			mover.SetPhysicMovement( Vector3.zero );
 			mover.controlable = true;
+	}
+	
+	
+	private class Hit {
+		public float timestamp;
+		public PhotonPlayer player;
+		
+		public Hit( float time, PhotonPlayer pplayer) {
+			timestamp = time;
+			player = pplayer;
+		}
 	}
 }
