@@ -39,7 +39,7 @@ public class InputManager : Photon.MonoBehaviour {
 	public void Update () {
 		// Check for input updates
 		if( (PhotonNetwork.player == controllingPlayer && controlable) ) {
-			if( Time.time - lastShot < 0.2f ) {
+			if( Time.time - lastShot < 0.02f ) {
 				transform.LookAt( shotDir );
 				mover.SetControllerMovement( Vector3.zero );
 			} else {
