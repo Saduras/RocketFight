@@ -17,7 +17,8 @@ public class MenuPanelController : MonoBehaviour {
 	void Update() {
 		// display center GUI only if game ist 
 		if( !nman.hasSpawn ) {
-			if( lastPeerState != PhotonNetwork.connectionStateDetailed || lastPeerState == null) {
+			
+			//if( lastPeerState != PhotonNetwork.connectionStateDetailed || lastPeerState == null) {
 				
 				switch(PhotonNetwork.connectionStateDetailed) {
 				case PeerState.Disconnected:
@@ -38,7 +39,7 @@ public class MenuPanelController : MonoBehaviour {
 					break;
 				}
 				lastPeerState = PhotonNetwork.connectionStateDetailed;
-			}
+			//}
 		} else {
 			mainMenu.SetActive(false);
 			connectingPanel.SetActive(false);
