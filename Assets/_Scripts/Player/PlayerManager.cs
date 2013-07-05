@@ -89,6 +89,8 @@ public class PlayerManager : Photon.MonoBehaviour {
 				requestSpawn = true;
 				mover.controlable = false;
 				mover.SetControllerMovement( Vector3.zero );
+				GetComponent<InputManager>().controlable = false;
+				GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
 				
 				// Reset buff if we carry it
 				ScoreBuff sb = gameObject.GetComponentInChildren<ScoreBuff>();
@@ -105,6 +107,8 @@ public class PlayerManager : Photon.MonoBehaviour {
 			
 			mover.SetPhysicMovement( Vector3.zero );
 			mover.controlable = true;
+			GetComponent<InputManager>().controlable = true;
+			GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
 	}
 	
 	
