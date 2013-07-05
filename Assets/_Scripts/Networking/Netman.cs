@@ -195,7 +195,7 @@ public class Netman : Photon.MonoBehaviour {
 		string labelString = "Playerlist:\n";
 		foreach( RocketFightPlayer rfp in playerList ) {
 			labelString += "[" + ColorX.RGBToHex(rfp.color) + "]";
-			labelString += rfp.photonPlayer.name;
+			labelString += rfp.photonPlayer.name + " : (" + rfp.score + ")";
 			labelString += "[ffffff]";
 			if( rfp.photonPlayer.isMasterClient ) 
 				labelString += " (Master)";
