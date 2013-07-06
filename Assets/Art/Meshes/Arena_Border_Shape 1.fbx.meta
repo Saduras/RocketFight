@@ -1,18 +1,32 @@
 fileFormatVersion: 2
-guid: 65b1f3c579c4a4c49a1048d94eaadb3e
+guid: f7d275915662dc049a33781887b2331e
 ModelImporter:
   serializedVersion: 15
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: polySurface2
-    100004: transform12
-    400000: //RootNode
-    400002: polySurface2
-    400004: transform12
-    2300000: polySurface2
-    3300000: polySurface2
-    4300000: polySurface2
-    6400000: polySurface2
+    100000: Arena_Border_Shape
+    100002: //RootNode
+    100004: pPlane4
+    100006: pPlane5
+    100008: pPlane6
+    100010: pPlane7
+    100012: transform1
+    100014: transform2
+    100016: transform3
+    100018: transform4
+    400000: Arena_Border_Shape
+    400002: //RootNode
+    400004: pPlane4
+    400006: pPlane5
+    400008: pPlane6
+    400010: pPlane7
+    400012: transform1
+    400014: transform2
+    400016: transform3
+    400018: transform4
+    2300000: Arena_Border_Shape
+    3300000: Arena_Border_Shape
+    4300000: Arena_Border_Shape
+    6400000: Arena_Border_Shape
     9500000: //RootNode
   materials:
     importMaterials: 1
