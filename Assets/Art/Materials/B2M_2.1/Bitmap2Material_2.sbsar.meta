@@ -3992,7 +3992,7 @@ SubstanceImporter:
   - serializedVersion: 7
     name: Rocket
     prototypeName: Bitmap2Material2
-    shaderName: Bumped Specular
+    shaderName: Unlit/Texture
     inputs:
     - name: $time
       value:
@@ -4437,7 +4437,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Details_Input_Intensity
       value:
-        scalar[0]: .540000021
+        scalar[0]: 1
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -4489,13 +4489,6 @@ SubstanceImporter:
         data:
           first:
             name: _MainTex
-          second:
-            texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
-            offset: {x: 0, y: 0}
-        data:
-          first:
-            name: _BumpMap
           second:
             texture: {instanceID: 0}
             scale: {x: 1, y: 1}
