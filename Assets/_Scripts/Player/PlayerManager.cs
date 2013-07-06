@@ -91,6 +91,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	public void OnDeath() {
 		if( photonView.owner == PhotonNetwork.player ) {
 			if( requestSpawn == false ) {
+				// give score points to killer and assistances
 				if ( hitList.Count > 0 ) {
 					Debug.Log("Killed by " + hitList[hitList.Count - 1].player.name + " [" + hitList[hitList.Count - 1].player.ID + "]");
 					netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,hitList[hitList.Count -1].player.ID, 2);
@@ -99,6 +100,10 @@ public class PlayerManager : Photon.MonoBehaviour {
 							netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,hitList[i].player.ID, 1);
 					}
 				}
+				// empty hitList
+				hitList.Clear();
+				
+				// if we don't know our spawn point: find it!
 				if( spawnPointObj == null ) {
 					GameObject[] gos = GameObject.FindGameObjectsWithTag("Respawn");
 					foreach( GameObject go in gos ) {
