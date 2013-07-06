@@ -8,7 +8,8 @@ public class PlayerManager : Photon.MonoBehaviour {
 	
 	private Color color;
 	private PhotonPlayer lastHit;
-	private Hit[] hitList = new Hit[3];
+	private List<Hit> hitList = new List<Hit>();
+	public int maxHitListCount = 3;
 	private Netman netman;
 	private GameObject spawnPointObj;
 	
@@ -43,14 +44,39 @@ public class PlayerManager : Photon.MonoBehaviour {
 		GetComponentInChildren<SkinnedMeshRenderer>().material.SetColor("_Color",color);
 	}
 	
+	/**
+	 * Add an player and timeStamp to the hitList at last place 
+	 * and make sure there are no hits with the same player left.
+	 */
 	[RPC]
 	public void HitBy( PhotonPlayer player ) {
-		if( player != photonView.owner) {
-			for( int i=0; i<hitList.Length - 1; i++ ) {
-				hitList[i+1] = hitList[i];
-			}
-			
-			hitList[0] = new Hit(Time.time, player);
+		// return if you hit yourself
+		if( player == photonView.owner )
+			return;
+		
+		// return if last hit is equal new hit
+		if( hitList.Count > 0 )
+			if( hitList[hitList.Count - 1].player == player ) 
+				return;
+		
+		// find old assist entries
+		List<Hit> results = hitList.FindAll(delegate(Hit hit) {
+			if(hit.player == player) 
+				return true;
+			else
+				return false;
+		});
+		// remove old assist entries
+		foreach( Hit oldHit in results ) {
+			hitList.Remove( oldHit );	
+		}
+		
+		// add new hit
+		hitList.Add( new Hit(Time.time, player) );
+		
+		// trim hit list if it's to long now
+		while( hitList.Count > maxHitListCount ) {
+			hitList.RemoveAt(0);	
 		}
 	}
 	
@@ -65,15 +91,13 @@ public class PlayerManager : Photon.MonoBehaviour {
 	public void OnDeath() {
 		if( photonView.owner == PhotonNetwork.player ) {
 			if( requestSpawn == false ) {
-				if ( hitList[0] != null ) {
-					Debug.Log("Killed by " + hitList[0].player.name + " [" + hitList[0].player.ID + "]");
-					netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,hitList[0].player.ID, 2);
-					for( int i=1; i<hitList.Length; i++) {
+				if ( hitList.Count > 0 ) {
+					Debug.Log("Killed by " + hitList[hitList.Count - 1].player.name + " [" + hitList[hitList.Count - 1].player.ID + "]");
+					netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,hitList[hitList.Count -1].player.ID, 2);
+					for( int i=0; i<hitList.Count-1; i++) {
 						if( hitList[i] != null && hitList[i].timestamp > (Time.time - assistTime) )
 							netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,hitList[i].player.ID, 1);
 					}
-					
-					hitList = new Hit[3];
 				}
 				if( spawnPointObj == null ) {
 					GameObject[] gos = GameObject.FindGameObjectsWithTag("Respawn");
@@ -119,6 +143,10 @@ public class PlayerManager : Photon.MonoBehaviour {
 		public Hit( float time, PhotonPlayer pplayer) {
 			timestamp = time;
 			player = pplayer;
+		}
+		
+		public override string ToString() {
+			return "Hit by " + player.name + " [" + player.ID + "] at time " + timestamp;
 		}
 	}
 }
