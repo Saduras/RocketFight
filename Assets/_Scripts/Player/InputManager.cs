@@ -11,6 +11,7 @@ public class InputManager : Photon.MonoBehaviour {
 	public GameObject projectile;
 	public GameObject muzzleFlash;
 	public string groundTag = "Ground";
+	private Match match;
 	private float lastShot = 0;
 	private Vector3 shotDir = Vector3.forward;
 	
@@ -33,12 +34,13 @@ public class InputManager : Photon.MonoBehaviour {
 		mover = GetComponent<CharacterMover>();
 		anim = GetComponent<Animator>();
 		anim.speed = mover.movementSpeed / 2;
+		match = GameObject.Find("PhotonNetman").GetComponent<Match>();
 	}
 	
 	// Update is called once per frame
 	public void Update () {
 		// Check for input updates
-		if( (PhotonNetwork.player == controllingPlayer && controlable) ) {
+		if( (PhotonNetwork.player == controllingPlayer && controlable && match.running) ) {
 			if( Time.time - lastShot < 0.02f ) {
 				transform.LookAt( shotDir );
 				mover.SetControllerMovement( Vector3.zero );

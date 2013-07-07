@@ -4,9 +4,11 @@ using System.Collections;
 public class UIMenu : MonoBehaviour {
 	
 	public string arenaScene = "Arena";
+	public Match match;
 	public UIPanel mainMenuPanel;
 	public UIPanel enterNamePanel;
 	public UIPanel lobbyPanel;
+	public UIPanel inGamePanel;
 	
 	private UIState currentState;
 	private bool arenaLoaded = false;
@@ -17,7 +19,8 @@ public class UIMenu : MonoBehaviour {
 		ENTERNAME,
 		LOBBY,
 		CONNECTING,
-		INGAME
+		INGAME,
+		QUIT
 	}
 	
 	public void ChanceState(UIState newState) {
@@ -26,25 +29,33 @@ public class UIMenu : MonoBehaviour {
 			mainMenuPanel.gameObject.SetActive(true);
 			enterNamePanel.gameObject.SetActive(false);
 			lobbyPanel.gameObject.SetActive(false);
+			inGamePanel.gameObject.SetActive(false);
 			break;
 		case UIState.ENTERNAME:
 			mainMenuPanel.gameObject.SetActive(false);
 			enterNamePanel.gameObject.SetActive(true);
 			lobbyPanel.gameObject.SetActive(false);
+			inGamePanel.gameObject.SetActive(false);
 			break;
 		case UIState.LOBBY:
 			mainMenuPanel.gameObject.SetActive(false);
 			enterNamePanel.gameObject.SetActive(false);
 			lobbyPanel.gameObject.SetActive(true);
+			inGamePanel.gameObject.SetActive(false);
 			break;
 		case UIState.INGAME:
 			mainMenuPanel.gameObject.SetActive(false);
 			enterNamePanel.gameObject.SetActive(false);
 			lobbyPanel.gameObject.SetActive(false);
+			inGamePanel.gameObject.SetActive(true);
 			if(!arenaLoaded) {
 				Application.LoadLevelAdditive(arenaScene);
 				arenaLoaded = true;
 			}
+			match.RequestStart();
+			break;
+		case UIState.QUIT:
+			Application.Quit();
 			break;
 		}
 		currentState = newState;

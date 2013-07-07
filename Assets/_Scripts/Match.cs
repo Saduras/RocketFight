@@ -7,22 +7,50 @@ public class Match : Photon.MonoBehaviour {
 	public List<RocketFightPlayer> playerList = new List<RocketFightPlayer>();
 	public int maxPlayerCount = 4;
 	public bool running;
+	public bool allReady = false;
+	public bool startRequest = false;
 	public float gameTime;
 	
 	public string respawnTag = "Respawn";
 	
 	public UILabel playerListLabel;
+	public UIMenu uiMenu;
 	public GameObject playerPrefab;
 	public List<Color> freeColors = new List<Color>();
 	
 	private List<Color> usedColors = new List<Color>();
 	
+	void Update() {
+		if(running) {
+			gameTime -= Time.deltaTime;
+			if( gameTime <= 0 ) {
+				running = false;
+				if(PhotonNetwork.isMasterClient) {
+					foreach( RocketFightPlayer rfp in playerList ) {
+						PhotonNetwork.DestroyPlayerObjects(rfp.photonPlayer);	
+					}
+				}
+				uiMenu.ChanceState(UIMenu.UIState.LOBBY);
+			}
+		} else if(startRequest && allReady && PhotonNetwork.isMasterClient) {
+			photonView.RPC("StartMatch",PhotonTargets.AllBuffered);
+			startRequest = false;
+		}
+	}
 	
-	public void Init() {
+	
+	public void Reset() {
 		playerList.Clear();
 		running = false;
-		gameTime = 180;
+		gameTime = 5;
 		UpdateUIPlayerList();
+	}
+	
+	public void Init() {
+		gameTime = 5;
+		foreach( RocketFightPlayer rfp in playerList ) {
+			rfp.score = 0;	
+		}
 	}
 	
 	[RPC]
@@ -86,7 +114,7 @@ public class Match : Photon.MonoBehaviour {
 	[RPC]
 	public void LoadingFinished(PhotonPlayer player) {
 		Debug.Log("Loading finished by: " + player.name + " [" + player.ID + "]");
-		bool allFinished = true;
+		allReady = true;
 		
 		// set levelLoaded = true
 		foreach( RocketFightPlayer rfp in playerList ) {
@@ -95,20 +123,20 @@ public class Match : Photon.MonoBehaviour {
 			}
 			// check if someone is not finished yet
 			if( !rfp.levelLoaded) {
-				allFinished = false;	
+				allReady = false;	
 			}
-		}
-		
-		if( PhotonNetwork.isMasterClient ) {
-			// start match
-			photonView.RPC("Start",PhotonTargets.AllBuffered);
 		}
 	}
 	
+	public void RequestStart() {
+		startRequest = true;
+	}
+	
 	[RPC]
-	public void Start() {
+	public void StartMatch() {
 		Debug.Log("Match started!");
-		running = true;	
+		running = true;
+		Init();
 		if( PhotonNetwork.isMasterClient )
 			OrganizeSpawning();
 	}

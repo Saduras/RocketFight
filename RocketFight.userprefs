@@ -1,12 +1,38 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\Networking\Netman.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\UI\Buttons\DisconnectButton.cs">
     <Files>
-      <File FileName="Assets\_Scripts\Networking\Netman.cs" Line="13" Column="24" />
+      <File FileName="Assets\_Scripts\Match.cs" Line="33" Column="46" />
+      <File FileName="Assets\_Scripts\Networking\Netman.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Scripts\UI\GameTimerLabel.cs" Line="17" Column="17" />
+      <File FileName="Assets\_Scripts\UI\UIMenu.cs" Line="55" Column="25" />
+      <File FileName="Assets\_Scripts\UI\PlayerScoreDisplay.cs" Line="9" Column="20" />
+      <File FileName="Assets\_Scripts\UI\Buttons\ChangeUIStateButton.cs" Line="10" Column="1" />
+      <File FileName="Assets\_Scripts\Player\InputManager.cs" Line="37" Column="65" />
+      <File FileName="Assets\_Scripts\UI\Buttons\DisconnectButton.cs" Line="7" Column="30" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True" selected="True" />
+        <State expanded="True">
+          <Node name="Assembly-CSharp" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="_Scripts" expanded="True">
+                <Node name="Networking" expanded="True" />
+                <Node name="Player" expanded="True" />
+                <Node name="UI" expanded="True">
+                  <Node name="Buttons" expanded="True">
+                    <Node name="DisconnectButton.cs" selected="True" />
+                  </Node>
+                </Node>
+              </Node>
+              <Node name="Photon Unity Networking" expanded="True">
+                <Node name="Plugins" expanded="True">
+                  <Node name="PhotonNetwork" expanded="True" />
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

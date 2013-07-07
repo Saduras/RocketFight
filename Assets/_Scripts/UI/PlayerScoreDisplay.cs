@@ -6,12 +6,12 @@ public class PlayerScoreDisplay : MonoBehaviour {
 	
 	public List<GameObject> scoreElements = new List<GameObject>();
 	
-	public Netman nman;
+	public Match match;
 	
 	void OnEnable() {
 		for( int i=0; i<scoreElements.Count; i++ ) {
-			if( nman.playerList.Count > i ) {
-				scoreElements[i].GetComponentInChildren<UISlicedSprite>().color = nman.playerList[i].color;
+			if( match.playerList.Count > i ) {
+				scoreElements[i].GetComponentInChildren<UISlicedSprite>().color = match.playerList[i].color;
 			} else {
 				scoreElements[i].SetActive(false);
 			}
@@ -20,11 +20,11 @@ public class PlayerScoreDisplay : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		for( int i=0; i<nman.playerList.Count; i++ ) {
+		for( int i=0; i<match.playerList.Count; i++ ) {
 			if(!scoreElements[i].activeSelf)
 				scoreElements[i].SetActive(true);
 			
-			scoreElements[i].GetComponentInChildren<UILabel>().text = nman.playerList[i].photonPlayer.name + ": " + nman.playerList[i].score;
+			scoreElements[i].GetComponentInChildren<UILabel>().text = match.playerList[i].photonPlayer.name + ": " + match.playerList[i].score;
 		}
 	}
 }
