@@ -50,6 +50,7 @@ public class UIMenu : MonoBehaviour {
 			inGamePanel.gameObject.SetActive(true);
 			if(!arenaLoaded) {
 				Application.LoadLevelAdditive(arenaScene);
+				GameObject.Find("TempCamera").SetActive(false);
 				arenaLoaded = true;
 			}
 			match.RequestStart();
