@@ -3,6 +3,7 @@ using System.Collections;
 
 public class UIMenu : MonoBehaviour {
 	
+	public string arenaScene = "Arena";
 	public UIPanel mainMenuPanel;
 	public UIPanel enterNamePanel;
 	public UIPanel lobbyPanel;
@@ -34,8 +35,14 @@ public class UIMenu : MonoBehaviour {
 			enterNamePanel.gameObject.SetActive(false);
 			lobbyPanel.gameObject.SetActive(true);
 			break;
+		case UIState.INGAME:
+			mainMenuPanel.gameObject.SetActive(false);
+			enterNamePanel.gameObject.SetActive(false);
+			lobbyPanel.gameObject.SetActive(false);
+			if( Application.loadedLevelName != arenaScene)
+				Application.LoadLevel(arenaScene);
+			break;
 		}
-		
 		currentState = newState;
 	}
 }

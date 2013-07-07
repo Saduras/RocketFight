@@ -18,6 +18,8 @@ public class Netman : Photon.MonoBehaviour {
 	public float startTime;
 	public float gameTime = 180;
 	
+	public Match match;
+	
 	public Color[] playerColors = new Color[]{Color.red, Color.blue, Color.green, Color.yellow};
 	public List<Color> freeColors = new List<Color>();
 	public Dictionary<int, Color> usedColors = new Dictionary<int, Color>();
@@ -58,7 +60,7 @@ public class Netman : Photon.MonoBehaviour {
 						playerCountRoom = PhotonNetwork.room.playerCount;
 					}
 		
-		DisplayPlayerList();
+		//DisplayPlayerList();
 	}
 	
 	
@@ -84,8 +86,7 @@ public class Netman : Photon.MonoBehaviour {
 		}
 		
 		foreach( RocketFightPlayer rfp in removePlayer ) {
-			//playerList.Remove( rfp );	
-			photonView.RPC("RemovePlayer",PhotonTargets.All, rfp.photonPlayer.ID);
+			photonView.RPC("RemovePlayer",PhotonTargets.All, rfp.photonPlayer);
 		}
 		
 		// remove free color
@@ -126,10 +127,10 @@ public class Netman : Photon.MonoBehaviour {
 					
 					foreach( RocketFightPlayer rfp in playerList ) {
 						Vector3 colVec = new Vector3( rfp.color.r, rfp.color.g, rfp.color.b );
-						photonView.RPC("AddPlayer",PhotonPlayer.Find( playerID ), rfp.photonPlayer, colVec );	
+						photonView.RPC("AddPlayer",PhotonPlayer.Find( playerID ), rfp.photonPlayer );	
 					}
 					
-					photonView.RPC("AddPlayer",PhotonTargets.All, PhotonPlayer.Find( playerID ), rgb );
+					photonView.RPC("AddPlayer",PhotonTargets.All, PhotonPlayer.Find( playerID ) );
 				}
 			}
 		}
@@ -173,7 +174,7 @@ public class Netman : Photon.MonoBehaviour {
     public void OnJoinedRoom()
     {
         Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room. From here on, your game would be running. For reference, all callbacks are listed in enum: PhotonNetworkingMessage");
-		PhotonNetwork.LoadLevel(gameScene);
+		match.Init();
     }
 	
 	public void OnLeftRoom() {
@@ -286,7 +287,7 @@ public class Netman : Photon.MonoBehaviour {
 		
 	}
 	
-	[RPC]
+	/*[RPC]
 	public void AddPlayer(PhotonPlayer player, Vector3 rgb) {
 		RocketFightPlayer rfp = new RocketFightPlayer(player);
 		rfp.color = new Color(rgb.x, rgb.y, rgb.z, 1);
@@ -304,7 +305,7 @@ public class Netman : Photon.MonoBehaviour {
 			} 
 		}
 		Debug.Log("Did not found player: " + playerID);
-	}
+	}*/
 	
 	
 	

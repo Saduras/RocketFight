@@ -8,8 +8,9 @@ public class RocketFightPlayer {
 	public Color color = Color.white;
 	public int score = 0;
 	
-	public RocketFightPlayer( PhotonPlayer player ) {
+	public RocketFightPlayer( PhotonPlayer player, Color col ) {
 		photonPlayer = player;
+		color = col;
 	}
 	
 	
