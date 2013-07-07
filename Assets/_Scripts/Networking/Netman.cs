@@ -88,12 +88,6 @@ public class Netman : Photon.MonoBehaviour {
 		foreach( RocketFightPlayer rfp in removePlayer ) {
 			photonView.RPC("RemovePlayer",PhotonTargets.All, rfp.photonPlayer);
 		}
-		
-		// remove free color
-		foreach( int playerID in validIDs ) {
-			Color col = usedColors[playerID];
-			freeColors.Add( col );
-		}
 	}
 	
 	public void OnPlayerConnect() {
@@ -113,27 +107,15 @@ public class Netman : Photon.MonoBehaviour {
 		
 		// remove assign to usedColor
 		foreach( int playerID in validIDs ) {
-			// create RocketFightPlayer
-			//playerList.Add(new RocketFightPlayer( PhotonPlayer.Find(playerID) ));
-			
-			if( freeColors.Count > 0 ) {
-				Color col = freeColors[ freeColors.Count - 1 ];
-				freeColors.Remove( col );
-				usedColors[playerID] = col;
-				
-				// masterclient assigns color to player
-				if( PhotonNetwork.isMasterClient ) {
-					Vector3 rgb = new Vector3( col.r, col.g, col.b );
-					
-					foreach( RocketFightPlayer rfp in playerList ) {
-						Vector3 colVec = new Vector3( rfp.color.r, rfp.color.g, rfp.color.b );
-						photonView.RPC("AddPlayer",PhotonPlayer.Find( playerID ), rfp.photonPlayer );	
-					}
-					
-					photonView.RPC("AddPlayer",PhotonTargets.All, PhotonPlayer.Find( playerID ) );
+			if( PhotonNetwork.isMasterClient ) {
+				foreach( RocketFightPlayer rfp in playerList ) {
+					photonView.RPC("AddPlayer",PhotonPlayer.Find( playerID ), rfp.photonPlayer );	
 				}
+
+				photonView.RPC("AddPlayer",PhotonTargets.All, PhotonPlayer.Find( playerID ) );
 			}
 		}
+		
 	}
 	
 	
@@ -192,20 +174,6 @@ public class Netman : Photon.MonoBehaviour {
 		}
 	}
 	
-	private void DisplayPlayerList() {
-		string labelString = "Playerlist:\n";
-		foreach( RocketFightPlayer rfp in playerList ) {
-			labelString += "[" + ColorX.RGBToHex(rfp.color) + "]";
-			labelString += rfp.photonPlayer.name + " : (" + rfp.score + ")";
-			labelString += "[ffffff]";
-			if( rfp.photonPlayer.isMasterClient ) 
-				labelString += " (Master)";
-			labelString += "\n";
-		}
-		
-		playerListLabel.text = labelString;
-	}
-	
 	[RPC]
 	public void BackToMenu() {
 		hasSpawn = false;
@@ -218,32 +186,6 @@ public class Netman : Photon.MonoBehaviour {
 				return rfp;
 		}
 		return null;
-	}
-	
-	public void OrganizeSpawning() {
-		if( Application.loadedLevelName == gameScene) {
-			// find spawnpoints
-			GameObject[] gos = GameObject.FindGameObjectsWithTag(respawnTag);
-			List<GameObject> spawnPoints = new List<GameObject>(gos);
-			
-			foreach( RocketFightPlayer rfp in playerList ) {
-				// choose random spawn point
-				int randIndex = Mathf.RoundToInt(Random.Range(0, spawnPoints.Count));
-				GameObject sp = spawnPoints[randIndex];
-				spawnPoints.RemoveAt(randIndex);
-					
-				Vector3 rgb = new Vector3( rfp.color.r, rfp.color.g,rfp.color.b );
-				
-				// assign spawpoint
-				sp.GetPhotonView().RPC("AssignTo",PhotonTargets.AllBuffered,rfp.photonPlayer);
-				sp.GetPhotonView().RPC("SetColor",PhotonTargets.AllBuffered,rgb);
-				
-				// spawn player incl. color
-				photonView.RPC("SpawnPlayer",rfp.photonPlayer,sp.transform.position, rgb);
-				// init score
-				photonView.RPC("SetScore",PhotonTargets.AllBuffered, rfp.photonPlayer.ID, 0);
-			}
-		}
 	}
 	
 	[RPC]
@@ -267,24 +209,6 @@ public class Netman : Photon.MonoBehaviour {
 				}
 			}
 		}
-	}
-	
-	/**
-	 * Called when new level was loaded.
-	 * If we loaded the game scene, find a respawn point for you.
-	 * Then spawn your player object at this spawn point.
-	 */
-	[RPC]
-	public void SpawnPlayer(Vector3 spawnPt, Vector3 rgb) {
-		if( Application.loadedLevelName == gameScene) {
-			startTime = Time.time;
-			Debug.Log("Instatiate player at " + spawnPt);
-			GameObject handle = PhotonNetwork.Instantiate(playerPrefab.name,spawnPt,Quaternion.identity,0);
-			handle.GetComponent<InputManager>().SendMessage("SetPlayer", PhotonNetwork.player);
-			handle.GetPhotonView().RPC("SetColor",PhotonTargets.AllBuffered,rgb);
-			hasSpawn = true;
-		}
-		
 	}
 	
 	/*[RPC]

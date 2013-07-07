@@ -71,7 +71,7 @@ public class NetmanGUI : Photon.MonoBehaviour {
 				// Display "start game" button
 				if (PhotonNetwork.room != null && PhotonNetwork.isMasterClient) {
 					if (GUILayout.Button("Start game!")) {
-						this.gameObject.GetComponent<Netman>().OrganizeSpawning();
+//						this.gameObject.GetComponent<Netman>().OrganizeSpawning();
 						PhotonNetwork.room.open = false;
 						PhotonNetwork.room.visible = false;
 					}

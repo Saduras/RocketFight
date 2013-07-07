@@ -9,6 +9,8 @@ public class UIMenu : MonoBehaviour {
 	public UIPanel lobbyPanel;
 	
 	private UIState currentState;
+	private bool arenaLoaded = false;
+	private bool sent = false;
 	
 	public enum UIState {
 		MAINMENU,
@@ -39,10 +41,19 @@ public class UIMenu : MonoBehaviour {
 			mainMenuPanel.gameObject.SetActive(false);
 			enterNamePanel.gameObject.SetActive(false);
 			lobbyPanel.gameObject.SetActive(false);
-			if( Application.loadedLevelName != arenaScene)
-				Application.LoadLevel(arenaScene);
+			if(!arenaLoaded) {
+				Application.LoadLevelAdditive(arenaScene);
+				arenaLoaded = true;
+			}
 			break;
 		}
 		currentState = newState;
+	}
+	
+	void Update() {
+		if(!Application.isLoadingLevel && arenaLoaded && !sent) {	
+			GameObject.Find("PhotonNetman").GetPhotonView().RPC("LoadingFinished",PhotonTargets.AllBuffered,PhotonNetwork.player);
+			sent = true;
+		}
 	}
 }

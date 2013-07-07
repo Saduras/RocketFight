@@ -7,6 +7,7 @@ public class RocketFightPlayer {
 	public PhotonPlayer photonPlayer;
 	public Color color = Color.white;
 	public int score = 0;
+	public bool levelLoaded = false;
 	
 	public RocketFightPlayer( PhotonPlayer player, Color col ) {
 		photonPlayer = player;
