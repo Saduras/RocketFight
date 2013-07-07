@@ -42,12 +42,13 @@ public class Match : Photon.MonoBehaviour {
 	public void Reset() {
 		playerList.Clear();
 		running = false;
-		gameTime = 5;
+		startRequest = false;
+		gameTime = 15;
 		UpdateUIPlayerList();
 	}
 	
 	public void Init() {
-		gameTime = 5;
+		gameTime = 15;
 		foreach( RocketFightPlayer rfp in playerList ) {
 			rfp.score = 0;	
 		}
@@ -178,7 +179,35 @@ public class Match : Photon.MonoBehaviour {
 			// spawn player incl. color
 			photonView.RPC("SpawnPlayer",rfp.photonPlayer,sp.transform.position, rgb);
 			// init score
-			photonView.RPC("SetScore",PhotonTargets.AllBuffered, rfp.photonPlayer.ID, 0);
+			photonView.RPC("SetScore",PhotonTargets.AllBuffered, rfp.photonPlayer, 0);
+		}
+	}
+	
+	[RPC]
+	public void IncreaseScore(int playerID, int val) {
+		foreach( RocketFightPlayer rfp in playerList ) {
+			if( rfp.photonPlayer.ID == playerID ) {
+				rfp.score += val;
+				
+				if( rfp.photonPlayer == PhotonNetwork.player ) {
+					GameObject[] characterObjects = GameObject.FindGameObjectsWithTag("Player");
+					foreach( GameObject character in characterObjects ) {
+						if( character.GetPhotonView().owner == rfp.photonPlayer ) {
+							character.GetComponent<PlayerManager>().PopupScore( val );
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	[RPC]
+	public void SetScore(PhotonPlayer target, int val) {
+		foreach( RocketFightPlayer rfp in playerList ) {
+			if( rfp.photonPlayer == target ) {
+				rfp.score = val;
+				return;
+			}
 		}
 	}
 }

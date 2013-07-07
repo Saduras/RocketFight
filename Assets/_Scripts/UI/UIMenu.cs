@@ -42,6 +42,7 @@ public class UIMenu : MonoBehaviour {
 			enterNamePanel.gameObject.SetActive(false);
 			lobbyPanel.gameObject.SetActive(true);
 			inGamePanel.gameObject.SetActive(false);
+			match.UpdateUIPlayerList();
 			break;
 		case UIState.INGAME:
 			mainMenuPanel.gameObject.SetActive(false);

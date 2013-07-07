@@ -188,29 +188,6 @@ public class Netman : Photon.MonoBehaviour {
 		return null;
 	}
 	
-	[RPC]
-	public void SetScore(int playerID, int val) {
-		playerScores[playerID] = val;
-	}
-	
-	[RPC]
-	public void IncreaseScore(int playerID, int val) {
-		foreach( RocketFightPlayer rfp in playerList ) {
-			if( rfp.photonPlayer.ID == playerID ) {
-				rfp.score += val;
-				
-				if( rfp.photonPlayer == PhotonNetwork.player ) {
-					GameObject[] characterObjects = GameObject.FindGameObjectsWithTag("Player");
-					foreach( GameObject character in characterObjects ) {
-						if( character.GetPhotonView().owner == rfp.photonPlayer ) {
-							character.GetComponent<PlayerManager>().PopupScore( val );
-						}
-					}
-				}
-			}
-		}
-	}
-	
 	/*[RPC]
 	public void AddPlayer(PhotonPlayer player, Vector3 rgb) {
 		RocketFightPlayer rfp = new RocketFightPlayer(player);
