@@ -4045,7 +4045,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Sharpen
       value:
-        scalar[0]: 0
+        scalar[0]: .100000001
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -4087,7 +4087,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Depth_Balance
       value:
-        scalar[0]: .349999994
+        scalar[0]: 0
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -4178,7 +4178,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Recognition_Intensity
       value:
-        scalar[0]: .790000021
+        scalar[0]: .5
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -4213,7 +4213,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Specular_Diffuse_Influence
       value:
-        scalar[0]: .389999986
+        scalar[0]: .200000003
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -4248,7 +4248,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: AO_Multiply
       value:
-        scalar[0]: .819999993
+        scalar[0]: 0
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -4290,7 +4290,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Curvature_In_Diffuse
       value:
-        scalar[0]: 1
+        scalar[0]: 0
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -4311,7 +4311,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Light_Equalizer
       value:
-        scalar[0]: .409999996
+        scalar[0]: 0
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -4437,7 +4437,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Details_Input_Intensity
       value:
-        scalar[0]: 1
+        scalar[0]: 0
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -4455,7 +4455,7 @@ SubstanceImporter:
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
-        texture: {fileID: 2800000, guid: 2fb43101f3412864bbfc9516b3b4241b, type: 3}
+        texture: {fileID: 2800000, guid: 9c60b860b8bb01a4a88d2a8940afd09e, type: 3}
     - name: Bitmap_Relief_optional
       value:
         scalar[0]: 0
@@ -4481,8 +4481,8 @@ SubstanceImporter:
       serializedVersion: 5
       offset: {x: 0, y: 0}
       scale: {x: 1, y: 1}
-      generateAllOutputs: 0
-      animationUpdateRate: 0
+      generateAllOutputs: 1
+      animationUpdateRate: 42
     materialProperties:
       serializedVersion: 2
       texEnvs:
@@ -4534,6 +4534,36 @@ SubstanceImporter:
       aniso: 1
       wrapMode: 0
     - name: Rocket_Normal
+      alphaSource: 0
+      filterMode: 1
+      aniso: 1
+      wrapMode: 0
+    - name: Rocket_Bump
+      alphaSource: 0
+      filterMode: 1
+      aniso: 1
+      wrapMode: 0
+    - name: Rocket_Displacement
+      alphaSource: 0
+      filterMode: 1
+      aniso: 1
+      wrapMode: 0
+    - name: Rocket_Height
+      alphaSource: 0
+      filterMode: 1
+      aniso: 1
+      wrapMode: 0
+    - name: Rocket_AmbientOcclusion
+      alphaSource: 0
+      filterMode: 1
+      aniso: 1
+      wrapMode: 0
+    - name: Rocket_Curvature
+      alphaSource: 0
+      filterMode: 1
+      aniso: 1
+      wrapMode: 0
+    - name: Rocket_Opacity
       alphaSource: 0
       filterMode: 1
       aniso: 1
