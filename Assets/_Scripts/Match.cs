@@ -12,6 +12,7 @@ public class Match : Photon.MonoBehaviour {
 	public float gameTime;
 	
 	public float matchLength = 120;
+	public string arenaScene = "Arena";
 	
 	public string respawnTag = "Respawn";
 	
@@ -21,6 +22,8 @@ public class Match : Photon.MonoBehaviour {
 	public List<Color> freeColors = new List<Color>();
 	
 	private List<Color> usedColors = new List<Color>();
+	private bool arenaLoaded = false;
+	private bool sent = false;
 	
 	void Update() {
 		if(running) {
@@ -37,6 +40,12 @@ public class Match : Photon.MonoBehaviour {
 		} else if(startRequest && allReady && PhotonNetwork.isMasterClient) {
 			photonView.RPC("StartMatch",PhotonTargets.AllBuffered);
 			startRequest = false;
+		}
+		
+		// finshed loading level
+		if(!Application.isLoadingLevel && arenaLoaded && !sent) {	
+			photonView.RPC("LoadingFinished",PhotonTargets.AllBuffered,PhotonNetwork.player);
+			sent = true;
 		}
 	}
 	
@@ -133,6 +142,11 @@ public class Match : Photon.MonoBehaviour {
 	
 	[RPC]
 	public void RequestStart() {
+		if(!arenaLoaded) {
+			Application.LoadLevelAdditive(arenaScene);
+			GameObject.Find("TempCamera").SetActive(false);
+			arenaLoaded = true;
+		}
 		startRequest = true;
 	}
 	

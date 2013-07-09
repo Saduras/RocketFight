@@ -1,9 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class UIMenu : MonoBehaviour {
+public class UIMenu : Photon.MonoBehaviour {
 	
-	public string arenaScene = "Arena";
 	public Match match;
 	public UIPanel mainMenuPanel;
 	public UIPanel enterNamePanel;
@@ -11,8 +10,6 @@ public class UIMenu : MonoBehaviour {
 	public UIPanel inGamePanel;
 	
 	private UIState currentState;
-	private bool arenaLoaded = false;
-	private bool sent = false;
 	
 	public enum UIState {
 		MAINMENU,
@@ -49,13 +46,11 @@ public class UIMenu : MonoBehaviour {
 			enterNamePanel.gameObject.SetActive(false);
 			lobbyPanel.gameObject.SetActive(false);
 			inGamePanel.gameObject.SetActive(true);
-			//TODO: load level on all clients in the room
-			if(!arenaLoaded) {
-				Application.LoadLevelAdditive(arenaScene);
-				GameObject.Find("TempCamera").SetActive(false);
-				arenaLoaded = true;
+			
+			if(PhotonNetwork.isMasterClient) {
+				photonView.RPC("ChangeToInGame",PhotonTargets.Others);
+				match.photonView.RPC("RequestStart",PhotonTargets.AllBuffered);
 			}
-			match.photonView.RPC("RequestStart",PhotonTargets.AllBuffered);
 			break;
 		case UIState.QUIT:
 			Application.Quit();
@@ -64,10 +59,12 @@ public class UIMenu : MonoBehaviour {
 		currentState = newState;
 	}
 	
-	void Update() {
-		if(!Application.isLoadingLevel && arenaLoaded && !sent) {	
-			GameObject.Find("PhotonNetman").GetPhotonView().RPC("LoadingFinished",PhotonTargets.AllBuffered,PhotonNetwork.player);
-			sent = true;
-		}
+	[RPC]
+	public void ChangeToInGame() {
+		mainMenuPanel.gameObject.SetActive(false);
+		enterNamePanel.gameObject.SetActive(false);
+		lobbyPanel.gameObject.SetActive(false);
+		inGamePanel.gameObject.SetActive(true);
 	}
+	
 }

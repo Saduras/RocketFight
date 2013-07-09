@@ -105,7 +105,7 @@ public class InputManager : Photon.MonoBehaviour {
 			Vector3 pos = this.transform.position + direction.normalized * 0.7f + Vector3.up * 0.5f;
 			PhotonNetwork.Instantiate(muzzleFlash.name,
 										pos, 
-										this.transform.rotation, 0);
+										Quaternion.LookRotation(direction), 0);
 			GameObject handle = PhotonNetwork.Instantiate(projectile.name, 
 										pos, 
 										this.transform.rotation, 0);
