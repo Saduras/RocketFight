@@ -3429,7 +3429,7 @@ SubstanceImporter:
   - serializedVersion: 7
     name: Building
     prototypeName: Bitmap2Material2
-    shaderName: Bumped Specular
+    shaderName: Unlit/Texture
     inputs:
     - name: $time
       value:
@@ -3482,7 +3482,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Sharpen
       value:
-        scalar[0]: .300000012
+        scalar[0]: 0
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -3524,7 +3524,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Depth_Balance
       value:
-        scalar[0]: -.819999993
+        scalar[0]: 1
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -3650,7 +3650,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Specular_Diffuse_Influence
       value:
-        scalar[0]: .409999996
+        scalar[0]: .349999994
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -3685,7 +3685,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: AO_Multiply
       value:
-        scalar[0]: .720000029
+        scalar[0]: .439999998
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -3727,7 +3727,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Curvature_In_Diffuse
       value:
-        scalar[0]: .75999999
+        scalar[0]: 1
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -3748,7 +3748,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Light_Equalizer
       value:
-        scalar[0]: .140000001
+        scalar[0]: .430000007
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -3874,7 +3874,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Details_Input_Intensity
       value:
-        scalar[0]: .689999998
+        scalar[0]: 1
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -3892,7 +3892,7 @@ SubstanceImporter:
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
-        texture: {fileID: 2800000, guid: 710ae33cb1714aa4c940b2749435671f, type: 3}
+        texture: {fileID: 2800000, guid: 043b4c757e4bf1344935469f9e815b78, type: 3}
     - name: Bitmap_Relief_optional
       value:
         scalar[0]: 0
@@ -3926,13 +3926,6 @@ SubstanceImporter:
         data:
           first:
             name: _MainTex
-          second:
-            texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
-            offset: {x: 0, y: 0}
-        data:
-          first:
-            name: _BumpMap
           second:
             texture: {instanceID: 0}
             scale: {x: 1, y: 1}
@@ -3988,7 +3981,7 @@ SubstanceImporter:
       textureWidth: 512
       textureHeight: 512
       textureFormat: 0
-      loadingBehavior: 1
+      loadingBehavior: 2
   - serializedVersion: 7
     name: Rocket
     prototypeName: Bitmap2Material2
