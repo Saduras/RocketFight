@@ -51,7 +51,7 @@ public class Rocket : Photon.MonoBehaviour {
 	void Update () {
 		switch( flightPath ) {
 		case FlightPath.linear:
-			this.transform.Translate( Vector3.back * speed * Time.deltaTime );
+			this.transform.Translate( Vector3.forward * speed * Time.deltaTime );
 			break;
 		case FlightPath.ballisitic:
 			// Mathf.Cos and Sin working with radians, so we need to convert the angle

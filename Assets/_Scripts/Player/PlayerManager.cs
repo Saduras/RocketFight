@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class PlayerManager : Photon.MonoBehaviour {
 	
 	public GameObject scorePopup;
+	public GameObject deathVFX;
 	
 	private Color color;
 	private PhotonPlayer lastHit;
@@ -119,7 +120,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 				mover.controlable = false;
 				mover.SetControllerMovement( Vector3.zero );
 				GetComponent<InputManager>().controlable = false;
-				GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+				photonView.RPC("ShowDeath",PhotonTargets.All);
 				
 				// Reset buff if we carry it
 				ScoreBuff sb = gameObject.GetComponentInChildren<ScoreBuff>();
@@ -127,6 +128,13 @@ public class PlayerManager : Photon.MonoBehaviour {
 					sb.Reset();
 				}
 		}
+	}
+	
+	[RPC]
+	public void ShowDeath() {
+		GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+		GetComponentInChildren<MeshRenderer>().enabled = false;
+		PhotonNetwork.Instantiate(deathVFX.name,transform.position,Quaternion.identity,0);
 	}
 	
 	private void Respawn() {
@@ -137,7 +145,13 @@ public class PlayerManager : Photon.MonoBehaviour {
 			mover.SetPhysicMovement( Vector3.zero );
 			mover.controlable = true;
 			GetComponent<InputManager>().controlable = true;
-			GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
+			photonView.RPC("ShowRespawn",PhotonTargets.AllBuffered);
+	}
+	
+	[RPC]
+	public void ShowRespawn() {
+		GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
+		GetComponentInChildren<MeshRenderer>().enabled = true;
 	}
 	
 	

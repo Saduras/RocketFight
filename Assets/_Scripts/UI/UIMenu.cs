@@ -49,12 +49,13 @@ public class UIMenu : MonoBehaviour {
 			enterNamePanel.gameObject.SetActive(false);
 			lobbyPanel.gameObject.SetActive(false);
 			inGamePanel.gameObject.SetActive(true);
+			//TODO: load level on all clients in the room
 			if(!arenaLoaded) {
 				Application.LoadLevelAdditive(arenaScene);
 				GameObject.Find("TempCamera").SetActive(false);
 				arenaLoaded = true;
 			}
-			match.RequestStart();
+			match.photonView.RPC("RequestStart",PhotonTargets.AllBuffered);
 			break;
 		case UIState.QUIT:
 			Application.Quit();

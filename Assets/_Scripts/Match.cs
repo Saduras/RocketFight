@@ -11,6 +11,8 @@ public class Match : Photon.MonoBehaviour {
 	public bool startRequest = false;
 	public float gameTime;
 	
+	public float matchLength = 120;
+	
 	public string respawnTag = "Respawn";
 	
 	public UILabel playerListLabel;
@@ -43,12 +45,12 @@ public class Match : Photon.MonoBehaviour {
 		playerList.Clear();
 		running = false;
 		startRequest = false;
-		gameTime = 15;
+		gameTime = matchLength;
 		UpdateUIPlayerList();
 	}
 	
 	public void Init() {
-		gameTime = 15;
+		gameTime = matchLength;
 		foreach( RocketFightPlayer rfp in playerList ) {
 			rfp.score = 0;	
 		}
@@ -129,6 +131,7 @@ public class Match : Photon.MonoBehaviour {
 		}
 	}
 	
+	[RPC]
 	public void RequestStart() {
 		startRequest = true;
 	}
