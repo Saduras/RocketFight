@@ -108,12 +108,12 @@ public class InputManager : Photon.MonoBehaviour {
 										Quaternion.LookRotation(direction), 0);
 			GameObject handle = PhotonNetwork.Instantiate(projectile.name, 
 										pos, 
-										this.transform.rotation, 0);
-			handle.transform.LookAt( handle.transform.position + direction );
+										Quaternion.LookRotation(direction), 0);
+			//handle.transform.LookAt( handle.transform.position + direction );
 			// hack for strange model...
 			//handle.transform.LookAt( handle.transform.position - direction );
 			
-			handle.SendMessage("SetRange", Vector3.Distance(pos, mousePos) );
+			//handle.SendMessage("SetRange", Vector3.Distance(pos, mousePos) );
 			lastShot = Time.time;
 			shotDir = transform.position + direction;
 		}
