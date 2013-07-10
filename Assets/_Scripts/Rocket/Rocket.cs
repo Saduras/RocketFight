@@ -10,8 +10,9 @@ public class Rocket : Photon.MonoBehaviour {
 	public float lifetime = 3;
 	public float explosionRange = 2;
 	public float explosionForce = 20;
-	public FlightPath flightPath = FlightPath.ballisitic;
-	public float ballisticAngle = 60f;
+	
+	public Vector3 target;
+	
 	public GameObject explosion;
 	public string playerTag = "Player";
 	
@@ -27,8 +28,8 @@ public class Rocket : Photon.MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
-		birthTime = Time.time;
+	void Awake () {
+		birthTime = (float) PhotonNetwork.time;
 		
 		if(zoneRadii.Count < 1 || zoneStrength.Count != zoneRadii.Count ) {
 			Debug.LogError("You must define atleast one explosion zone (radius & strength) for the Rocket!");	
@@ -47,28 +48,39 @@ public class Rocket : Photon.MonoBehaviour {
 		}*/
 	}
 	
+	[RPC]
+	public void InstatiateTimeStamp(float timestamp) {		
+		
+		if( birthTime - timestamp <= 0 )
+			return;
+		
+		Debug.Log("Forward by: " + (birthTime - timestamp));
+		
+		UpdateInternal( birthTime - timestamp );
+	}
+	
+	[RPC]
+	public void SetTarget(Vector3 targetPos) {
+		Debug.Log("Target Pos: " + targetPos);
+		target = targetPos;
+	}
+	
 	// Update is called once per frame
 	void Update () {
-		switch( flightPath ) {
-		case FlightPath.linear:
-			this.transform.Translate( Vector3.forward * speed * Time.deltaTime );
-			break;
-		case FlightPath.ballisitic:
-			// Mathf.Cos and Sin working with radians, so we need to convert the angle
-			// float alpha = Mathf.Deg2Rad * ballisticAngle; 
-			// Vector3 move = Vector3.forward * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha);
-			//this.transform.Translate( move * Time.deltaTime );
-			break;
-		case FlightPath.controlled:
-			this.transform.Translate( Vector3.forward * speed * Time.deltaTime );
-			if( Input.GetButtonDown("Fire1") && (Time.time - birthTime > 0.1) ) {
-				Explode();
-				PhotonNetwork.Destroy( this.gameObject );
-			}
-			break;
-		}
+		UpdateInternal( Time.deltaTime );
+	}
 		
-		if ( (birthTime + lifetime < Time.time) && ((photonView.owner == PhotonNetwork.player)) ) {
+	private void UpdateInternal(float deltaTime) {
+		this.transform.Translate( Vector3.forward * speed * deltaTime );
+		
+		Vector3 tmp = transform.position;
+		tmp.y = 0;
+		if( (tmp - target).magnitude < 0.2f && photonView.owner == PhotonNetwork.player) {
+			Explode();
+			PhotonNetwork.Destroy( this.gameObject );
+		}
+			
+		if ( (birthTime + lifetime < PhotonNetwork.time) && ((photonView.owner == PhotonNetwork.player)) ) {
 			PhotonNetwork.Destroy( this.gameObject );	
 		}
 	}
@@ -77,17 +89,6 @@ public class Rocket : Photon.MonoBehaviour {
 		if ( photonView.owner == PhotonNetwork.player ) {
 			Explode();
 			PhotonNetwork.Destroy( this.gameObject );
-		}
-	}
-	
-	public void SetRange(float range) {
-		if( flightPath == FlightPath.ballisitic) {
-			// Mathf.Cos and Sin working with radians, so we need to convert the angle
-			float alpha = Mathf.Deg2Rad * ballisticAngle;
-			speed = Mathf.Sqrt( (range * Physics.gravity.magnitude) / Mathf.Sin(2 * alpha) );
-			// Vector3 force = (Vector3.forward * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha));
-			Debug.Log( Vector3.forward );
-			this.rigidbody.AddRelativeForce( Vector3.back * speed * Mathf.Cos(alpha) + Vector3.up * speed * Mathf.Sin(alpha), ForceMode.VelocityChange );
 		}
 	}
 	

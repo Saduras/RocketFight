@@ -5,9 +5,31 @@ using System.Collections;
 public class RespawnPoint : Photon.MonoBehaviour {
 	
 	public GameObject particleEffectSystem;
+	public GameObject pointer;
 	public Color color;
 	public PhotonPlayer player;
+	
+	private PlayerManager pman;
 
+	void Update() {
+		if( pman != null ) {
+			if( pman.IsDead() ) {		
+				photonView.RPC("SetPointer",PhotonTargets.All,true);
+			} else {
+				photonView.RPC("SetPointer",PhotonTargets.All,false);
+			}
+		}
+	}
+	
+	[RPC]
+	public void SetPointer( bool val ) {
+		pointer.SetActive( val );
+	}
+	
+	
+	public void SetPMan( PlayerManager playermanager ) {
+		pman = playermanager;
+	}
 	
 	[RPC]
 	public void SetColor( Vector3 rgb ) {
@@ -18,6 +40,7 @@ public class RespawnPoint : Photon.MonoBehaviour {
 		foreach( ParticleSystem particle in ps ) {
 			particle.startColor = color;
 		}
+		pointer.renderer.material.color = color;
 	}
 	
 	[RPC]

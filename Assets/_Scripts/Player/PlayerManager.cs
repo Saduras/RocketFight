@@ -7,6 +7,15 @@ public class PlayerManager : Photon.MonoBehaviour {
 	public GameObject scorePopup;
 	public GameObject deathVFX;
 	
+	// stuff for explosion on respawn
+	public GameObject explosion;
+	public string playerTag = "Player";
+	public float explosionForce = 4;
+	public List<float> zoneRadii = new List<float>();
+	public List<float> zoneStrength = new List<float>();
+	
+	
+	
 	private Color color;
 	private PhotonPlayer lastHit;
 	private List<Hit> hitList = new List<Hit>();
@@ -37,6 +46,14 @@ public class PlayerManager : Photon.MonoBehaviour {
 				requestSpawn = false;	
 			}
 		}
+	}
+	
+	public bool IsDead() {
+		return requestSpawn;	
+	}
+	
+	public void SetSpawnPoint( Vector3 position ) {
+		spawnPointObj.transform.position = position;
 	}
 	
 	[RPC]
@@ -110,6 +127,8 @@ public class PlayerManager : Photon.MonoBehaviour {
 					foreach( GameObject go in gos ) {
 						if ( go.GetComponent<RespawnPoint>().player == photonView.owner ) {
 							spawnPointObj = go;
+							spawnPointObj.GetComponent<RespawnPoint>().SetPMan( this );
+							//spawnPointObj.GetPhotonView().viewID = PhotonNetwork.AllocateViewID();
 							break;
 						}
 					}
@@ -138,20 +157,44 @@ public class PlayerManager : Photon.MonoBehaviour {
 	}
 	
 	private void Respawn() {
-			mover.Teleport( spawnPointObj.transform.position );
-			transform.rotation = Quaternion.identity;
-			spawnPointObj.GetPhotonView().RPC("StartAnimation",PhotonTargets.All);
-			
-			mover.SetPhysicMovement( Vector3.zero );
-			mover.controlable = true;
-			GetComponent<InputManager>().controlable = true;
-			photonView.RPC("ShowRespawn",PhotonTargets.AllBuffered);
+		mover.Teleport( spawnPointObj.transform.position );
+		transform.rotation = Quaternion.identity;
+		spawnPointObj.GetPhotonView().RPC("StartAnimation",PhotonTargets.All);
+		
+		mover.SetPhysicMovement( Vector3.zero );
+		mover.controlable = true;
+		GetComponent<InputManager>().controlable = true;
+		photonView.RPC("ShowRespawn",PhotonTargets.AllBuffered);
+		
+		// explosion on respawn
+		Explode();
 	}
 	
 	[RPC]
 	public void ShowRespawn() {
 		GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
 		GetComponentInChildren<MeshRenderer>().enabled = true;
+	}
+	
+	public void Explode() {
+		if( explosion != null)
+				PhotonNetwork.Instantiate(explosion.name, this.transform.position, Quaternion.identity, 0);
+		
+		GameObject[] gos = GameObject.FindGameObjectsWithTag( playerTag );
+		foreach( GameObject playerGo in gos ) {
+			Vector3 direction = playerGo.transform.position - this.transform.position;
+			direction.y = 0;
+			for( int i=0; i<zoneRadii.Count; i++ ) {
+				if( direction.magnitude < zoneRadii[i] && playerGo.GetPhotonView().owner != photonView.owner ) {
+					Vector3 playerForce = direction.normalized * explosionForce * zoneStrength[i];
+					Debug.Log("Explosion strength: " + playerForce.magnitude );
+					
+					playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.AllBuffered,playerForce);	
+					playerGo.gameObject.GetPhotonView().RPC("HitBy",PhotonTargets.AllBuffered, photonView.owner);
+					break;
+				}
+			}
+		}
 	}
 	
 	

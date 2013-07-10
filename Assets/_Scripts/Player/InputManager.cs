@@ -17,6 +17,10 @@ public class InputManager : Photon.MonoBehaviour {
 	
 	private Animator anim;
 	private CharacterMover mover;
+	private PlayerManager pman;
+	
+	private int rageCounter = 0;
+	private float rageCooldown = 0.2f;
 	
 	
 	// The client who controls this character
@@ -35,6 +39,7 @@ public class InputManager : Photon.MonoBehaviour {
 		anim = GetComponent<Animator>();
 		anim.speed = mover.movementSpeed / 2;
 		match = GameObject.Find("PhotonNetman").GetComponent<Match>();
+		pman = GetComponent<PlayerManager>();
 	}
 	
 	// Update is called once per frame
@@ -63,6 +68,12 @@ public class InputManager : Photon.MonoBehaviour {
 					hitPoint = GetMouseHitPoint();
 					Shoot(hitPoint);
 				}
+			}
+		} else if(pman.IsDead()) {;
+			rageCounter = 5;
+			if( Input.GetButton("Fire1") ) {
+				Vector3 mousePos = GetMouseHitPoint();
+				pman.SetSpawnPoint( mousePos );
 			}
 		}
 	}
@@ -97,7 +108,8 @@ public class InputManager : Photon.MonoBehaviour {
 	 * @param	mousePos	Current position of the mouse cursour.
 	 */
 	private void Shoot(Vector3 mousePos) {
-		if( Time.time > lastShot + cooldown ) {
+		if( (Time.time > lastShot + cooldown) 
+			|| (rageCounter > 0 && Time.time > lastShot + rageCooldown) ) {
 			Vector3 direction = mousePos - this.transform.position;
 			direction.y = 0;
 			direction.Normalize();
@@ -109,13 +121,15 @@ public class InputManager : Photon.MonoBehaviour {
 			GameObject handle = PhotonNetwork.Instantiate(projectile.name, 
 										pos, 
 										Quaternion.LookRotation(direction), 0);
-			//handle.transform.LookAt( handle.transform.position + direction );
-			// hack for strange model...
-			//handle.transform.LookAt( handle.transform.position - direction );
+			handle.GetPhotonView().RPC("InstatiateTimeStamp",PhotonTargets.AllBuffered,(float)PhotonNetwork.time);
+			handle.GetPhotonView().RPC("SetTarget",PhotonTargets.AllBuffered,mousePos);
 			
 			//handle.SendMessage("SetRange", Vector3.Distance(pos, mousePos) );
 			lastShot = Time.time;
 			shotDir = transform.position + direction;
+			if( rageCounter > 0) {
+				rageCounter--;
+			}
 		}
 	}
 	
