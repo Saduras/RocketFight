@@ -16,6 +16,10 @@ public class Match : Photon.MonoBehaviour {
 	
 	public string respawnTag = "Respawn";
 	
+	// stuff for instantiate spawn points
+	public GameObject spawnPointPrefab;
+	public List<Vector3> positions = new List<Vector3>();
+	
 	public UILabel playerListLabel;
 	public UIMenu uiMenu;
 	public GameObject playerPrefab;
@@ -175,6 +179,11 @@ public class Match : Photon.MonoBehaviour {
 	public void OrganizeSpawning() {
 		if( !PhotonNetwork.isMasterClient ) 
 			return;
+		
+		// instatiate spawn points
+		foreach( Vector3 pos in positions) {
+			PhotonNetwork.Instantiate(spawnPointPrefab.name,pos, Quaternion.identity,0);	
+		}
 		
 		// find spawnpoints
 		GameObject[] gos = GameObject.FindGameObjectsWithTag(respawnTag);
