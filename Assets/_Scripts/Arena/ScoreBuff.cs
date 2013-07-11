@@ -5,6 +5,7 @@ public class ScoreBuff : MonoBehaviour {
 
 	public GameObject staticVFX;
 	public GameObject mobileVFX;
+	public AudioSource itemSound;
 	
 	public float buffDuration = 30;
 	public float buffIntervall = 5;
@@ -50,6 +51,9 @@ public class ScoreBuff : MonoBehaviour {
 			transform.parent = other.gameObject.transform;
 			renderer.enabled = false;
 			pickedUp = true;
+			// play sound
+			itemSound.Play();
+			
 			collider.enabled = false;
 			pickupTime = Time.time;
 			staticVFX.SetActive( false );

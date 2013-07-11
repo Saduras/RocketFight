@@ -14,7 +14,7 @@ public class GameTimerLabel : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		float timer = match.gameTime;
+		float timer = match.GetGameTime();
 		string minutes = Mathf.Floor(timer / 60).ToString("00");
 		string seconds = (timer % 60).ToString("00");
 		label.text = "Time: " + minutes + ":" + seconds;

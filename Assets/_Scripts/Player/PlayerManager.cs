@@ -14,7 +14,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	public List<float> zoneRadii = new List<float>();
 	public List<float> zoneStrength = new List<float>();
 	
-	
+	public AudioSource hitSound;
 	
 	private Color color;
 	private PhotonPlayer lastHit;
@@ -68,6 +68,9 @@ public class PlayerManager : Photon.MonoBehaviour {
 	 */
 	[RPC]
 	public void HitBy( PhotonPlayer player ) {
+		// play sound
+		hitSound.Play();
+		
 		// return if you hit yourself
 		if( player == photonView.owner )
 			return;

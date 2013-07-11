@@ -10,6 +10,7 @@ public class InputManager : Photon.MonoBehaviour {
 	
 	public GameObject projectile;
 	public GameObject muzzleFlash;
+	public AudioSource walkSound;
 	public string groundTag = "Ground";
 	private Match match;
 	private float lastShot = 0;
@@ -45,7 +46,7 @@ public class InputManager : Photon.MonoBehaviour {
 	// Update is called once per frame
 	public void Update () {
 		// Check for input updates
-		if( (PhotonNetwork.player == controllingPlayer && controlable && match.running) ) {
+		if( (PhotonNetwork.player == controllingPlayer && controlable && match.IsRunning()) ) {
 			if( Time.time - lastShot < 0.02f ) {
 				transform.LookAt( shotDir );
 				mover.SetControllerMovement( Vector3.zero );
@@ -59,10 +60,15 @@ public class InputManager : Photon.MonoBehaviour {
 				mover.SetControllerMovement( movement );
 				anim.SetFloat("speed", movement.magnitude );
 				
-				
 				// rotate in movement direction
-				if( movement.magnitude > 0.1)
+				if( movement.magnitude > 0.1) {
 					this.transform.LookAt(this.transform.position + movement);
+					if( !walkSound.isPlaying )
+						walkSound.Play();
+				} else {
+					if( walkSound.isPlaying )
+						walkSound.Stop();
+				}
 	
 				if( Input.GetButton("Fire1") ) {
 					hitPoint = GetMouseHitPoint();
@@ -124,7 +130,6 @@ public class InputManager : Photon.MonoBehaviour {
 			handle.GetPhotonView().RPC("InstatiateTimeStamp",PhotonTargets.AllBuffered,(float)PhotonNetwork.time);
 			handle.GetPhotonView().RPC("SetTarget",PhotonTargets.AllBuffered,mousePos);
 			
-			//handle.SendMessage("SetRange", Vector3.Distance(pos, mousePos) );
 			lastShot = Time.time;
 			shotDir = transform.position + direction;
 			if( rageCounter > 0) {

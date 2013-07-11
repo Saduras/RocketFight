@@ -4,16 +4,16 @@ using System.Collections.Generic;
 
 public class Match : Photon.MonoBehaviour {
 	
-	public List<RocketFightPlayer> playerList = new List<RocketFightPlayer>();
-	public int maxPlayerCount = 4;
-	public bool running;
-	public bool allReady = false;
-	public bool startRequest = false;
-	public float gameTime;
+	private List<RocketFightPlayer> playerList = new List<RocketFightPlayer>();
 	
+	private bool running;
+	private bool allReady = false;
+	private bool startRequest = false;
+	private float gameTime;
+	
+	public int maxPlayerCount = 4;
 	public float matchLength = 120;
 	public string arenaScene = "Arena";
-	
 	public string respawnTag = "Respawn";
 	
 	// stuff for instantiate spawn points
@@ -25,6 +25,9 @@ public class Match : Photon.MonoBehaviour {
 	public GameObject playerPrefab;
 	public List<Color> freeColors = new List<Color>();
 	
+	// sound & music stuff
+	public AudioSource matchMusic;
+	
 	private List<Color> usedColors = new List<Color>();
 	private bool arenaLoaded = false;
 	private bool sent = false;
@@ -33,13 +36,7 @@ public class Match : Photon.MonoBehaviour {
 		if(running) {
 			gameTime -= Time.deltaTime;
 			if( gameTime <= 0 ) {
-				running = false;
-				if(PhotonNetwork.isMasterClient) {
-					foreach( RocketFightPlayer rfp in playerList ) {
-						PhotonNetwork.DestroyPlayerObjects(rfp.photonPlayer);	
-					}
-				}
-				uiMenu.ChanceState(UIMenu.UIState.LOBBY);
+				GameOver();
 			}
 		} else if(startRequest && allReady && PhotonNetwork.isMasterClient) {
 			photonView.RPC("StartMatch",PhotonTargets.AllBuffered);
@@ -52,7 +49,6 @@ public class Match : Photon.MonoBehaviour {
 			sent = true;
 		}
 	}
-	
 	
 	public void Reset() {
 		playerList.Clear();
@@ -94,6 +90,18 @@ public class Match : Photon.MonoBehaviour {
 		
 		// update UI
 		UpdateUIPlayerList();
+	}
+	
+	public bool IsRunning() {
+		return running;	
+	}
+	
+	public float GetGameTime() {
+		return gameTime;	
+	}
+	
+	public List<RocketFightPlayer> GetPlayerList() {
+		return playerList;	
 	}
 	
 	[RPC]
@@ -159,8 +167,24 @@ public class Match : Photon.MonoBehaviour {
 		Debug.Log("Match started!");
 		running = true;
 		Init();
+		// play background music
+		matchMusic.Play();
+		
 		if( PhotonNetwork.isMasterClient )
 			OrganizeSpawning();
+	}
+	
+	private void GameOver() {
+		running = false;
+		if(PhotonNetwork.isMasterClient) {
+			foreach( RocketFightPlayer rfp in playerList ) {
+				PhotonNetwork.DestroyPlayerObjects(rfp.photonPlayer);	
+			}
+		}
+		uiMenu.ChanceState(UIMenu.UIState.LOBBY);
+		
+		// stop background music
+		matchMusic.Stop();
 	}
 	
 	/**

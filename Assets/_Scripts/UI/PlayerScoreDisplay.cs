@@ -10,8 +10,8 @@ public class PlayerScoreDisplay : MonoBehaviour {
 	
 	void OnEnable() {
 		for( int i=0; i<scoreElements.Count; i++ ) {
-			if( match.playerList.Count > i ) {
-				scoreElements[i].GetComponentInChildren<UISlicedSprite>().color = match.playerList[i].color;
+			if( match.GetPlayerList().Count > i ) {
+				scoreElements[i].GetComponentInChildren<UISlicedSprite>().color = match.GetPlayerList()[i].color;
 			} else {
 				scoreElements[i].SetActive(false);
 			}
@@ -20,11 +20,11 @@ public class PlayerScoreDisplay : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		for( int i=0; i<match.playerList.Count; i++ ) {
+		for( int i=0; i<match.GetPlayerList().Count; i++ ) {
 			if(!scoreElements[i].activeSelf)
 				scoreElements[i].SetActive(true);
 			
-			scoreElements[i].GetComponentInChildren<UILabel>().text = match.playerList[i].photonPlayer.name + ": " + match.playerList[i].score;
+			scoreElements[i].GetComponentInChildren<UILabel>().text = match.GetPlayerList()[i].photonPlayer.name + ": " + match.GetPlayerList()[i].score;
 		}
 	}
 }

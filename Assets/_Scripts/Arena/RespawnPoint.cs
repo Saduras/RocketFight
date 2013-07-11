@@ -5,6 +5,7 @@ using System.Collections;
 public class RespawnPoint : Photon.MonoBehaviour {
 	
 	public GameObject particleEffectSystem;
+	public AudioSource respawnSound;
 	public GameObject pointer;
 	public Color color;
 	public PhotonPlayer player;
@@ -46,6 +47,7 @@ public class RespawnPoint : Photon.MonoBehaviour {
 	[RPC]
 	public void StartAnimation() {
 		particleEffectSystem.SetActive(true);
+		respawnSound.Play();
 		Debug.Log("Respawn Animation start");
 	}
 	
