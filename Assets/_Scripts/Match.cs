@@ -12,7 +12,7 @@ public class Match : Photon.MonoBehaviour {
 	private float gameTime;
 	
 	public int maxPlayerCount = 4;
-	public float matchLength = 120;
+	public float matchLength = 5;
 	public string arenaScene = "Arena";
 	public string respawnTag = "Respawn";
 	
@@ -182,6 +182,7 @@ public class Match : Photon.MonoBehaviour {
 			}
 		}
 		uiMenu.ChanceState(UIMenu.UIState.LOBBY);
+		Screen.showCursor = true;
 		
 		// stop background music
 		matchMusic.Stop();
