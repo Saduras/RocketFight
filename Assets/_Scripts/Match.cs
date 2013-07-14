@@ -6,13 +6,17 @@ public class Match : Photon.MonoBehaviour {
 	
 	private List<RocketFightPlayer> playerList = new List<RocketFightPlayer>();
 	
-	private bool running;
+	private MatchState currentState;
 	private bool allReady = false;
 	private bool startRequest = false;
+	private double startTime;
 	private float gameTime;
+	
+	private double countdownTime;
 	
 	public int maxPlayerCount = 4;
 	public float matchLength = 5;
+	public int countdownLength;
 	public string arenaScene = "Arena";
 	public string respawnTag = "Respawn";
 	
@@ -20,6 +24,7 @@ public class Match : Photon.MonoBehaviour {
 	public GameObject spawnPointPrefab;
 	public List<Vector3> positions = new List<Vector3>();
 	
+	public UILabel countdownLabel;
 	public UILabel playerListLabel;
 	public UIMenu uiMenu;
 	public GameObject playerPrefab;
@@ -27,20 +32,45 @@ public class Match : Photon.MonoBehaviour {
 	
 	// sound & music stuff
 	public AudioSource matchMusic;
+	public AudioSource countdownSound;
 	
 	private List<Color> usedColors = new List<Color>();
 	private bool arenaLoaded = false;
 	private bool sent = false;
 	
+	public enum MatchState {
+		SETTINGUP,
+		COUNTDOWN,
+		RUNNING,
+		FINISHED
+	}
+	
+	
 	void Update() {
-		if(running) {
-			gameTime -= Time.deltaTime;
+		switch(currentState) {
+		case MatchState.RUNNING:
+			// use network time to calculate game time
+			// this ensures everyone has the same time
+			gameTime = (float) (matchLength + startTime - PhotonNetwork.time);
 			if( gameTime <= 0 ) {
 				GameOver();
 			}
-		} else if(startRequest && allReady && PhotonNetwork.isMasterClient) {
-			photonView.RPC("StartMatch",PhotonTargets.AllBuffered);
-			startRequest = false;
+			break;
+		case MatchState.SETTINGUP:
+			if(startRequest && allReady && PhotonNetwork.isMasterClient) {
+				photonView.RPC("InitCountdown",PhotonTargets.AllBuffered, PhotonNetwork.time);
+				startRequest = false;
+			}
+			break;
+		case MatchState.COUNTDOWN:
+			int currentStep = Mathf.FloorToInt( (float) (countdownTime + countdownLength + 1 - PhotonNetwork.time) );
+			if( currentStep > 0)
+				countdownLabel.text = currentStep.ToString();
+			if( currentStep == 0 )
+				countdownLabel.text = "go";
+			if( currentStep < 0 && PhotonNetwork.isMasterClient )
+				photonView.RPC("StartMatch",PhotonTargets.AllBuffered, PhotonNetwork.time);
+			break;
 		}
 		
 		// finshed loading level
@@ -52,7 +82,7 @@ public class Match : Photon.MonoBehaviour {
 	
 	public void Reset() {
 		playerList.Clear();
-		running = false;
+		currentState = MatchState.SETTINGUP;
 		startRequest = false;
 		gameTime = matchLength;
 		UpdateUIPlayerList();
@@ -63,6 +93,14 @@ public class Match : Photon.MonoBehaviour {
 		foreach( RocketFightPlayer rfp in playerList ) {
 			rfp.score = 0;	
 		}
+	}
+	
+	[RPC]
+	public void InitCountdown(double timestamp) {
+		countdownTime = timestamp;
+		currentState = MatchState.COUNTDOWN;
+		countdownLabel.gameObject.SetActive( true );
+		countdownSound.Play();
 	}
 	
 	[RPC]
@@ -93,7 +131,7 @@ public class Match : Photon.MonoBehaviour {
 	}
 	
 	public bool IsRunning() {
-		return running;	
+		return (currentState == MatchState.RUNNING);	
 	}
 	
 	public float GetGameTime() {
@@ -156,26 +194,27 @@ public class Match : Photon.MonoBehaviour {
 	public void RequestStart() {
 		if(!arenaLoaded) {
 			Application.LoadLevelAdditive(arenaScene);
-			GameObject.Find("TempCamera").SetActive(false);
 			arenaLoaded = true;
 		}
 		startRequest = true;
 	}
 	
 	[RPC]
-	public void StartMatch() {
+	public void StartMatch(double timestamp) {
 		Debug.Log("Match started!");
-		running = true;
+		currentState = MatchState.RUNNING;
+		startTime = timestamp;
 		Init();
 		// play background music
 		matchMusic.Play();
+		countdownLabel.gameObject.SetActive( false );
 		
 		if( PhotonNetwork.isMasterClient )
 			OrganizeSpawning();
 	}
 	
 	private void GameOver() {
-		running = false;
+		currentState = MatchState.FINISHED;
 		if(PhotonNetwork.isMasterClient) {
 			foreach( RocketFightPlayer rfp in playerList ) {
 				PhotonNetwork.DestroyPlayerObjects(rfp.photonPlayer);	
