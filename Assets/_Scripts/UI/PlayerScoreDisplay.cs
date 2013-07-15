@@ -24,7 +24,8 @@ public class PlayerScoreDisplay : MonoBehaviour {
 			if(!scoreElements[i].activeSelf)
 				scoreElements[i].SetActive(true);
 			
-			scoreElements[i].GetComponentInChildren<UILabel>().text = match.GetPlayerList()[i].photonPlayer.name + ": " + match.GetPlayerList()[i].score;
+			scoreElements[i].GetComponentInChildren<UILabel>().text = match.GetPlayerList()[i].photonPlayer.name 
+				+ ": " + match.GetPlayerList()[i].score;
 		}
 	}
 }

@@ -8,6 +8,7 @@ public class InputManager : Photon.MonoBehaviour {
 	
 	public float cooldown = 0.5f;
 	
+	public Animation crosshairAnimation;
 	public GameObject projectile;
 	public GameObject muzzleFlash;
 	public AudioSource walkSound;
@@ -28,19 +29,15 @@ public class InputManager : Photon.MonoBehaviour {
 	public PhotonPlayer controllingPlayer;
 	//private PhotonView photonView;
 	
-	// Custom cursor texture
-	public Texture2D cursorTex;
-	public int cursorSizeX = 32;  // set to width of your cursor texture
-	public int cursorSizeY= 32;  // set to height of your cursor texture
-	
 	// Use this for initialization
 	public void Awake () {
-		Screen.showCursor = false;
 		mover = GetComponent<CharacterMover>();
 		anim = GetComponent<Animator>();
 		anim.speed = mover.movementSpeed / 2;
 		match = GameObject.Find("PhotonNetman").GetComponent<Match>();
 		pman = GetComponent<PlayerManager>();
+		
+		crosshairAnimation = GameObject.Find("CursorController").GetComponent<Animation>();
 	}
 	
 	// Update is called once per frame
@@ -84,16 +81,6 @@ public class InputManager : Photon.MonoBehaviour {
 		}
 	}
 	
-	/**
-	 * Replace mouse coursor with custom texture
-	 */
-	public void OnGUI(){
-		GUI.DrawTexture( new Rect(Input.mousePosition.x-cursorSizeX/2, 
-				(Screen.height-Input.mousePosition.y)-cursorSizeY/2, 
-				cursorSizeX, 
-				cursorSizeY),cursorTex);
-	}
-	
 	private Vector3 GetMouseHitPoint() {
 		Ray cursorRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit[] rayHits = Physics.RaycastAll(cursorRay);
@@ -116,6 +103,13 @@ public class InputManager : Photon.MonoBehaviour {
 	private void Shoot(Vector3 mousePos) {
 		if( (Time.time > lastShot + cooldown) 
 			|| (rageCounter > 0 && Time.time > lastShot + rageCooldown) ) {
+			
+			//animate crosshait
+			if(crosshairAnimation.isPlaying)
+				crosshairAnimation.Stop();
+			
+			crosshairAnimation.Play();
+			
 			Vector3 direction = mousePos - this.transform.position;
 			direction.y = 0;
 			direction.Normalize();
@@ -134,6 +128,13 @@ public class InputManager : Photon.MonoBehaviour {
 			shotDir = transform.position + direction;
 			if( rageCounter > 0) {
 				rageCounter--;
+				foreach( AnimationState state in crosshairAnimation ) {
+					state.speed = 1/rageCooldown;
+				}
+			} else {
+				foreach( AnimationState state in crosshairAnimation ) {
+					state.speed = 1/cooldown;
+				}
 			}
 		}
 	}
