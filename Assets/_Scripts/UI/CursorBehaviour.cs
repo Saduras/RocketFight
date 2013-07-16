@@ -16,7 +16,6 @@ public class CursorBehaviour : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		Debug.Log("Set cursor!");
 		Cursor.SetCursor(menuCursorTex, Vector2.zero, CursorMode.Auto);
 	}
 	

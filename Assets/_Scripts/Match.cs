@@ -81,7 +81,16 @@ public class Match : Photon.MonoBehaviour {
 	}
 	
 	public void Reset() {
+		// reset colors
+		freeColors.AddRange( usedColors );
+		usedColors.Clear();
+		
+		// reload player list
 		playerList.Clear();
+		foreach( PhotonPlayer player in PhotonNetwork.playerList ) {
+			AddPlayer( player );	
+		}
+		
 		currentState = MatchState.SETTINGUP;
 		startRequest = false;
 		gameTime = matchLength;
@@ -119,8 +128,8 @@ public class Match : Photon.MonoBehaviour {
 		if( results.Count > 0 ) return;
 		
 		// get Color
-		Color playerColor = freeColors[0];
-		freeColors.RemoveAt(0);
+		Color playerColor = freeColors[freeColors.Count - 1];
+		freeColors.RemoveAt(freeColors.Count - 1);
 		usedColors.Add(playerColor);
 		
 		// add new RocketFightPlayer
@@ -220,8 +229,7 @@ public class Match : Photon.MonoBehaviour {
 				PhotonNetwork.DestroyPlayerObjects(rfp.photonPlayer);	
 			}
 		}
-		uiMenu.ChanceState(UIMenu.UIState.LOBBY);
-		Screen.showCursor = true;
+		uiMenu.ChanceState(UIMenu.UIState.MATCHOVER);
 		
 		// stop background music
 		matchMusic.Stop();

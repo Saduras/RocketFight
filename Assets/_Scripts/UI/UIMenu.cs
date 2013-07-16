@@ -8,6 +8,7 @@ public class UIMenu : Photon.MonoBehaviour {
 	public UIPanel enterNamePanel;
 	public UIPanel lobbyPanel;
 	public UIPanel inGamePanel;
+	public UIPanel afterMatchPanel;
 	
 	private UIState currentState;
 	
@@ -17,6 +18,7 @@ public class UIMenu : Photon.MonoBehaviour {
 		LOBBY,
 		CONNECTING,
 		INGAME,
+		MATCHOVER,
 		QUIT
 	}
 	
@@ -27,18 +29,21 @@ public class UIMenu : Photon.MonoBehaviour {
 			enterNamePanel.gameObject.SetActive(false);
 			lobbyPanel.gameObject.SetActive(false);
 			inGamePanel.gameObject.SetActive(false);
+			afterMatchPanel.gameObject.SetActive(false);
 			break;
 		case UIState.ENTERNAME:
 			mainMenuPanel.gameObject.SetActive(false);
 			enterNamePanel.gameObject.SetActive(true);
 			lobbyPanel.gameObject.SetActive(false);
 			inGamePanel.gameObject.SetActive(false);
+			afterMatchPanel.gameObject.SetActive(false);
 			break;
 		case UIState.LOBBY:
 			mainMenuPanel.gameObject.SetActive(false);
 			enterNamePanel.gameObject.SetActive(false);
 			lobbyPanel.gameObject.SetActive(true);
 			inGamePanel.gameObject.SetActive(false);
+			afterMatchPanel.gameObject.SetActive(false);
 			match.UpdateUIPlayerList();
 			break;
 		case UIState.INGAME:
@@ -46,11 +51,20 @@ public class UIMenu : Photon.MonoBehaviour {
 			enterNamePanel.gameObject.SetActive(false);
 			lobbyPanel.gameObject.SetActive(false);
 			inGamePanel.gameObject.SetActive(true);
+			afterMatchPanel.gameObject.SetActive(false);
 			
 			if(PhotonNetwork.isMasterClient) {
 				photonView.RPC("ChangeToInGame",PhotonTargets.Others);
 				match.photonView.RPC("RequestStart",PhotonTargets.AllBuffered);
 			}
+			break;
+		case UIState.MATCHOVER:
+			mainMenuPanel.gameObject.SetActive(false);
+			enterNamePanel.gameObject.SetActive(false);
+			lobbyPanel.gameObject.SetActive(false);
+			inGamePanel.gameObject.SetActive(false);
+			afterMatchPanel.gameObject.SetActive(true);
+			match.UpdateUIPlayerList();
 			break;
 		case UIState.QUIT:
 			Application.Quit();

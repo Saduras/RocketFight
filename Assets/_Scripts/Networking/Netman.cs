@@ -156,7 +156,7 @@ public class Netman : Photon.MonoBehaviour {
     public void OnJoinedRoom()
     {
         Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room. From here on, your game would be running. For reference, all callbacks are listed in enum: PhotonNetworkingMessage");
-		match.Init();
+		match.Reset();
     }
 	
 	public void OnLeftRoom() {
@@ -177,7 +177,6 @@ public class Netman : Photon.MonoBehaviour {
 	[RPC]
 	public void BackToMenu() {
 		hasSpawn = false;
-		Screen.showCursor = true;
 	}
 	
 	public RocketFightPlayer GetPlayer( int playerID ) {
