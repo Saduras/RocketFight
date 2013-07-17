@@ -34,18 +34,6 @@ public class Rocket : Photon.MonoBehaviour {
 		if(zoneRadii.Count < 1 || zoneStrength.Count != zoneRadii.Count ) {
 			Debug.LogError("You must define atleast one explosion zone (radius & strength) for the Rocket!");	
 		}
-		
-		/*switch( flightPath ) {
-		case FlightPath.linear:
-			this.rigidbody.useGravity = false;
-			break;
-		case FlightPath.ballisitic:
-			this.rigidbody.useGravity = true;
-			break;
-		case FlightPath.controlled:
-			this.rigidbody.useGravity = false;
-			break;
-		}*/
 	}
 	
 	[RPC]
@@ -105,8 +93,8 @@ public class Rocket : Photon.MonoBehaviour {
 					Vector3 playerForce = direction.normalized * explosionForce * zoneStrength[i];
 					Debug.Log("Explosion strength: " + playerForce.magnitude );
 					
-					playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.AllBuffered,playerForce);	
-					playerGo.gameObject.GetPhotonView().RPC("HitBy",PhotonTargets.AllBuffered, photonView.owner);
+					playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.OthersBuffered,playerForce);	
+					playerGo.gameObject.GetPhotonView().RPC("HitBy",PhotonTargets.OthersBuffered, photonView.owner);
 					break;
 				}
 			}

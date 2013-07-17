@@ -73,7 +73,7 @@ public class InputManager : Photon.MonoBehaviour {
 				}
 			}
 		} else if(pman.IsDead()) {;
-			rageCounter = 5;
+			rageCounter = 0;
 			if( Input.GetButton("Fire1") ) {
 				Vector3 mousePos = GetMouseHitPoint();
 				pman.SetSpawnPoint( mousePos );

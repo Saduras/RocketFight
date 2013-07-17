@@ -7,6 +7,10 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	
 	public float fadeTime = 1f;
 	public bool controlableWhileForce = false;
+	
+	// TODO
+	public bool vulnable = true;
+	
 	private float curvePower = 2f;
 	
 	private List<Force> forceSet = new List<Force>();
@@ -69,7 +73,7 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	
 	[RPC]
 	public void ApplyForce( Vector3 newForce) {
-		if (photonView.owner == PhotonNetwork.player) {
+		if (photonView.owner == PhotonNetwork.player && vulnable) {
 				forceSet.Add( new Force(newForce, Time.time) );
 		}
 	}

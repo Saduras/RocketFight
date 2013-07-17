@@ -6,6 +6,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	
 	public GameObject scorePopup;
 	public GameObject deathVFX;
+	public GameObject invulnable;
 	
 	// stuff for explosion on respawn
 	public GameObject explosion;
@@ -40,10 +41,16 @@ public class PlayerManager : Photon.MonoBehaviour {
 	}
 	
 	void Update() {	
-		if( requestSpawn && photonView.owner == PhotonNetwork.player ) {
-			if( Time.time > deathTime + respawnTime ) {
+		if( photonView.owner == PhotonNetwork.player ) {
+			if( Time.time > deathTime + respawnTime && requestSpawn) {
 				Respawn();
 				requestSpawn = false;	
+			}
+			
+			if( Time.time > deathTime + respawnTime + 2 && !GetComponent<PlayerPhysic>().vulnable) {
+				// become vunable again
+				GetComponent<PlayerPhysic>().vulnable = true;
+				photonView.RPC("HideInvulnable",PhotonTargets.All);
 			}
 		}
 	}
@@ -149,6 +156,13 @@ public class PlayerManager : Photon.MonoBehaviour {
 				if( sb != null )
 					sb.Reset();
 				}
+			
+			
+				// TODO Spawnschutz
+				GetComponent<PlayerPhysic>().vulnable = false;
+				Color tmpCol = GetComponentInChildren<SkinnedMeshRenderer>().material.color;
+				tmpCol.a = 0.5f;
+				GetComponentInChildren<SkinnedMeshRenderer>().material.color = tmpCol;
 		}
 	}
 	
@@ -156,7 +170,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	public void ShowDeath() {
 		GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
 		GetComponentInChildren<MeshRenderer>().enabled = false;
-		PhotonNetwork.Instantiate(deathVFX.name,transform.position,Quaternion.identity,0);
+		Instantiate(deathVFX,transform.position,Quaternion.identity);
 	}
 	
 	private void Respawn() {
@@ -177,6 +191,12 @@ public class PlayerManager : Photon.MonoBehaviour {
 	public void ShowRespawn() {
 		GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
 		GetComponentInChildren<MeshRenderer>().enabled = true;
+		invulnable.SetActive( true );
+	}
+	
+	[RPC]
+	public void HideInvulnable() {
+		invulnable.SetActive( false );
 	}
 	
 	public void Explode() {
