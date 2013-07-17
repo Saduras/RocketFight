@@ -59,8 +59,6 @@ public class Netman : Photon.MonoBehaviour {
 						OnPlayerConnect();
 						playerCountRoom = PhotonNetwork.room.playerCount;
 					}
-		
-		//DisplayPlayerList();
 	}
 	
 	
