@@ -60,7 +60,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	}
 	
 	public void SetSpawnPoint( Vector3 position ) {
-		spawnPointObj.transform.position = position;
+		spawnPointObj.GetComponent<RespawnPoint>().SetPos( position );
 	}
 	
 	[RPC]
@@ -163,6 +163,9 @@ public class PlayerManager : Photon.MonoBehaviour {
 				Color tmpCol = GetComponentInChildren<SkinnedMeshRenderer>().material.color;
 				tmpCol.a = 0.5f;
 				GetComponentInChildren<SkinnedMeshRenderer>().material.color = tmpCol;
+			
+				// TODO choose spawn with single click
+				GetComponent<InputManager>().respawnFree = true;
 		}
 	}
 	

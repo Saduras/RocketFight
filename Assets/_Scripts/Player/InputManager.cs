@@ -24,6 +24,8 @@ public class InputManager : Photon.MonoBehaviour {
 	private int rageCounter = 0;
 	private float rageCooldown = 0.2f;
 	
+	public bool respawnFree = true;
+	
 	
 	// The client who controls this character
 	public PhotonPlayer controllingPlayer;
@@ -74,9 +76,10 @@ public class InputManager : Photon.MonoBehaviour {
 			}
 		} else if(pman.IsDead()) {;
 			rageCounter = 0;
-			if( Input.GetButton("Fire1") ) {
+			if( Input.GetButton("Fire1") && respawnFree ) {
 				Vector3 mousePos = GetMouseHitPoint();
 				pman.SetSpawnPoint( mousePos );
+				//respawnFree = false;
 			}
 		}
 	}

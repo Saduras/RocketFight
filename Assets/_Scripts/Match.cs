@@ -253,36 +253,27 @@ public class Match : Photon.MonoBehaviour {
 		handle.GetPhotonView().RPC("SetColor",PhotonTargets.AllBuffered,rgb);
 	}
 	
+	[RPC]
+	public void SetSpawnPoint( Vector3 pos, PhotonPlayer player, Vector3 rgb ) {
+		GameObject handle = PhotonNetwork.Instantiate(spawnPointPrefab.name,pos, Quaternion.identity,0);
+		handle.GetPhotonView().RPC("AssignTo",PhotonTargets.AllBuffered,player);
+		handle.GetPhotonView().RPC("SetColor",PhotonTargets.AllBuffered,rgb);
+		
+		// spawn player & set color
+		photonView.RPC("SpawnPlayer",player,handle.transform.position, rgb);
+		// init score
+		photonView.RPC("SetScore",PhotonTargets.AllBuffered, player, 0);
+	}
+	
 	public void OrganizeSpawning() {
 		if( !PhotonNetwork.isMasterClient ) 
 			return;
 		
-		// instatiate spawn points
-		foreach( Vector3 pos in positions) {
-			PhotonNetwork.Instantiate(spawnPointPrefab.name,pos, Quaternion.identity,0);	
-		}
 		
-		// find spawnpoints
-		GameObject[] gos = GameObject.FindGameObjectsWithTag(respawnTag);
-		List<GameObject> spawnPoints = new List<GameObject>(gos);
-		Debug.Log("Spawnpoints : " + spawnPoints.Count);
-		
-		foreach( RocketFightPlayer rfp in playerList ) {
-			// choose random spawn point
-			int randIndex = Mathf.RoundToInt(Random.Range(0, spawnPoints.Count));
-			GameObject sp = spawnPoints[randIndex];
-			spawnPoints.RemoveAt(randIndex);
-				
-			Vector3 rgb = new Vector3( rfp.color.r, rfp.color.g,rfp.color.b );
-			
-			// assign spawpoint
-			sp.GetPhotonView().RPC("AssignTo",PhotonTargets.AllBuffered,rfp.photonPlayer);
-			sp.GetPhotonView().RPC("SetColor",PhotonTargets.AllBuffered,rgb);
-			
-			// spawn player incl. color
-			photonView.RPC("SpawnPlayer",rfp.photonPlayer,sp.transform.position, rgb);
-			// init score
-			photonView.RPC("SetScore",PhotonTargets.AllBuffered, rfp.photonPlayer, 0);
+		for( int i=0; i<playerList.Count; i++ ) {
+			// instatiate spawn points
+			Vector3 rgb = new Vector3( playerList[i].color.r, playerList[i].color.g,playerList[i].color.b );
+			photonView.RPC("SetSpawnPoint",playerList[i].photonPlayer,positions[i],playerList[i].photonPlayer,rgb);	
 		}
 	}
 	

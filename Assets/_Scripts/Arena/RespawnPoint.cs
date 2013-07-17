@@ -11,7 +11,14 @@ public class RespawnPoint : Photon.MonoBehaviour {
 	public PhotonPlayer player;
 	
 	private PlayerManager pman;
-
+	
+	private Vector3 target;
+	private float speed = 5;
+	
+	void Start() {
+		target = transform.position;	
+	}
+	
 	void Update() {
 		if( pman != null ) {
 			if( pman.IsDead() ) {		
@@ -20,6 +27,10 @@ public class RespawnPoint : Photon.MonoBehaviour {
 				photonView.RPC("SetPointer",PhotonTargets.All,false);
 			}
 		}
+		
+		if( target != null ) {
+			transform.Translate( (target - transform.position).normalized * speed * Time.deltaTime );
+		}
 	}
 	
 	[RPC]
@@ -27,6 +38,9 @@ public class RespawnPoint : Photon.MonoBehaviour {
 		pointer.SetActive( val );
 	}
 	
+	public void SetPos( Vector3 pos ) {
+		target = pos;
+	}
 	
 	public void SetPMan( PlayerManager playermanager ) {
 		pman = playermanager;
