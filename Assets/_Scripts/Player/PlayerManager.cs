@@ -47,9 +47,9 @@ public class PlayerManager : Photon.MonoBehaviour {
 				requestSpawn = false;	
 			}
 			
-			if( Time.time > deathTime + respawnTime + 2 && !GetComponent<PlayerPhysic>().vulnable) {
+			if( Time.time > deathTime + respawnTime + 2 && !GetComponent<PlayerPhysic>().vulnerable) {
 				// become vunable again
-				GetComponent<PlayerPhysic>().vulnable = true;
+				GetComponent<PlayerPhysic>().vulnerable = true;
 				photonView.RPC("HideInvulnable",PhotonTargets.All);
 			}
 		}
@@ -159,7 +159,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 			
 			
 				// TODO Spawnschutz
-				GetComponent<PlayerPhysic>().vulnable = false;
+				GetComponent<PlayerPhysic>().vulnerable = false;
 				Color tmpCol = GetComponentInChildren<SkinnedMeshRenderer>().material.color;
 				tmpCol.a = 0.5f;
 				GetComponentInChildren<SkinnedMeshRenderer>().material.color = tmpCol;
