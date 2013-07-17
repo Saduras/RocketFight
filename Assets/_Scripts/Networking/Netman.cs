@@ -66,56 +66,12 @@ public class Netman : Photon.MonoBehaviour {
 	
 	public void OnPlayerDisconnect() {
 		Debug.Log("OnPlayerDisconnect");
-		
-		List<int> validIDs = new List<int>();
-		// get list of connected player IDs
-		foreach( KeyValuePair<int, Color> pair in usedColors ) {
-			validIDs.Add(pair.Key);
-		}
-		
-		// find ID of disconnected player
-		foreach( PhotonPlayer p in PhotonNetwork.playerList ) {
-			validIDs.Remove(p.ID);
-		}
-		
-		List<RocketFightPlayer> removePlayer = new List<RocketFightPlayer>();
-		foreach( RocketFightPlayer rfp in playerList ) {
-			if( validIDs.Contains( rfp.photonPlayer.ID ) ) {
-				removePlayer.Add( rfp );	
-			}
-		}
-		
-		foreach( RocketFightPlayer rfp in removePlayer ) {
-			photonView.RPC("RemovePlayer",PhotonTargets.All, rfp.photonPlayer);
-		}
+		photonView.RPC("ReloadPlayerList",PhotonTargets.All);	
 	}
 	
 	public void OnPlayerConnect() {
 		Debug.Log("OnPlayerConnect");
-		
-		// get list of connected player IDs
-		List<int> validIDs = new List<int>();
-		foreach( PhotonPlayer p in PhotonNetwork.playerList ) {
-				validIDs.Add(p.ID);
-		}
-		
-		// find ID of disconnected player
-		foreach( KeyValuePair<int, Color> pair in usedColors ) {
-			validIDs.Remove(pair.Key);
-		}
-		
-		
-		// remove assign to usedColor
-		foreach( int playerID in validIDs ) {
-			if( PhotonNetwork.isMasterClient ) {
-				foreach( RocketFightPlayer rfp in playerList ) {
-					photonView.RPC("AddPlayer",PhotonPlayer.Find( playerID ), rfp.photonPlayer );	
-				}
-
-				photonView.RPC("AddPlayer",PhotonTargets.All, PhotonPlayer.Find( playerID ) );
-			}
-		}
-		
+		photonView.RPC("ReloadPlayerList",PhotonTargets.All);		
 	}
 	
 	

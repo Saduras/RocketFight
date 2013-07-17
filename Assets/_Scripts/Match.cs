@@ -81,15 +81,7 @@ public class Match : Photon.MonoBehaviour {
 	}
 	
 	public void Reset() {
-		// reset colors
-		freeColors.AddRange( usedColors );
-		usedColors.Clear();
-		
-		// reload player list
-		playerList.Clear();
-		foreach( PhotonPlayer player in PhotonNetwork.playerList ) {
-			AddPlayer( player );	
-		}
+		ReloadPlayerList();
 		
 		currentState = MatchState.SETTINGUP;
 		startRequest = false;
@@ -165,6 +157,19 @@ public class Match : Photon.MonoBehaviour {
 				UpdateUIPlayerList();
 				return;
 			}
+		}
+	}
+	
+	[RPC]
+	public void ReloadPlayerList() {
+		// reset colors
+		freeColors.AddRange( usedColors );
+		usedColors.Clear();
+		
+		// reload player list
+		playerList.Clear();
+		foreach( PhotonPlayer player in PhotonNetwork.playerList ) {
+			AddPlayer( player );	
 		}
 	}
 	
