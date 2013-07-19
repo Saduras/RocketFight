@@ -28,7 +28,7 @@ public class RespawnPoint : Photon.MonoBehaviour {
 			}
 		}
 		
-		if( target != null ) {
+		if( target != null && (target - transform.position).magnitude > 0.2f ) {
 			transform.Translate( (target - transform.position).normalized * speed * Time.deltaTime );
 		}
 	}
