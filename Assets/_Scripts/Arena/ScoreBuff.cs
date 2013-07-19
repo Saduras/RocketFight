@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class ScoreBuff : MonoBehaviour {
+public class ScoreBuff : Photon.MonoBehaviour {
 
 	public GameObject staticVFX;
 	public GameObject mobileVFX;
@@ -22,6 +22,9 @@ public class ScoreBuff : MonoBehaviour {
 	void Start () {
 		startPos = transform.position;
 		netman = GameObject.Find("PhotonNetman").GetComponent<Netman>();
+		
+		if(!PhotonNetwork.isMasterClient) 
+			enabled = false;
 	}
 	
 	// Update is called once per frame
@@ -37,6 +40,11 @@ public class ScoreBuff : MonoBehaviour {
 		}
 	}
 	
+	public void Drop() {
+		photonView.RPC("Reset",PhotonTargets.AllBuffered);
+	}
+	
+	[RPC]
 	public void Reset() {
 		pickedUp = false;
 		transform.parent = null;

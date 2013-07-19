@@ -154,7 +154,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 				// Reset buff if we carry it
 				ScoreBuff sb = gameObject.GetComponentInChildren<ScoreBuff>();
 				if( sb != null )
-					sb.Reset();
+					sb.Drop();
 				}
 			
 			
