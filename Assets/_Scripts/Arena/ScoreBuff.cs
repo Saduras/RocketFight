@@ -49,6 +49,11 @@ public class ScoreBuff : MonoBehaviour {
 		if(other.gameObject.CompareTag("Player") ) {
 			player = other.gameObject.GetComponent<InputManager>().controllingPlayer;
 			transform.parent = other.gameObject.transform;
+			Vector3 localPos = transform.localPosition;
+			localPos.x = 0;
+			localPos.z = 0;
+			transform.localPosition = localPos;
+			
 			renderer.enabled = false;
 			pickedUp = true;
 			// play sound
