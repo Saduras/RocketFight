@@ -30,9 +30,10 @@ public class PlayerInter : Photon.MonoBehaviour {
     {
         if (photonView.isMine)
             this.enabled = false;//Only enable inter/extrapol for remote players
-		
-		anim = GetComponent<Animator>(); 
-		anim.speed = GetComponent<CharacterMover>().movementSpeed / 2;
+		if(GetComponent<Animator>()) {
+			anim = GetComponent<Animator>(); 
+			anim.speed = GetComponent<CharacterMover>().movementSpeed / 2;
+		}
     }
 
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -117,7 +118,8 @@ public class PlayerInter : Photon.MonoBehaviour {
                     transform.localRotation = Quaternion.Slerp(lhs.rot, rhs.rot, t);
 					
 					float speed = Mathf.Abs((lhs.pos - rhs.pos).magnitude) / (float)length;
-					anim.SetFloat("speed", speed );
+					if(anim)
+						anim.SetFloat("speed", speed );
 					return;
                 }
             }
@@ -132,7 +134,8 @@ public class PlayerInter : Photon.MonoBehaviour {
             transform.localRotation = latest.rot;
 			
 			float speed = Mathf.Abs((transform.localPosition - latest.pos).magnitude) / Time.deltaTime;
-			anim.SetFloat("speed", speed );
+			if(anim)
+				anim.SetFloat("speed", speed );
         }
     }
 }
