@@ -26,6 +26,7 @@ public class Match : Photon.MonoBehaviour {
 	
 	public UILabel countdownLabel;
 	public UILabel playerListLabel;
+	public UILabel finalScoreLabel;
 	public UIMenu uiMenu;
 	public GameObject playerPrefab;
 	public List<Color> freeColors = new List<Color>();
@@ -173,7 +174,7 @@ public class Match : Photon.MonoBehaviour {
 		}
 	}
 	
-	public void UpdateUIPlayerList() {
+	public void UpdateUIPlayerList( UILabel label ) {
 		string labelString = "";
 		foreach( RocketFightPlayer rfp in playerList ) {
 			labelString += "[" + ColorX.RGBToHex(rfp.color) + "]";
@@ -184,7 +185,11 @@ public class Match : Photon.MonoBehaviour {
 			labelString += "\n";
 		}
 		
-		playerListLabel.text = labelString;	
+		label.text = labelString;	
+	}
+	
+	public void UpdateUIPlayerList() {
+		UpdateUIPlayerList( playerListLabel );	
 	}
 	
 	[RPC]
@@ -235,7 +240,7 @@ public class Match : Photon.MonoBehaviour {
 			}
 		}
 		uiMenu.ChanceState(UIMenu.UIState.MATCHOVER);
-		
+		UpdateUIPlayerList( finalScoreLabel );
 		// stop background music
 		matchMusic.Stop();
 	}

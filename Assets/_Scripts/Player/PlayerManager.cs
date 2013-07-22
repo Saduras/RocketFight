@@ -7,6 +7,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	public GameObject scorePopup;
 	public GameObject deathVFX;
 	public GameObject invulnable;
+	public GameObject marker;
 	
 	// stuff for explosion on respawn
 	public GameObject explosion;
@@ -24,7 +25,6 @@ public class PlayerManager : Photon.MonoBehaviour {
 	private Netman netman;
 	private GameObject spawnPointObj;
 	
-	
 	public float assistTime = 3f;
 	public float respawnTime = 3f;
 	private float deathTime;
@@ -37,6 +37,8 @@ public class PlayerManager : Photon.MonoBehaviour {
 		if (photonView.owner == PhotonNetwork.player) {	
 			netman = GameObject.Find("PhotonNetman").GetComponent<Netman>();
 			mover = GetComponent<CharacterMover>();
+			GameObject handle = (GameObject) Instantiate( marker );
+			handle.GetComponent<PlayerMarker>().SetParent(transform);
 		}
 	}
 	
