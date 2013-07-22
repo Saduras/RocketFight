@@ -6,6 +6,7 @@ public class UIMenu : Photon.MonoBehaviour {
 	public Match match;
 	public UIPanel mainMenuPanel;
 	public UIPanel enterNamePanel;
+	public UIPanel connectingPanel;
 	public UIPanel lobbyPanel;
 	public UIPanel inGamePanel;
 	public UIPanel afterMatchPanel;
@@ -27,6 +28,7 @@ public class UIMenu : Photon.MonoBehaviour {
 		case UIState.MAINMENU:
 			mainMenuPanel.gameObject.SetActive(true);
 			enterNamePanel.gameObject.SetActive(false);
+			connectingPanel.gameObject.SetActive(false);
 			lobbyPanel.gameObject.SetActive(false);
 			inGamePanel.gameObject.SetActive(false);
 			afterMatchPanel.gameObject.SetActive(false);
@@ -34,6 +36,15 @@ public class UIMenu : Photon.MonoBehaviour {
 		case UIState.ENTERNAME:
 			mainMenuPanel.gameObject.SetActive(false);
 			enterNamePanel.gameObject.SetActive(true);
+			connectingPanel.gameObject.SetActive(false);
+			lobbyPanel.gameObject.SetActive(false);
+			inGamePanel.gameObject.SetActive(false);
+			afterMatchPanel.gameObject.SetActive(false);
+			break;
+		case UIState.CONNECTING:
+			mainMenuPanel.gameObject.SetActive(false);
+			enterNamePanel.gameObject.SetActive(false);
+			connectingPanel.gameObject.SetActive(true);
 			lobbyPanel.gameObject.SetActive(false);
 			inGamePanel.gameObject.SetActive(false);
 			afterMatchPanel.gameObject.SetActive(false);
@@ -41,6 +52,7 @@ public class UIMenu : Photon.MonoBehaviour {
 		case UIState.LOBBY:
 			mainMenuPanel.gameObject.SetActive(false);
 			enterNamePanel.gameObject.SetActive(false);
+			connectingPanel.gameObject.SetActive(false);
 			lobbyPanel.gameObject.SetActive(true);
 			inGamePanel.gameObject.SetActive(false);
 			afterMatchPanel.gameObject.SetActive(false);
@@ -49,6 +61,7 @@ public class UIMenu : Photon.MonoBehaviour {
 		case UIState.INGAME:
 			mainMenuPanel.gameObject.SetActive(false);
 			enterNamePanel.gameObject.SetActive(false);
+			connectingPanel.gameObject.SetActive(false);
 			lobbyPanel.gameObject.SetActive(false);
 			inGamePanel.gameObject.SetActive(true);
 			afterMatchPanel.gameObject.SetActive(false);
@@ -61,6 +74,7 @@ public class UIMenu : Photon.MonoBehaviour {
 		case UIState.MATCHOVER:
 			mainMenuPanel.gameObject.SetActive(false);
 			enterNamePanel.gameObject.SetActive(false);
+			connectingPanel.gameObject.SetActive(false);
 			lobbyPanel.gameObject.SetActive(false);
 			inGamePanel.gameObject.SetActive(false);
 			afterMatchPanel.gameObject.SetActive(true);
