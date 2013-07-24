@@ -11,12 +11,24 @@ public class PlayerInter : Photon.MonoBehaviour {
 	//
 	
     public double interpolationBackTime = 0.15;
+	
+	Vector3 force;
 
     internal struct State
     {
         internal double timestamp;
         internal Vector3 pos;
         internal Quaternion rot;
+		
+		public static State extrapol(State prev, State last, double timediff) {
+			State newState = new State();
+			newState.timestamp = last.timestamp + timediff;
+			double timeFactor = timediff / (last.timestamp - prev.timestamp);
+			newState.pos = last.pos + (last.pos - prev.pos) * (float)timeFactor;
+			newState.rot = last.rot;
+			
+			return newState;
+		}
     }
 
     // We store twenty states with "playback" information
@@ -27,7 +39,7 @@ public class PlayerInter : Photon.MonoBehaviour {
 	private Animator anim;
 
     void Awake()
-    {
+    {	
         if (photonView.isMine)
             this.enabled = false;//Only enable inter/extrapol for remote players
 		if(GetComponent<Animator>()) {
@@ -93,8 +105,7 @@ public class PlayerInter : Photon.MonoBehaviour {
         // Use interpolation
         // Check if latest state exceeds interpolation time, if this is the case then
         // it is too old and extrapolation should be used
-        if (m_BufferedState[0].timestamp > interpolationTime)
-        {
+        if (m_BufferedState[0].timestamp > interpolationTime) {
 			for (int i = 0; i < m_TimestampCount; i++)
             {
                 // Find the state which matches the interpolation time (time+0.1) or use last state
@@ -126,16 +137,25 @@ public class PlayerInter : Photon.MonoBehaviour {
         }
         // Use extrapolation. Here we do something really simple and just repeat the last
         // received state. You can do clever stuff with predicting what should happen.
-        else
-        {
-            State latest = m_BufferedState[0];
+        else {
+			// extrapolate a new state by timediff
+			double timediff = interpolationTime - m_BufferedState[0].timestamp;
+            State latest = State.extrapol(m_BufferedState[1], m_BufferedState[0], timediff);
 
-            transform.localPosition = Vector3.Lerp(transform.localPosition, latest.pos, Time.deltaTime * 20 );
+            // transform.localPosition = Vector3.Lerp(transform.localPosition, latest.pos, Time.deltaTime * 20 );
+			transform.localPosition = latest.pos + force;
             transform.localRotation = latest.rot;
+			
+//			Debug.ClearDeveloperConsole();
+//			Debug.LogError("Latest.pos : " + latest.pos);
 			
 			float speed = Mathf.Abs((transform.localPosition - latest.pos).magnitude) / Time.deltaTime;
 			if(anim)
 				anim.SetFloat("speed", speed );
         }
     }
+	
+	public void SetForce( Vector3 vec ) {
+		force = vec;	
+	}
 }

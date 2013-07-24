@@ -16,13 +16,15 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	private List<Force> forceSet = new List<Force>();
 	
 	private CharacterMover mover;
+	private PlayerInter syncer;
 	
 	// Use this for initialization
 	void Start () {
-		if (!(photonView.owner == PhotonNetwork.player) ) {
-			this.enabled = false;
-		}
+//		if (!(photonView.owner == PhotonNetwork.player) ) {
+//			this.enabled = false;
+//		}
 		mover = GetComponent<CharacterMover>();
+		syncer = GetComponent<PlayerInter>();
 	}
 	
 	// Update is called once per frame
@@ -30,6 +32,10 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 		Vector3 frameForce = CalculateFrameForce();
 		if( frameForce.magnitude != 0 ) {
 			mover.SetPhysicMovement( frameForce );
+			
+			if( syncer != null ) {
+				syncer.SetForce( frameForce );	
+			}
 			
 			if( !controlableWhileForce && (this.gameObject.GetComponent<InputManager>().enabled == true) ) {
 				this.gameObject.GetComponent<InputManager>().enabled = false;
@@ -74,7 +80,7 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	[RPC]
 	public void ApplyForce( Vector3 newForce) {
 		if (photonView.owner == PhotonNetwork.player && vulnerable) {
-				forceSet.Add( new Force(newForce, Time.time) );
+			forceSet.Add( new Force(newForce, Time.time) );
 		}
 	}
 	

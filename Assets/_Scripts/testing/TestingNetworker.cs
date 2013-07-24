@@ -20,6 +20,7 @@ public class TestingNetworker : Photon.MonoBehaviour {
 		foreach( RoomInfo ri in roomList ) {
 			if( ri.name ==	roomName ) {
 				PhotonNetwork.JoinRoom( roomName );
+				return;
 			}
 		}
 		// room doesnt exist 

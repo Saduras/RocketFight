@@ -11,7 +11,7 @@ public class Rocket : Photon.MonoBehaviour {
 	public float explosionRange = 2;
 	public float explosionForce = 20;
 	
-	public Vector3 target;
+	public Vector3? target = null;
 	
 	public GameObject explosion;
 	public string playerTag = "Player";
@@ -42,7 +42,7 @@ public class Rocket : Photon.MonoBehaviour {
 		if( birthTime - timestamp <= 0 )
 			return;
 		
-		Debug.Log("Forward by: " + (birthTime - timestamp));
+		Debug.LogError("Forward by: " + (birthTime - timestamp));
 		
 		UpdateInternal( birthTime - timestamp );
 	}
@@ -53,6 +53,10 @@ public class Rocket : Photon.MonoBehaviour {
 		target = targetPos;
 	}
 	
+	void OnDestroy() {
+		Explode();	
+	}
+	
 	// Update is called once per frame
 	void Update () {
 		UpdateInternal( Time.deltaTime );
@@ -61,12 +65,13 @@ public class Rocket : Photon.MonoBehaviour {
 	private void UpdateInternal(float deltaTime) {
 		this.transform.Translate( Vector3.forward * speed * deltaTime );
 		
-		Vector3 tmp = transform.position;
-		tmp.y = 0;
-		if( (tmp - target).magnitude < 0.2f && photonView.owner == PhotonNetwork.player) {
-			Explode();
-			PhotonNetwork.Destroy( this.gameObject );
-		}
+		Vector3 pos = transform.position;
+		pos.y = 0;
+		if( target != null )
+			if( Vector3.Dot( (target.Value - pos), transform.rotation * Vector3.forward ) <= 0 ) {
+				transform.position = target.Value;
+				Explode();
+			}
 			
 		if ( (birthTime + lifetime < PhotonNetwork.time) && ((photonView.owner == PhotonNetwork.player)) ) {
 			PhotonNetwork.Destroy( this.gameObject );	
@@ -74,30 +79,39 @@ public class Rocket : Photon.MonoBehaviour {
 	}
 	
 	void OnCollisionEnter( Collision collision ) {
-		if ( photonView.owner == PhotonNetwork.player ) {
-			Explode();
-			PhotonNetwork.Destroy( this.gameObject );
-		}
+//		if ( !photonView.owner == PhotonNetwork.player ) 
+//			return; 
+		
+		Explode();
 	}
 	
 	public void Explode() {
 		if( explosion != null)
-				PhotonNetwork.Instantiate(explosion.name, this.transform.position, Quaternion.identity, 0);
+				Instantiate(explosion, this.transform.position, Quaternion.identity);
 		
-		GameObject[] gos = GameObject.FindGameObjectsWithTag( playerTag );
-		foreach( GameObject playerGo in gos ) {
-			Vector3 direction = playerGo.transform.position - this.transform.position;
-			direction.y = 0;
-			for( int i=0; i<zoneRadii.Count; i++ ) {
-				if( direction.magnitude < zoneRadii[i] ) {
-					Vector3 playerForce = direction.normalized * explosionForce * zoneStrength[i];
-					Debug.Log("Explosion strength: " + playerForce.magnitude );
-					
-					playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.OthersBuffered,playerForce);	
-					playerGo.gameObject.GetPhotonView().RPC("HitBy",PhotonTargets.OthersBuffered, photonView.owner);
-					break;
+//		Debug.ClearDeveloperConsole();
+		Debug.LogError("ExplosionTime: " + PhotonNetwork.time);
+		
+		if( photonView.owner == PhotonNetwork.player ) {
+			GameObject[] gos = GameObject.FindGameObjectsWithTag( playerTag );
+			foreach( GameObject playerGo in gos ) {
+				Vector3 direction = playerGo.transform.position - this.transform.position;
+				direction.y = 0;
+				for( int i=0; i<zoneRadii.Count; i++ ) {
+					if( direction.magnitude < zoneRadii[i] ) {
+						Vector3 playerForce = direction.normalized * explosionForce * zoneStrength[i];
+						Debug.Log("Explosion strength: " + playerForce.magnitude );
+						
+						playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.OthersBuffered,playerForce);	
+						playerGo.gameObject.GetPhotonView().RPC("HitBy",PhotonTargets.OthersBuffered, photonView.owner);
+						break;
+					}
 				}
 			}
+				
+			PhotonNetwork.Destroy( this.gameObject );
+		} else {
+			gameObject.SetActive( false );
 		}
 	}
 	
