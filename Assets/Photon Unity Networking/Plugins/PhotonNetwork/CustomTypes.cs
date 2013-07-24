@@ -23,29 +23,11 @@ internal static class CustomTypes
     {
         PhotonPeer.RegisterType(typeof(Vector2), (byte)'W', SerializeVector2, DeserializeVector2);
         PhotonPeer.RegisterType(typeof(Vector3), (byte)'V', SerializeVector3, DeserializeVector3);
-        PhotonPeer.RegisterType(typeof(Transform), (byte)'T', SerializeTransform, DeserializeTransform);
         PhotonPeer.RegisterType(typeof(Quaternion), (byte)'Q', SerializeQuaternion, DeserializeQuaternion);
         PhotonPeer.RegisterType(typeof(PhotonPlayer), (byte)'P', SerializePhotonPlayer, DeserializePhotonPlayer);
     }
 
     #region Custom De/Serializer Methods
-
-    private static byte[] SerializeTransform(object customobject)
-    {
-        Transform t = (Transform)customobject;
-
-        Vector3[] parts = new Vector3[2];
-        parts[0] = t.position;
-        parts[1] = t.eulerAngles;
-
-        return Protocol.Serialize(parts);
-    }
-
-    private static object DeserializeTransform(byte[] serializedcustomobject)
-    {
-        object x = Protocol.Deserialize(serializedcustomobject);
-        return x;
-    }
 
     private static byte[] SerializeVector3(object customobject)
     {
