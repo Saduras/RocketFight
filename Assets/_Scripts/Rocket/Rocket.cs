@@ -61,12 +61,13 @@ public class Rocket : Photon.MonoBehaviour {
 	private void UpdateInternal(float deltaTime) {
 		this.transform.Translate( Vector3.forward * speed * deltaTime );
 		
-		Vector3 tmp = transform.position;
-		tmp.y = 0;
-		if( (tmp - target).magnitude < 0.2f && photonView.owner == PhotonNetwork.player) {
-			Explode();
-			PhotonNetwork.Destroy( this.gameObject );
-		}
+		Vector3 pos = transform.position;
+		pos.y = 0;
+		if( target != null )
+			if( Vector3.Dot( (target - pos), transform.rotation * Vector3.forward) <= 0 && photonView.owner == PhotonNetwork.player) {
+				transform.position = target;
+				Explode();
+			}
 			
 		if ( (birthTime + lifetime < PhotonNetwork.time) && ((photonView.owner == PhotonNetwork.player)) ) {
 			PhotonNetwork.Destroy( this.gameObject );	
@@ -76,7 +77,6 @@ public class Rocket : Photon.MonoBehaviour {
 	void OnCollisionEnter( Collision collision ) {
 		if ( photonView.owner == PhotonNetwork.player ) {
 			Explode();
-			PhotonNetwork.Destroy( this.gameObject );
 		}
 	}
 	
@@ -99,6 +99,9 @@ public class Rocket : Photon.MonoBehaviour {
 				}
 			}
 		}
+		
+		if( photonView.owner == PhotonNetwork.player )
+			PhotonNetwork.Destroy( this.gameObject );
 	}
 	
 	void OnDrawGizmos() {
