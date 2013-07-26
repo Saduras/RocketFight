@@ -40,6 +40,9 @@ public class InputManager : Photon.MonoBehaviour {
 		pman = GetComponent<PlayerManager>();
 		
 		crosshairAnimation = GameObject.Find("CursorController").GetComponent<Animation>();
+		
+		if(!match.IsRunning())
+			enabled = false;
 	}
 	
 	// Update is called once per frame

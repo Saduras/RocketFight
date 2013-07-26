@@ -103,6 +103,9 @@ public class Match : Photon.MonoBehaviour {
 		currentState = MatchState.COUNTDOWN;
 		countdownLabel.gameObject.SetActive( true );
 		countdownSound.Play();
+		
+		if( PhotonNetwork.isMasterClient )
+			OrganizeSpawning();
 	}
 	
 	[RPC]
@@ -228,8 +231,11 @@ public class Match : Photon.MonoBehaviour {
 		matchMusic.Play();
 		countdownLabel.gameObject.SetActive( false );
 		
-		if( PhotonNetwork.isMasterClient )
-			OrganizeSpawning();
+		GameObject[] characters = GameObject.FindGameObjectsWithTag("Player");
+		foreach( GameObject go in characters ) {
+			if( go.GetPhotonView().owner == PhotonNetwork.player )
+				go.GetComponent<InputManager>().enabled = true;
+		}
 	}
 	
 	private void GameOver() {
