@@ -1,7 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\Match.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\UI\UIMenu.cs">
     <Files>
+      <File FileName="Assets\_Scripts\UI\UIMenu.cs" Line="34" Column="48" />
       <File FileName="Assets\_Scripts\Match.cs" Line="221" Column="23" />
       <File FileName="Assets\_Scripts\UI\Buttons\ChangeUIStateButton.cs" Line="1" Column="1" />
       <File FileName="Assets\_Scripts\Player\InputManager.cs" Line="1" Column="1" />
@@ -19,8 +20,8 @@
                 <Node name="testing" expanded="True" />
                 <Node name="UI" expanded="True">
                   <Node name="Buttons" expanded="True" />
+                  <Node name="UIMenu.cs" selected="True" />
                 </Node>
-                <Node name="Match.cs" selected="True" />
               </Node>
               <Node name="NGUI" expanded="True">
                 <Node name="Resources" expanded="True">
