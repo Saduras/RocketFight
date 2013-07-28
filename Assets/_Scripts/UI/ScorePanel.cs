@@ -41,7 +41,7 @@ public class ScorePanel : MonoBehaviour {
 			scoreLabels[i].text = playerList[i].score.ToString();
 		}
 		
-		if( playerList.Count < 2 ) {
+		if( playerList.Count <= 2 ) {
 			Vector3 tmpScale = boardBackground.transform.localScale;
 			tmpScale.y = 700;
 			boardBackground.transform.localScale = tmpScale;

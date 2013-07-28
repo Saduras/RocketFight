@@ -64,9 +64,13 @@ public class Rocket : Photon.MonoBehaviour {
 		Vector3 pos = transform.position;
 		pos.y = 0;
 		if( target != null )
-			if( Vector3.Dot( (target - pos), transform.rotation * Vector3.forward) <= 0 && photonView.owner == PhotonNetwork.player) {
-				transform.position = target;
-				Explode();
+			if( Vector3.Dot( (target - pos), transform.rotation * Vector3.forward) <= 0 ) {
+				if( photonView.owner == PhotonNetwork.player ) {
+					transform.position = target;
+					Explode();
+				} else {
+					renderer.enabled = false;
+				}
 			}
 			
 		if ( (birthTime + lifetime < PhotonNetwork.time) && ((photonView.owner == PhotonNetwork.player)) ) {
