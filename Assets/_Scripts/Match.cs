@@ -27,6 +27,7 @@ public class Match : Photon.MonoBehaviour {
 	public UILabel countdownLabel;
 	public UILabel playerListLabel;
 	public UILabel finalScoreLabel;
+	public ScorePanel scoreBoard;
 	public UIMenu uiMenu;
 	public GameObject playerPrefab;
 	public List<Color> freeColors = new List<Color>();
@@ -103,6 +104,12 @@ public class Match : Photon.MonoBehaviour {
 		currentState = MatchState.COUNTDOWN;
 		countdownLabel.gameObject.SetActive( true );
 		countdownSound.Play();
+		
+		if( scoreBoard == null )
+			scoreBoard = GameObject.Find("ScorePanel").GetComponent<ScorePanel>();
+		
+		scoreBoard.gameObject.SetActive( true );
+		scoreBoard.UpdateDisplay();
 		
 		if( PhotonNetwork.isMasterClient )
 			OrganizeSpawning();
@@ -290,6 +297,7 @@ public class Match : Photon.MonoBehaviour {
 	
 	[RPC]
 	public void IncreaseScore(int playerID, int val) {
+		// increase score value
 		foreach( RocketFightPlayer rfp in playerList ) {
 			if( rfp.photonPlayer.ID == playerID ) {
 				rfp.score += val;
@@ -304,6 +312,8 @@ public class Match : Photon.MonoBehaviour {
 				}
 			}
 		}
+		// update scoreboard
+		scoreBoard.UpdateScore();
 	}
 	
 	[RPC]
@@ -314,5 +324,7 @@ public class Match : Photon.MonoBehaviour {
 				return;
 			}
 		}
+		// update scoreboard
+		scoreBoard.UpdateScore();
 	}
 }
