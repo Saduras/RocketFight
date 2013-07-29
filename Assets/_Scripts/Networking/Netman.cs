@@ -6,17 +6,6 @@ public class Netman : Photon.MonoBehaviour {
 	
 	// Name of the game scene. Will be loaded on joining a room.
 	public string gameScene = "Arena";
-	// Tag that identifies spawn points.
-	public string respawnTag = "Respawn";
-	// The prefabe we will spawn for the player.
-	public GameObject playerPrefab;
-	// Tells you if the player had spawn a character or not.
-	public bool hasSpawn = false;
-	
-	public UILabel playerListLabel;
-	
-	public float startTime;
-	public float gameTime = 180;
 	
 	public Match match;
 	
@@ -46,11 +35,6 @@ public class Netman : Photon.MonoBehaviour {
     }
 	
 	public void Update() {
-		if( PhotonNetwork.isMasterClient ) {			
-			if( (startTime + gameTime < Time.time) && hasSpawn )
-				GameOver();	
-		}
-		
 		if( PhotonNetwork.room != null )
 				if( playerCountRoom > PhotonNetwork.room.playerCount ) {
 						OnPlayerDisconnect();
@@ -126,11 +110,6 @@ public class Netman : Photon.MonoBehaviour {
 				photonView.RPC("BackToMenu",PhotonTargets.AllBuffered);
 			}
 		}
-	}
-	
-	[RPC]
-	public void BackToMenu() {
-		hasSpawn = false;
 	}
 	
 	public RocketFightPlayer GetPlayer( int playerID ) {

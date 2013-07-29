@@ -85,7 +85,7 @@ public class Rocket : Photon.MonoBehaviour {
 	}
 	
 	public void Explode() {
-		if( explosion != null)
+		if( explosion != null )
 				PhotonNetwork.Instantiate(explosion.name, this.transform.position, Quaternion.identity, 0);
 		
 		GameObject[] gos = GameObject.FindGameObjectsWithTag( playerTag );
