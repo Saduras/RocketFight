@@ -8,6 +8,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	public GameObject deathVFX;
 	public GameObject invulnable;
 	public GameObject marker;
+	public GameObject circleMarker;
 	private PlayerMarker markerInstance;
 	
 	// stuff for explosion on respawn
@@ -43,6 +44,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 			netman = GameObject.Find("PhotonNetman").GetComponent<Netman>();
 			mover = GetComponent<CharacterMover>();
 			markerInstance = ( (GameObject) Instantiate( marker ) ).GetComponent<PlayerMarker>();
+			circleMarker.SetActive( true );
 		}
 		match = GameObject.Find("PhotonNetman").GetComponent<Match>();
 	}
@@ -81,8 +83,10 @@ public class PlayerManager : Photon.MonoBehaviour {
 			}
 		}
 		
-		if( photonView.owner == PhotonNetwork.player )
+		if( photonView.owner == PhotonNetwork.player ) {
 			markerInstance.SetParent(transform);
+			circleMarker.renderer.material.SetColor("_Color",color);	
+		}
 	}
 	
 	public Color GetColor() {
