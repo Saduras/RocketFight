@@ -31,7 +31,7 @@ public class ScoreBuff : Photon.MonoBehaviour {
 	void Update () {
 		if(pickedUp) {
 			if(Time.time - pickupTime > buffDuration) {
-				Reset();
+				photonView.RPC("Reset",PhotonTargets.All);
 			}
 			if( scoreTime + buffIntervall < Time.time ) {
 				netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,player.ID, buffScoreValue);

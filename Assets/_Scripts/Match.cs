@@ -258,6 +258,8 @@ public class Match : Photon.MonoBehaviour {
 			}
 		}
 		uiMenu.ChanceState(UIMenu.UIState.MATCHOVER);
+		
+		playerList = SortPlayerListByScore( playerList );
 		UpdateUIPlayerList( finalScoreLabel );
 		// stop background music
 		matchMusic.Stop();
@@ -338,20 +340,19 @@ public class Match : Photon.MonoBehaviour {
 	}
 	
 	private List<PhotonPlayer> SortPlayerListByID( List<PhotonPlayer> unsortedPlayerList ) {
-		Debug.Log("Sorting player list...");
 		QuickSortPlayerID( ref unsortedPlayerList, 0, unsortedPlayerList.Count - 1);
 		return unsortedPlayerList;
 	}
 	
 	private void QuickSortPlayerID( ref List<PhotonPlayer> list, int left, int right) {
 		if( left < right ) {
-			int divisior = QuickSortDivide(ref list, left, right);
+			int divisior = QuickSortDivideID(ref list, left, right);
 			QuickSortPlayerID(ref list, left, divisior -1);
 			QuickSortPlayerID(ref list, divisior + 1, right);
 		}
 	}
 	
-	private int QuickSortDivide( ref List<PhotonPlayer> list, int left, int right ) {
+	private int QuickSortDivideID( ref List<PhotonPlayer> list, int left, int right ) {
 		int i = left;
         // start with j left beside pivot element
         int j = right - 1;
@@ -380,6 +381,54 @@ public class Match : Photon.MonoBehaviour {
 		// swap pivot element (list[right]) with new final positoin (list[i])
         if (list[i].ID > pivot) {
                 PhotonPlayer z = list[i];
+                list[i] = list[right];
+                list[right] = z;
+        }
+        return i; // return position of pivot element
+	}
+	
+	private List<RocketFightPlayer> SortPlayerListByScore( List<RocketFightPlayer> unsortedPlayerList ) {
+		QuickSortPlayerScore( ref unsortedPlayerList, 0, unsortedPlayerList.Count - 1);
+		return unsortedPlayerList;
+	}
+	
+	private void QuickSortPlayerScore( ref List<RocketFightPlayer> list, int left, int right) {
+		if( left < right ) {
+			int divisior = QuickSortDivideScore(ref list, left, right);
+			QuickSortPlayerScore(ref list, left, divisior -1);
+			QuickSortPlayerScore(ref list, divisior + 1, right);
+		}
+	}
+	
+	private int QuickSortDivideScore( ref List<RocketFightPlayer> list, int left, int right ) {
+		int i = left;
+        // start with j left beside pivot element
+        int j = right - 1;
+        int pivot = list[right].score;
+
+        do {
+                // search element greater then pivot starting from left
+                while (list[i].score >= pivot && i < right) 
+                        i++;
+
+                // seach element smaller then pivot starting from right
+                while (list[j].score <= pivot && j > left) 
+                        j--;
+
+                if (i < j) {
+						// swap list[i] and list[j]
+                        RocketFightPlayer z = list[i];
+                        list[i] = list[j];
+                        list[j] = z;
+                }
+
+        } while (i < j);
+        // as long as i < j
+
+        // Tausche Pivotelement (daten[rechts]) mit neuer endgültiger Position (daten[i])
+		// swap pivot element (list[right]) with new final positoin (list[i])
+        if (list[i].score < pivot) {
+                RocketFightPlayer z = list[i];
                 list[i] = list[right];
                 list[right] = z;
         }
