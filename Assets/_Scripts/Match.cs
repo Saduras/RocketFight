@@ -174,12 +174,17 @@ public class Match : Photon.MonoBehaviour {
 	[RPC]
 	public void ReloadPlayerList() {
 		// reset colors
-		freeColors.AddRange( usedColors );
+		for( int i=usedColors.Count-1; i>=0; i-- ) {
+			freeColors.Add( usedColors[i] );	
+			Debug.Log( usedColors[i] );
+		}
 		usedColors.Clear();
 		
 		// reload player list
 		playerList.Clear();
-		foreach( PhotonPlayer player in PhotonNetwork.playerList ) {
+		List<PhotonPlayer> sortedList = SortPlayerListByID( new List<PhotonPlayer>( PhotonNetwork.playerList ) );
+		
+		foreach( PhotonPlayer player in sortedList ) {
 			AddPlayer( player );	
 		}
 	}
@@ -188,7 +193,7 @@ public class Match : Photon.MonoBehaviour {
 		string labelString = "";
 		foreach( RocketFightPlayer rfp in playerList ) {
 			labelString += "[" + ColorX.RGBToHex(rfp.color) + "]";
-			labelString += rfp.photonPlayer.name + " : (" + rfp.score + ")";
+			labelString += rfp.photonPlayer.name + "[" + rfp.photonPlayer.ID  + "]" + " : (" + rfp.score + ")";
 			labelString += "[ffffff]";
 			if( rfp.photonPlayer.isMasterClient ) 
 				labelString += " (Master)";
@@ -326,5 +331,58 @@ public class Match : Photon.MonoBehaviour {
 		}
 		// update scoreboard
 		scoreBoard.UpdateScore();
+	}
+	
+	public List<Color> GetUsedColors() {
+		return usedColors;	
+	}
+	
+	private List<PhotonPlayer> SortPlayerListByID( List<PhotonPlayer> unsortedPlayerList ) {
+		Debug.Log("Sorting player list...");
+		QuickSortPlayerID( ref unsortedPlayerList, 0, unsortedPlayerList.Count - 1);
+		return unsortedPlayerList;
+	}
+	
+	private void QuickSortPlayerID( ref List<PhotonPlayer> list, int left, int right) {
+		if( left < right ) {
+			int divisior = QuickSortDivide(ref list, left, right);
+			QuickSortPlayerID(ref list, left, divisior -1);
+			QuickSortPlayerID(ref list, divisior + 1, right);
+		}
+	}
+	
+	private int QuickSortDivide( ref List<PhotonPlayer> list, int left, int right ) {
+		int i = left;
+        // start with j left beside pivot element
+        int j = right - 1;
+        int pivot = list[right].ID;
+
+        do {
+                // search element greater then pivot starting from left
+                while (list[i].ID <= pivot && i < right) 
+                        i++;
+
+                // seach element smaller then pivot starting from right
+                while (list[j].ID >= pivot && j > left) 
+                        j--;
+
+                if (i < j) {
+						// swap list[i] and list[j]
+                        PhotonPlayer z = list[i];
+                        list[i] = list[j];
+                        list[j] = z;
+                }
+
+        } while (i < j);
+        // as long as i < j
+
+        // Tausche Pivotelement (daten[rechts]) mit neuer endgültiger Position (daten[i])
+		// swap pivot element (list[right]) with new final positoin (list[i])
+        if (list[i].ID > pivot) {
+                PhotonPlayer z = list[i];
+                list[i] = list[right];
+                list[right] = z;
+        }
+        return i; // return position of pivot element
 	}
 }

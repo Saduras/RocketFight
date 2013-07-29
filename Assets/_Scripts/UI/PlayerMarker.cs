@@ -22,8 +22,8 @@ public class PlayerMarker : Photon.MonoBehaviour {
 			Destroy( gameObject );
 	}
 	
-	public void SetParent( Transform transform ) {
-		parent = transform;
-		GetComponentInChildren<Renderer>().material.color = parent.GetComponentInChildren<SkinnedMeshRenderer>().material.color;
+	public void SetParent( Transform trans ) {
+		parent = trans;
+		GetComponentInChildren<Renderer>().material.color = trans.gameObject.GetComponent<PlayerManager>().GetColor();
 	}	
 }

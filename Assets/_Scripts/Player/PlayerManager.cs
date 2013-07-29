@@ -8,6 +8,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	public GameObject deathVFX;
 	public GameObject invulnable;
 	public GameObject marker;
+	private PlayerMarker markerInstance;
 	
 	// stuff for explosion on respawn
 	public GameObject explosion;
@@ -17,6 +18,9 @@ public class PlayerManager : Photon.MonoBehaviour {
 	public List<float> zoneStrength = new List<float>();
 	
 	public AudioSource hitSound;
+	
+	public Material[] playerMaterials;
+	public SkinnedMeshRenderer materialTarget;
 	
 	private Color color;
 	private PhotonPlayer lastHit;
@@ -31,15 +35,16 @@ public class PlayerManager : Photon.MonoBehaviour {
 	private bool requestSpawn = false;
 	
 	private CharacterMover mover;
+	private Match match;
 	
 	
-	void Start () {
+	void Awake() {
 		if (photonView.owner == PhotonNetwork.player) {	
 			netman = GameObject.Find("PhotonNetman").GetComponent<Netman>();
 			mover = GetComponent<CharacterMover>();
-			GameObject handle = (GameObject) Instantiate( marker );
-			handle.GetComponent<PlayerMarker>().SetParent(transform);
+			markerInstance = ( (GameObject) Instantiate( marker ) ).GetComponent<PlayerMarker>();
 		}
+		match = GameObject.Find("PhotonNetman").GetComponent<Match>();
 	}
 	
 	void Update() {	
@@ -67,8 +72,21 @@ public class PlayerManager : Photon.MonoBehaviour {
 	
 	[RPC]
 	public void SetColor( Vector3 rgb ) {
+		List<Color> usedColors = match.GetUsedColors();
+		
 		color = new Color(rgb[0],rgb[1],rgb[2], 1.0f);
-		GetComponentInChildren<SkinnedMeshRenderer>().material.SetColor("_Color",color);
+		for( int i=0; i<usedColors.Count; i++) {
+			if( usedColors[i] == color ) {
+				materialTarget.material = playerMaterials[playerMaterials.Length - 1 - i];	
+			}
+		}
+		
+		if( photonView.owner == PhotonNetwork.player )
+			markerInstance.SetParent(transform);
+	}
+	
+	public Color GetColor() {
+		return color;	
 	}
 	
 	/**
