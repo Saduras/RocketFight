@@ -25,8 +25,9 @@ public class Match : Photon.MonoBehaviour {
 	public List<Vector3> positions = new List<Vector3>();
 	
 	public UILabel countdownLabel;
-	public UILabel playerListLabel;
 	public UILabel finalScoreLabel;
+	public UIPlayerSlot[] uiPlayerLobbySlots;
+	
 	public ScorePanel scoreBoard;
 	public UIMenu uiMenu;
 	public GameObject playerPrefab;
@@ -88,7 +89,7 @@ public class Match : Photon.MonoBehaviour {
 		currentState = MatchState.SETTINGUP;
 		startRequest = false;
 		gameTime = matchLength;
-		UpdateUIPlayerList();
+		UpdateLobbyUI();
 	}
 	
 	public void Init() {
@@ -139,7 +140,7 @@ public class Match : Photon.MonoBehaviour {
 		playerList.Add( new RocketFightPlayer(newPlayer, playerColor));
 		
 		// update UI
-		UpdateUIPlayerList();
+		UpdateLobbyUI();
 	}
 	
 	public bool IsRunning() {
@@ -165,7 +166,7 @@ public class Match : Photon.MonoBehaviour {
 				// fremove from list
 				playerList.Remove(rfp);
 				// update UI
-				UpdateUIPlayerList();
+				UpdateLobbyUI();
 				return;
 			}
 		}
@@ -189,22 +190,19 @@ public class Match : Photon.MonoBehaviour {
 		}
 	}
 	
-	public void UpdateUIPlayerList( UILabel label ) {
-		string labelString = "";
-		foreach( RocketFightPlayer rfp in playerList ) {
-			labelString += "[" + ColorX.RGBToHex(rfp.color) + "]";
-			labelString += rfp.photonPlayer.name + "[" + rfp.photonPlayer.ID  + "]" + " : (" + rfp.score + ")";
-			labelString += "[ffffff]";
-			if( rfp.photonPlayer.isMasterClient ) 
-				labelString += " (Master)";
-			labelString += "\n";
+	public void UpdateLobbyUI() {
+		// deactivate all slots in lobby
+		foreach( UIPlayerSlot slot in uiPlayerLobbySlots ) {
+			slot.Deactivate();	
 		}
 		
-		label.text = labelString;	
-	}
-	
-	public void UpdateUIPlayerList() {
-		UpdateUIPlayerList( playerListLabel );	
+		// set fill one slot for each player in playerlist with data
+		for( int i=0; i<playerList.Count; i++ ) {
+			uiPlayerLobbySlots[i].Set( 
+				playerList[i].photonPlayer.name, 
+				(PhotonNetwork.masterClient == playerList[i].photonPlayer),
+				(PhotonNetwork.player == playerList[i].photonPlayer));
+		}
 	}
 	
 	[RPC]
@@ -260,7 +258,7 @@ public class Match : Photon.MonoBehaviour {
 		uiMenu.ChanceState(UIMenu.UIState.MATCHOVER);
 		
 		playerList = SortPlayerListByScore( playerList );
-		UpdateUIPlayerList( finalScoreLabel );
+		// UpdateUIPlayerList( finalScoreLabel );
 		// stop background music
 		matchMusic.Stop();
 	}

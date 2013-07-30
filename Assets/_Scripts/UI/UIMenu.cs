@@ -71,7 +71,7 @@ public class UIMenu : Photon.MonoBehaviour {
 			lobbyPanel.gameObject.SetActive(true);
 			inGamePanel.gameObject.SetActive(false);
 			afterMatchPanel.gameObject.SetActive(false);
-			match.UpdateUIPlayerList();
+			match.UpdateLobbyUI();
 			break;
 		case UIState.INGAME:
 			mainMenuPanel.gameObject.SetActive(false);
@@ -95,7 +95,7 @@ public class UIMenu : Photon.MonoBehaviour {
 			lobbyPanel.gameObject.SetActive(false);
 			inGamePanel.gameObject.SetActive(false);
 			afterMatchPanel.gameObject.SetActive(true);
-			match.UpdateUIPlayerList();
+			match.UpdateLobbyUI();
 			break;
 		case UIState.QUIT:
 			Application.Quit();
