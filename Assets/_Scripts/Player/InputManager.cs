@@ -147,9 +147,7 @@ public class InputManager : Photon.MonoBehaviour {
 	
 	[RPC]
 	public void SetPlayer(PhotonPlayer player) {
-		Debug.Log("Setting the controlling player: " + player.name + "[" + player.ID + "]");
 		controllingPlayer = player;
-		// photonView.RPC("SetPlayer",PhotonTargets.OthersBuffered, player);
 	}
 	
 	[RPC]

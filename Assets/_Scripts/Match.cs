@@ -41,6 +41,8 @@ public class Match : Photon.MonoBehaviour {
 	private bool arenaLoaded = false;
 	private bool sent = false;
 	
+	private PhotonPlayer itemHolder = null;
+	
 	public enum MatchState {
 		SETTINGUP,
 		COUNTDOWN,
@@ -272,7 +274,8 @@ public class Match : Photon.MonoBehaviour {
 	public void SpawnPlayer(Vector3 spawnPt, Vector3 rgb) {
 		Debug.Log("Instatiate player at " + spawnPt);
 		GameObject handle = PhotonNetwork.Instantiate(playerPrefab.name,spawnPt,Quaternion.identity,0);
-		handle.GetComponent<InputManager>().SendMessage("SetPlayer", PhotonNetwork.player);
+		// handle.GetComponent<InputManager>().SendMessage("SetPlayer", PhotonNetwork.player);
+		handle.GetPhotonView().RPC("SetPlayer",PhotonTargets.AllBuffered, PhotonNetwork.player);
 		handle.GetPhotonView().RPC("SetColor",PhotonTargets.AllBuffered,rgb);
 	}
 	
@@ -305,8 +308,14 @@ public class Match : Photon.MonoBehaviour {
 		// increase score value
 		foreach( RocketFightPlayer rfp in playerList ) {
 			if( rfp.photonPlayer.ID == playerID ) {
+				// apply multiplier effect by item if the playertarget is the item holder
+				if( rfp.photonPlayer == itemHolder ) 
+					val *= 2;
+				
+				// increase score in playerlist
 				rfp.score += val;
 				
+				// display score increase over character if its my char
 				if( rfp.photonPlayer == PhotonNetwork.player ) {
 					GameObject[] characterObjects = GameObject.FindGameObjectsWithTag("Player");
 					foreach( GameObject character in characterObjects ) {
@@ -431,5 +440,22 @@ public class Match : Photon.MonoBehaviour {
                 list[right] = z;
         }
         return i; // return position of pivot element
+	}
+	
+	/**
+	 * Set who is holding the item to enable score multiplier.
+	 */
+	[RPC]
+	public void SetItemHolder( PhotonPlayer player ) {
+		Debug.Log("New item holder: " + player.name + "[" + player.ID + "]" );
+		itemHolder = player;
+	}
+	
+	/**
+	 * Clear item holde, so nobody get the score multiplier.
+	 */
+	[RPC]
+	public void ClearItem() {
+		itemHolder = null;	
 	}
 }
