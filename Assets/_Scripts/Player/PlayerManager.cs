@@ -78,8 +78,9 @@ public class PlayerManager : Photon.MonoBehaviour {
 		
 		color = new Color(rgb[0],rgb[1],rgb[2], 1.0f);
 		for( int i=0; i<usedColors.Count; i++) {
-			if( usedColors[i] == color ) {
+			if( usedColors[i] == color  && materialTarget != null) {
 				materialTarget.material = playerMaterials[playerMaterials.Length - 1 - i];	
+				break;
 			}
 		}
 		
@@ -184,9 +185,6 @@ public class PlayerManager : Photon.MonoBehaviour {
 			
 				// TODO Spawnschutz
 				GetComponent<PlayerPhysic>().vulnerable = false;
-				Color tmpCol = GetComponentInChildren<SkinnedMeshRenderer>().material.color;
-				tmpCol.a = 0.5f;
-				GetComponentInChildren<SkinnedMeshRenderer>().material.color = tmpCol;
 			
 				// TODO choose spawn with single click
 				GetComponent<InputManager>().respawnFree = true;
@@ -195,8 +193,11 @@ public class PlayerManager : Photon.MonoBehaviour {
 	
 	[RPC]
 	public void ShowDeath() {
-		GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
-		GetComponentInChildren<MeshRenderer>().enabled = false;
+		if( GetComponentInChildren<SkinnedMeshRenderer>() != null
+			&& GetComponentInChildren<SkinnedMeshRenderer>() != null) {
+			GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+			GetComponentInChildren<MeshRenderer>().enabled = false;
+		}
 		Instantiate(deathVFX,transform.position,Quaternion.identity);
 	}
 	
@@ -216,9 +217,12 @@ public class PlayerManager : Photon.MonoBehaviour {
 	
 	[RPC]
 	public void ShowRespawn() {
-		GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
-		GetComponentInChildren<MeshRenderer>().enabled = true;
-		invulnable.SetActive( true );
+		if( GetComponentInChildren<SkinnedMeshRenderer>() != null
+			&& GetComponentInChildren<MeshRenderer>() != null ) {
+			GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
+			GetComponentInChildren<MeshRenderer>().enabled = true;
+			invulnable.SetActive( true );
+		}
 	}
 	
 	[RPC]
