@@ -26,7 +26,7 @@ public class Match : Photon.MonoBehaviour {
 	
 	public UILabel countdownLabel;
 	public UILabel finalScoreLabel;
-	public UIPlayerSlot[] uiPlayerLobbySlots;
+	public UIPlayerLobbySlot[] uiPlayerLobbySlots;
 	
 	public ScorePanel scoreBoard;
 	public UIMenu uiMenu;
@@ -194,7 +194,7 @@ public class Match : Photon.MonoBehaviour {
 	
 	public void UpdateLobbyUI() {
 		// deactivate all slots in lobby
-		foreach( UIPlayerSlot slot in uiPlayerLobbySlots ) {
+		foreach( UIPlayerLobbySlot slot in uiPlayerLobbySlots ) {
 			slot.Deactivate();	
 		}
 		

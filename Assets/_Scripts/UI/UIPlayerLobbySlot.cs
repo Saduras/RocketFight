@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class UIPlayerSlot : MonoBehaviour {
+public class UIPlayerLobbySlot : MonoBehaviour {
 	
 	public UISlicedSprite slotBackground;
 	public UISlicedSprite slotBackgroundHighlight;
