@@ -193,6 +193,7 @@ public class Match : Photon.MonoBehaviour {
 	}
 	
 	public void UpdateLobbyUI() {
+		Debug.LogError("UpdateLobbyUI " + playerList.Count);
 		// deactivate all slots in lobby
 		foreach( UIPlayerLobbySlot slot in uiPlayerLobbySlots ) {
 			slot.Deactivate();	

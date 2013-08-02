@@ -12,7 +12,7 @@ public class UIPlayerLobbySlot : MonoBehaviour {
 	public Color activeBackgroundColor;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		// deactivate this slot as default
 		Deactivate();
 	}
