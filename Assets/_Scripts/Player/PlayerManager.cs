@@ -147,18 +147,14 @@ public class PlayerManager : Photon.MonoBehaviour {
 				// give score points to killer and assistances
 				if ( hitList.Count > 0 ) {
 					Debug.Log("Killed by " + hitList[hitList.Count - 1].player.name + " [" + hitList[hitList.Count - 1].player.ID + "]");
-					netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,hitList[hitList.Count -1].player.ID, 2);
 					
-					// send kill event to eventcollector
-					GameObject.Find("FightEventManager").GetPhotonView().RPC("NewEvent",PhotonTargets.AllBuffered,
-						FightEvent.FightEventType.KILL, hitList[hitList.Count - 1].player, PhotonNetwork.player, PhotonNetwork.time);
+					GameObject.Find("PanelDeath").GetComponent<DeathPanel>().Activate( hitList[hitList.Count - 1].player );
+					
+					netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,hitList[hitList.Count -1].player.ID, 2);
 					
 					for( int i=0; i<hitList.Count-1; i++) {
 						if( hitList[i] != null && hitList[i].timestamp > (Time.time - assistTime) ) {
 							netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,hitList[i].player.ID, 1);
-							// send kill event to eventcollector
-							GameObject.Find("FightEventManager").GetPhotonView().RPC("NewEvent",PhotonTargets.AllBuffered,
-								FightEvent.FightEventType.ASSIST, hitList[i].player, PhotonNetwork.player, PhotonNetwork.time);
 						}
 					}
 				}
