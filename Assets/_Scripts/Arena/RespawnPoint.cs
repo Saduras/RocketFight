@@ -4,74 +4,92 @@ using System.Collections;
 [RequireComponent(typeof(PhotonView))]
 public class RespawnPoint : Photon.MonoBehaviour {
 	
+	// sound & VFX references
 	public GameObject particleEffectSystem;
 	public AudioSource respawnSound;
-	public GameObject pointer;
-	public Color color;
-	public PhotonPlayer player;
+	public GameObject positionMarker;
 	
+	private Color color;
+	private PhotonPlayer player;
 	private PlayerManager pman;
 	
+	// paramteres used to move this object around
 	private Vector3 target;
 	private float speed = 5;
 	
+	/**
+	 * Initialize target position to ensure respawnpoint standing still on start
+	 */ 
 	void Start() {
 		target = transform.position;	
 	}
 	
 	void Update() {
+		// enable/disable marker if the linked player is dead/alive
 		if( pman != null ) {
 			if( pman.IsDead() ) {		
-				photonView.RPC("SetPointer",PhotonTargets.All,true);
+				photonView.RPC("SetMarkerActive",PhotonTargets.All,true);
 			} else {
-				photonView.RPC("SetPointer",PhotonTargets.All,false);
+				photonView.RPC("SetMarkerActive",PhotonTargets.All,false);
 			}
 		}
 		
+		// move respawnpoint with given speed to target until we a very close
 		if( target != null && (target - transform.position).magnitude > 0.2f ) {
 			transform.Translate( (target - transform.position).normalized * speed * Time.deltaTime );
 		}
 	}
 	
+	/**
+	 * Enable/disable marker
+	 */
 	[RPC]
-	public void SetPointer( bool val ) {
-		pointer.SetActive( val );
+	public void SetMarkerActive( bool val ) {
+		positionMarker.SetActive( val );
 	}
 	
-	public void SetPos( Vector3 pos ) {
+	/**
+	 * Set the target of the respawn movement
+	 */
+	public void SetTargetPos( Vector3 pos ) {
 		target = pos;
 	}
 	
+	/**
+	 * Establish reference to the player
+	 */ 
 	public void SetPMan( PlayerManager playermanager ) {
 		pman = playermanager;
 	}
 	
+	/**
+	 * Set the color of the respawn VFX
+	 */ 
 	[RPC]
 	public void SetColor( Vector3 rgb ) {
 		color = new Color( rgb.x, rgb.y, rgb.z, 1);
-		Debug.Log("Set Color");
 		particleEffectSystem.SetActive( true );
 		ParticleSystem[] ps = GetComponentsInChildren<ParticleSystem>();
 		foreach( ParticleSystem particle in ps ) {
 			particle.startColor = color;
 		}
-		pointer.renderer.material.color = color;
+		positionMarker.renderer.material.color = color;
 	}
 	
+	/**
+	 * Trigger respawn sound and -animation
+	 */ 
 	[RPC]
 	public void StartAnimation() {
 		particleEffectSystem.SetActive(true);
 		respawnSound.Play();
-		Debug.Log("Respawn Animation start");
 	}
 	
 	/**
-	 * Assign this respawn point to the given player if it is free.
-	 * The respawn point is not free anymore.
+	 * Assign this respawn point to the given player.
 	 */
 	[RPC]
 	public void AssignTo(PhotonPlayer assignedPlayer) {
 		player = assignedPlayer;
-		Debug.Log("Assigned respawn point to: " + player.name);
 	}
 }

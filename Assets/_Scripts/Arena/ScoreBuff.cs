@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 public class ScoreBuff : Photon.MonoBehaviour {
-
+	
+	// sound and VFX references
 	public GameObject staticVFX;
 	public GameObject mobileVFX;
 	public AudioSource itemSound;

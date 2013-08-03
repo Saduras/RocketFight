@@ -69,7 +69,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	}
 	
 	public void SetSpawnPoint( Vector3 position ) {
-		spawnPointObj.GetComponent<RespawnPoint>().SetPos( position );
+		spawnPointObj.GetComponent<RespawnPoint>().SetTargetPos( position );
 	}
 	
 	[RPC]
