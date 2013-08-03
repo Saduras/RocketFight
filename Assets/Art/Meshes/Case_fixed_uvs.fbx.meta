@@ -77,6 +77,14 @@ ModelImporter:
     100142: transform44
     100144: transform45
     100146: transform46
+    100148: polySurface1
+    100150: polySurface2
+    100152: polySurface3
+    100154: Rocket_Case
+    100156: transform47
+    100158: transform48
+    100160: transform49
+    100162: transform50
     400000: Arena_Case
     400002: Arena_case
     400004: Arena_Edges
@@ -151,14 +159,26 @@ ModelImporter:
     400142: transform44
     400144: transform45
     400146: transform46
+    400148: polySurface1
+    400150: polySurface2
+    400152: polySurface3
+    400154: Rocket_Case
+    400156: transform47
+    400158: transform48
+    400160: transform49
+    400162: transform50
     2300000: Arena_case
     2300002: pPlane3
+    2300004: Rocket_Case
     3300000: Arena_case
     3300002: pPlane3
+    3300004: Rocket_Case
     4300000: pPlane3
     4300002: Arena_case
+    4300004: Rocket_Case
     6400000: Arena_case
     6400002: pPlane3
+    6400004: Rocket_Case
     9500000: //RootNode
   materials:
     importMaterials: 1
