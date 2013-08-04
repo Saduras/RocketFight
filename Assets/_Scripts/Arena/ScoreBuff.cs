@@ -8,6 +8,7 @@ public class ScoreBuff : Photon.MonoBehaviour {
 	public GameObject mobileVFX;
 	public AudioSource itemSound;
 	
+	// parameter to modify buff effect
 	public float buffDuration = 30;
 	public float buffIntervall = 5;
 	public int buffScoreValue = 2;
@@ -18,7 +19,6 @@ public class ScoreBuff : Photon.MonoBehaviour {
 	private float pickupTime = 0;
 	private float scoreTime = 0;
 	private Netman netman;
-	
 	private Match match;
 	
 	// Use this for initialization
@@ -34,9 +34,11 @@ public class ScoreBuff : Photon.MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(pickedUp && PhotonNetwork.isMasterClient) {
+			// reset item if carry duration is over
 			if(Time.time - pickupTime > buffDuration) {
 				photonView.RPC("Reset",PhotonTargets.AllBuffered);
 			}
+			// increase score in given intervals if this feature is enabled
 			if( scoreTime + buffIntervall < Time.time && buffScoreValue > 0 ) {
 				netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,player.ID, buffScoreValue);
 				scoreTime = Time.time;
@@ -45,12 +47,16 @@ public class ScoreBuff : Photon.MonoBehaviour {
 	}
 	
 	/**
-	 * Reset the item to it's original place and clear item holder ref.
+	 * Call Reset() via RPC on all clients
 	 */
 	public void Drop() {
 		photonView.RPC("Reset",PhotonTargets.AllBuffered);
 	}
 	
+	/**
+	 * Drop the item and move it back to it's original postion.
+	 * Also re-enable some VFX
+	 */ 
 	[RPC]
 	public void Reset() {
 		pickedUp = false;
