@@ -19,6 +19,9 @@ public class CharacterMover : MonoBehaviour {
 	
 	private CharacterController controller;
 	
+	/**
+	 * Init character controller reference on wake up
+	 */ 
 	void Awake() {
 		controller = GetComponent<CharacterController>();
 	}
