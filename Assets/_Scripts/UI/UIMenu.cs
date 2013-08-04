@@ -112,4 +112,8 @@ public class UIMenu : Photon.MonoBehaviour {
 		inGamePanel.gameObject.SetActive(true);
 	}
 	
+	public UIState GetState() {
+		return currentState;	
+	}
+	
 }

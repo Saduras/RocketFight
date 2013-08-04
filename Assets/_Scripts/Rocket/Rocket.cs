@@ -11,7 +11,7 @@ public class Rocket : Photon.MonoBehaviour {
 	public float explosionRange = 2;
 	public float explosionForce = 20;
 	
-	public Vector3 target;
+	public Vector3? target;
 	
 	public GameObject explosion;
 	public string playerTag = "Player";
@@ -64,9 +64,9 @@ public class Rocket : Photon.MonoBehaviour {
 		Vector3 pos = transform.position;
 		pos.y = 0;
 		if( target != null )
-			if( Vector3.Dot( (target - pos), transform.rotation * Vector3.forward) <= 0 ) {
+			if( Vector3.Dot( (target.Value - pos), transform.rotation * Vector3.forward) <= 0 ) {
 				if( photonView.owner == PhotonNetwork.player ) {
-					transform.position = target;
+					transform.position = target.Value;
 					Explode();
 				} else {
 					renderer.enabled = false;
