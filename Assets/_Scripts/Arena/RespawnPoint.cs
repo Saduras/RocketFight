@@ -14,7 +14,7 @@ public class RespawnPoint : Photon.MonoBehaviour {
 	private PlayerManager pman;
 	
 	// paramteres used to move this object around
-	private Vector3 target;
+	private Vector3? target;
 	private float speed = 5;
 	
 	/**
@@ -35,9 +35,16 @@ public class RespawnPoint : Photon.MonoBehaviour {
 		}
 		
 		// move respawnpoint with given speed to target until we a very close
-		if( target != null && (target - transform.position).magnitude > 0.2f ) {
-			transform.Translate( (target - transform.position).normalized * speed * Time.deltaTime );
+		if( target != null && (target.Value - transform.position).magnitude > 0.2f ) {
+			transform.Translate( (target.Value - transform.position).normalized * speed * Time.deltaTime );
 		}
+	}
+	
+	/**
+	 * Check if the given player is the owner of this respawn point.
+	 */
+	public bool IsOwner( PhotonPlayer checkPlayer ) {
+		return player == checkPlayer;
 	}
 	
 	/**

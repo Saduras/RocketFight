@@ -165,10 +165,9 @@ public class PlayerManager : Photon.MonoBehaviour {
 				if( spawnPointObj == null ) {
 					GameObject[] gos = GameObject.FindGameObjectsWithTag("Respawn");
 					foreach( GameObject go in gos ) {
-						if ( go.GetComponent<RespawnPoint>().player == photonView.owner ) {
+						if ( go.GetComponent<RespawnPoint>().IsOwner(photonView.owner) ) {
 							spawnPointObj = go;
-							spawnPointObj.GetComponent<RespawnPoint>().SetPMan( this );
-							//spawnPointObj.GetPhotonView().viewID = PhotonNetwork.AllocateViewID();
+							spawnPointObj.GetComponent<RespawnPoint>().SetPMan(this);
 							break;
 						}
 					}
