@@ -189,9 +189,6 @@ public class PlayerManager : Photon.MonoBehaviour {
 			
 				// TODO Spawnschutz
 				GetComponent<PlayerPhysic>().vulnerable = false;
-			
-				// TODO choose spawn with single click
-				GetComponent<InputManager>().respawnFree = true;
 		}
 	}
 	

@@ -4,8 +4,10 @@ using System.Collections;
 [RequireComponent(typeof(CharacterMover))]
 public class InputManager : Photon.MonoBehaviour {
 	
+	// allow to enable/disable input controlls
 	public bool controlable = true;
 	
+	// weapon cooldown
 	public float cooldown = 0.5f;
 	
 	public Animation crosshairAnimation;
@@ -13,23 +15,23 @@ public class InputManager : Photon.MonoBehaviour {
 	public GameObject muzzleFlash;
 	public AudioSource walkSound;
 	public string groundTag = "Ground";
+	
 	private Match match;
-	private float lastShot = 0;
+	private float lastShotTimestamp = 0;
 	private Vector3 shotDir = Vector3.forward;
 	
 	private Animator anim;
 	private CharacterMover mover;
 	private PlayerManager pman;
 	
+	// these to allow an rage-mode after respawn
+	// a limit number of shoots with reduces cooldown
 	private int rageCounter = 0;
 	private float rageCooldown = 0.2f;
-	
-	public bool respawnFree = true;
 	
 	
 	// The client who controls this character
 	public PhotonPlayer controllingPlayer;
-	//private PhotonView photonView;
 	
 	// Use this for initialization
 	public void Awake () {
@@ -38,55 +40,59 @@ public class InputManager : Photon.MonoBehaviour {
 		anim.speed = mover.movementSpeed / 2;
 		match = GameObject.Find("PhotonNetman").GetComponent<Match>();
 		pman = GetComponent<PlayerManager>();
-		
 		crosshairAnimation = GameObject.Find("CursorController").GetComponent<Animation>();
 		
+		// disable this if there is no match runnig at the moment
 		if(!match.IsRunning())
 			enabled = false;
 	}
 	
 	// Update is called once per frame
 	public void Update () {
-		// Check for input updates
+		// Only controlling player is allow to send inputs to this instance
+		// also input only allowed if is controlable and macht is running
 		if( (PhotonNetwork.player == controllingPlayer && controlable && match.IsRunning()) ) {
-			if( Time.time - lastShot < 0.02f ) {
-				transform.LookAt( shotDir );
-				mover.SetControllerMovement( Vector3.zero );
+			// Get movement input.
+			Vector3 hitPoint;
+			// calculate movement vector from keyboard input
+			Vector3 movement = new Vector3(Input.GetAxis("Horizontal"),0,Input.GetAxis("Vertical"));
+			movement.Normalize();
+			// apply previous calculated movement
+			mover.SetControllerMovement( movement );
+			anim.SetFloat("speed", movement.magnitude );
+			
+			// rotate in movement direction and play sound
+			if( movement.magnitude > 0.1) {
+				this.transform.LookAt(this.transform.position + movement);
+				if( !walkSound.isPlaying )
+					walkSound.Play();
 			} else {
-				// Get movement input.
-				Vector3 hitPoint;
-				// calculate movement vector from keyboard input
-				Vector3 movement = new Vector3(Input.GetAxis("Horizontal"),0,Input.GetAxis("Vertical"));
-				movement.Normalize();
-				// apply previous calculated movement
-				mover.SetControllerMovement( movement );
-				anim.SetFloat("speed", movement.magnitude );
-				
-				// rotate in movement direction
-				if( movement.magnitude > 0.1) {
-					this.transform.LookAt(this.transform.position + movement);
-					if( !walkSound.isPlaying )
-						walkSound.Play();
-				} else {
-					if( walkSound.isPlaying )
-						walkSound.Stop();
-				}
-	
-				if( Input.GetButton("Fire1") ) {
-					hitPoint = GetMouseHitPoint();
-					Shoot(hitPoint);
-				}
+				if( walkSound.isPlaying )
+					walkSound.Stop();
 			}
-		} else if(pman.IsDead()) {;
+			
+			// shoot a missile to the mouse position on left-mouse click
+			if( Input.GetButton("Fire1") ) {
+				hitPoint = GetMouseHitPoint();
+				Shoot(hitPoint);
+			}
+		} else if(pman.IsDead()) {
+			// we are dead
+			
+			// reset rage-counter (0 means it's disabled)
 			rageCounter = 0;
-			if( Input.GetButton("Fire1") && respawnFree ) {
+			
+			// use mouse input to move respawn point
+			if( Input.GetButton("Fire1") ) {
 				Vector3 mousePos = GetMouseHitPoint();
 				pman.SetSpawnPoint( mousePos );
-				//respawnFree = false;
 			}
 		}
 	}
 	
+	/**
+	 * Calculate hit point of mouse cursor ray with "Ground" collider
+	 */
 	private Vector3 GetMouseHitPoint() {
 		Ray cursorRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit[] rayHits = Physics.RaycastAll(cursorRay);
@@ -107,31 +113,40 @@ public class InputManager : Photon.MonoBehaviour {
 	 * @param	mousePos	Current position of the mouse cursour.
 	 */
 	private void Shoot(Vector3 mousePos) {
-		if( (Time.time > lastShot + cooldown) 
-			|| (rageCounter > 0 && Time.time > lastShot + rageCooldown) ) {
+		// check if we are off cooldown
+		if( (Time.time > lastShotTimestamp + cooldown) 
+			|| (rageCounter > 0 && Time.time > lastShotTimestamp + rageCooldown) ) {
 			
-			//animate crosshait
+			// animate crosshait
 			if(crosshairAnimation.isPlaying)
 				crosshairAnimation.Stop();
 			
 			crosshairAnimation.Play();
 			
+			// calculate normalized direction
 			Vector3 direction = mousePos - this.transform.position;
 			direction.y = 0;
 			direction.Normalize();
 			
+			// set start position of the projectile
 			Vector3 pos = this.transform.position + direction.normalized * 0.7f + Vector3.up * 0.5f;
+			// instatiate VFX
 			PhotonNetwork.Instantiate(muzzleFlash.name,
 										pos, 
 										Quaternion.LookRotation(direction), 0);
+			// instatiate projectile
 			GameObject handle = PhotonNetwork.Instantiate(projectile.name, 
 										pos, 
 										Quaternion.LookRotation(direction), 0);
 			handle.GetPhotonView().RPC("InstatiateTimeStamp",PhotonTargets.AllBuffered,(float)PhotonNetwork.time);
 			handle.GetPhotonView().RPC("SetTarget",PhotonTargets.AllBuffered,mousePos);
 			
-			lastShot = Time.time;
+			// save information about shoot
+			lastShotTimestamp = Time.time;
 			shotDir = transform.position + direction;
+			
+			// decrease rage counter
+			// change crosshair animation speed according to next cooldown
 			if( rageCounter > 0) {
 				rageCounter--;
 				foreach( AnimationState state in crosshairAnimation ) {
@@ -145,11 +160,17 @@ public class InputManager : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * Change which client this input manager is listing to.
+	 */ 
 	[RPC]
 	public void SetPlayer(PhotonPlayer player) {
 		controllingPlayer = player;
 	}
 	
+	/**
+	 * Get the player this input manager is listing to.
+	 */ 
 	[RPC]
 	public PhotonPlayer GetPlayer() {
 		return controllingPlayer;	
