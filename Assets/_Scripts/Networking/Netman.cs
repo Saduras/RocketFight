@@ -8,15 +8,6 @@ public class Netman : Photon.MonoBehaviour {
 	public string gameScene = "Arena";
 	
 	public Match match;
-	
-	public Color[] playerColors = new Color[]{Color.red, Color.blue, Color.green, Color.yellow};
-	public List<Color> freeColors = new List<Color>();
-	public Dictionary<int, Color> usedColors = new Dictionary<int, Color>();
-	
-	public Dictionary<int, int> playerScores = new Dictionary<int, int>();
-	
-	public List<RocketFightPlayer> playerList = new List<RocketFightPlayer>();
-	
 	private int playerCountRoom = 0;
 	
 	/**
@@ -28,35 +19,19 @@ public class Netman : Photon.MonoBehaviour {
         PhotonNetwork.autoJoinLobby = false;
 		PhotonNetwork.sendRate = 15;
 		PhotonNetwork.sendRateOnSerialize = 15;
-		
-		foreach( Color col in playerColors ) {
-			freeColors.Add( col );	
-		}
     }
 	
+	/**
+	 * Check each frame if player count in this room has changed
+	 * and call ReloadPlayerList if so.
+	 */ 
 	public void Update() {
 		if( PhotonNetwork.room != null )
-				if( playerCountRoom > PhotonNetwork.room.playerCount ) {
-						OnPlayerDisconnect();
-						playerCountRoom = PhotonNetwork.room.playerCount;
-					} else if( playerCountRoom < PhotonNetwork.room.playerCount ) {
-						OnPlayerConnect();
+				if( playerCountRoom != PhotonNetwork.room.playerCount ) {
+						photonView.RPC("ReloadPlayerList",PhotonTargets.All);
 						playerCountRoom = PhotonNetwork.room.playerCount;
 					}
 	}
-	
-	
-	public void OnPlayerDisconnect() {
-		Debug.Log("OnPlayerDisconnect");
-		photonView.RPC("ReloadPlayerList",PhotonTargets.All);	
-	}
-	
-	public void OnPlayerConnect() {
-		Debug.Log("OnPlayerConnect");
-		photonView.RPC("ReloadPlayerList",PhotonTargets.All);		
-	}
-	
-	
 	
 	/**
 	 * This is called when the client fails to connect to the server.
@@ -95,52 +70,5 @@ public class Netman : Photon.MonoBehaviour {
     {
         Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room. From here on, your game would be running. For reference, all callbacks are listed in enum: PhotonNetworkingMessage");
 		match.Reset();
-    }
-	
-	public void OnLeftRoom() {
-		playerList.Clear();
-		//Application.LoadLevel(0);
-	}
-	
-	public void GameOver() {
-		// kill player objects
-		if( PhotonNetwork.isMasterClient ) {
-			foreach( PhotonPlayer player in PhotonNetwork.playerList ) {
-				PhotonNetwork.DestroyPlayerObjects( player );
-				photonView.RPC("BackToMenu",PhotonTargets.AllBuffered);
-			}
-		}
-	}
-	
-	public RocketFightPlayer GetPlayer( int playerID ) {
-		foreach( RocketFightPlayer rfp in playerList ) {
-			if( rfp.photonPlayer.ID == playerID )
-				return rfp;
-		}
-		return null;
-	}
-	
-	/*[RPC]
-	public void AddPlayer(PhotonPlayer player, Vector3 rgb) {
-		RocketFightPlayer rfp = new RocketFightPlayer(player);
-		rfp.color = new Color(rgb.x, rgb.y, rgb.z, 1);
-		
-		playerList.Add( rfp);
-	}
-	
-	[RPC]
-	public void RemovePlayer(int playerID) {
-		foreach( RocketFightPlayer rfp in playerList ) {
-			Debug.Log( rfp.ToString() );
-			if( rfp.photonPlayer.ID == playerID ) {
-				playerList.Remove( rfp );	
-				return;
-			} 
-		}
-		Debug.Log("Did not found player: " + playerID);
-	}*/
-	
-	
-	
-	
+    }	
 }
