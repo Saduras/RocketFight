@@ -179,7 +179,6 @@ public class Match : Photon.MonoBehaviour {
 		// reset colors
 		for( int i=usedColors.Count-1; i>=0; i-- ) {
 			freeColors.Add( usedColors[i] );	
-			Debug.Log( usedColors[i] );
 		}
 		usedColors.Clear();
 		
@@ -193,7 +192,6 @@ public class Match : Photon.MonoBehaviour {
 	}
 	
 	public void UpdateLobbyUI() {
-		Debug.LogError("UpdateLobbyUI " + playerList.Count);
 		// deactivate all slots in lobby
 		foreach( UIPlayerLobbySlot slot in uiPlayerLobbySlots ) {
 			slot.Deactivate();	

@@ -65,12 +65,8 @@ public class Rocket : Photon.MonoBehaviour {
 		pos.y = 0;
 		if( target != null )
 			if( Vector3.Dot( (target.Value - pos), transform.rotation * Vector3.forward) <= 0 ) {
-				if( photonView.owner == PhotonNetwork.player ) {
-					transform.position = target.Value;
-					Explode();
-				} else {
-					renderer.enabled = false;
-				}
+				transform.position = target.Value;
+				Explode();
 			}
 			
 		if ( (birthTime + lifetime < PhotonNetwork.time) && ((photonView.owner == PhotonNetwork.player)) ) {
@@ -79,33 +75,38 @@ public class Rocket : Photon.MonoBehaviour {
 	}
 	
 	void OnCollisionEnter( Collision collision ) {
-		if ( photonView.owner == PhotonNetwork.player ) {
-			Explode();
-		}
+		Explode();
 	}
 	
 	public void Explode() {
+		// play VFX
 		if( explosion != null )
-				PhotonNetwork.Instantiate(explosion.name, this.transform.position, Quaternion.identity, 0);
+				Instantiate(explosion, this.transform.position, Quaternion.identity);
 		
-		GameObject[] gos = GameObject.FindGameObjectsWithTag( playerTag );
-		foreach( GameObject playerGo in gos ) {
-			Vector3 direction = playerGo.transform.position - this.transform.position;
-			direction.y = 0;
-			for( int i=0; i<zoneRadii.Count; i++ ) {
-				if( direction.magnitude < zoneRadii[i] ) {
-					Vector3 playerForce = direction.normalized * explosionForce * zoneStrength[i];
-					Debug.Log("Explosion strength: " + playerForce.magnitude );
-					
-					playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.OthersBuffered,playerForce);	
-					playerGo.gameObject.GetPhotonView().RPC("HitBy",PhotonTargets.OthersBuffered, photonView.owner);
-					break;
+//		Debug.LogError("Explosion at: " + PhotonNetwork.time);
+		
+		if( photonView.owner == PhotonNetwork.player ) {
+			GameObject[] gos = GameObject.FindGameObjectsWithTag( playerTag );
+			foreach( GameObject playerGo in gos ) {
+				Vector3 direction = playerGo.transform.position - this.transform.position;
+				direction.y = 0;
+				for( int i=0; i<zoneRadii.Count; i++ ) {
+					if( direction.magnitude < zoneRadii[i] ) {
+						Vector3 playerForce = direction.normalized * explosionForce * zoneStrength[i];
+						Debug.Log("Explosion strength: " + playerForce.magnitude );
+						
+						playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.OthersBuffered,playerForce);	
+						playerGo.gameObject.GetPhotonView().RPC("HitBy",PhotonTargets.OthersBuffered, photonView.owner);
+						break;
+					}
 				}
 			}
 		}
 		
 		if( photonView.owner == PhotonNetwork.player )
 			PhotonNetwork.Destroy( this.gameObject );
+		else
+			gameObject.SetActive( false );
 	}
 	
 	void OnDrawGizmos() {
