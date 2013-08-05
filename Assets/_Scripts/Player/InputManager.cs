@@ -10,15 +10,17 @@ public class InputManager : Photon.MonoBehaviour {
 	// weapon cooldown
 	public float cooldown = 0.5f;
 	
+	// sound and VFX
 	public Animation crosshairAnimation;
 	public GameObject projectile;
 	public GameObject muzzleFlash;
 	public AudioSource walkSound;
-	public string groundTag = "Ground";
 	
+	public string groundTag = "Ground";
 	private Match match;
+	
+	// data about the last shot
 	private float lastShotTimestamp = 0;
-	private Vector3 shotDir = Vector3.forward;
 	
 	private Animator anim;
 	private CharacterMover mover;
@@ -143,7 +145,6 @@ public class InputManager : Photon.MonoBehaviour {
 			
 			// save information about shoot
 			lastShotTimestamp = Time.time;
-			shotDir = transform.position + direction;
 			
 			// decrease rage counter
 			// change crosshair animation speed according to next cooldown

@@ -20,28 +20,34 @@ public class PlayerManager : Photon.MonoBehaviour {
 	
 	public AudioSource hitSound;
 	
+	// materials and target for changing materials
+	// depending on player color
 	public Material[] playerMaterials;
 	public SkinnedMeshRenderer materialTarget;
-	
+	// this color is the player main color and will be used to
+	// color marker and respawn VFX
 	private Color color;
-	private PhotonPlayer lastHit;
+	
+	// list of hit information for the last few hit you recived
 	private List<Hit> hitList = new List<Hit>();
 	public int maxHitListCount = 3;
-	private Netman netman;
-	private GameObject spawnPointObj;
-	
 	public float assistTime = 3f;
+	
+	// respawn
 	public float respawnTime = 3f;
-	private float deathTime;
+	public float invulnableTime = 3f;
+	private float deathTimestamp;
 	private bool requestSpawn = false;
 	
 	private CharacterMover mover;
 	private Match match;
+	private GameObject spawnPointObj;
 	
-	
+	/**
+	 * Initialize all references needed and activate the circle marker if we own this player instance
+	 */ 
 	void Awake() {
 		if (photonView.owner == PhotonNetwork.player) {	
-			netman = GameObject.Find("PhotonNetman").GetComponent<Netman>();
 			mover = GetComponent<CharacterMover>();
 			markerInstance = ( (GameObject) Instantiate( marker ) ).GetComponent<PlayerMarker>();
 			circleMarker.SetActive( true );
@@ -49,14 +55,18 @@ public class PlayerManager : Photon.MonoBehaviour {
 		match = GameObject.Find("PhotonNetman").GetComponent<Match>();
 	}
 	
+	/**
+	 * Each frame check if we should respawn now and if invunablility is over
+	 */ 
 	void Update() {	
 		if( photonView.owner == PhotonNetwork.player ) {
-			if( Time.time > deathTime + respawnTime && requestSpawn) {
+			// proceed respawn if respawntime it over and respawn is requested
+			if( Time.time > deathTimestamp + respawnTime && requestSpawn) {
 				Respawn();
 				requestSpawn = false;	
 			}
-			
-			if( Time.time > deathTime + respawnTime + 2 && !GetComponent<PlayerPhysic>().vulnerable) {
+			// make player vunable again if time is over
+			if( Time.time > deathTimestamp + respawnTime + invulnableTime && !GetComponent<PlayerPhysic>().vulnerable) {
 				// become vunable again
 				GetComponent<PlayerPhysic>().vulnerable = true;
 				photonView.RPC("HideInvulnable",PhotonTargets.All);
@@ -64,19 +74,30 @@ public class PlayerManager : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * Check if the player is dead and waits for respawn.
+	 */ 
 	public bool IsDead() {
 		return requestSpawn;	
 	}
 	
+	/**
+	 * Move respawnpoint to a given position.
+	 */ 
 	public void SetSpawnPoint( Vector3 position ) {
 		spawnPointObj.GetComponent<RespawnPoint>().SetTargetPos( position );
 	}
 	
+	/**
+	 * Change main color of this player and choose character materials depending on
+	 * Since this is an RPC we get the color as vector and need to rebuild it
+	 */ 
 	[RPC]
 	public void SetColor( Vector3 rgb ) {
 		List<Color> usedColors = match.GetUsedColors();
-		
+		// rebuild color from vector information
 		color = new Color(rgb[0],rgb[1],rgb[2], 1.0f);
+		// choose material by color index
 		for( int i=0; i<usedColors.Count; i++) {
 			if( usedColors[i] == color  && materialTarget != null) {
 				materialTarget.material = playerMaterials[playerMaterials.Length - 1 - i];	
@@ -84,12 +105,16 @@ public class PlayerManager : Photon.MonoBehaviour {
 			}
 		}
 		
+		// set color of marker if we own this instance
 		if( photonView.owner == PhotonNetwork.player ) {
 			markerInstance.SetParent(transform);
 			circleMarker.renderer.material.SetColor("_Color",color);	
 		}
 	}
 	
+	/**
+	 * Return the main color of this player.
+	 */ 
 	public Color GetColor() {
 		return color;	
 	}
@@ -129,10 +154,14 @@ public class PlayerManager : Photon.MonoBehaviour {
 		
 		// trim hit list if it's to long now
 		while( hitList.Count > maxHitListCount ) {
-			hitList.RemoveAt(0);	
+			hitList.RemoveAt(0);
 		}
 	}
 	
+	/**
+	 * Instatiate a label above the player which shows the score increase
+	 * and fades away.
+	 */ 
 	[RPC]
 	public void PopupScore(int score) {
 	 	GameObject handle = (GameObject) Instantiate(scorePopup, transform.position + Vector3.up, Quaternion.identity);
@@ -141,6 +170,12 @@ public class PlayerManager : Photon.MonoBehaviour {
 		handle.transform.parent = GameObject.Find("UI Root 3D").transform;	
 	}
 	
+	/**
+	 * This is recieved if we hit an death zone.
+	 * Increase the score for each player in the hit list depending on killer or assistance.
+	 * Request respawn and disable the player controls until spawn.
+	 * Reset item if we hold it
+	 */ 
 	public void OnDeath() {
 		if( photonView.owner == PhotonNetwork.player ) {
 			if( requestSpawn == false ) {
@@ -150,11 +185,11 @@ public class PlayerManager : Photon.MonoBehaviour {
 					
 					GameObject.Find("PanelDeath").GetComponent<DeathPanel>().Activate( hitList[hitList.Count - 1].player );
 					
-					netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,hitList[hitList.Count -1].player.ID, 2);
+					match.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,hitList[hitList.Count -1].player.ID, 2);
 					
 					for( int i=0; i<hitList.Count-1; i++) {
 						if( hitList[i] != null && hitList[i].timestamp > (Time.time - assistTime) ) {
-							netman.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,hitList[i].player.ID, 1);
+							match.gameObject.GetPhotonView().RPC("IncreaseScore",PhotonTargets.AllBuffered,hitList[i].player.ID, 1);
 						}
 					}
 				}
@@ -173,11 +208,14 @@ public class PlayerManager : Photon.MonoBehaviour {
 					}
 				}
 				
-				deathTime = Time.time;
+				// request spawn and store time of death
+				deathTimestamp = Time.time;
 				requestSpawn = true;
+				// disable controls
 				mover.controlable = false;
 				mover.SetControllerMovement( Vector3.zero );
 				GetComponent<InputManager>().controlable = false;
+				// visualise death on all clients
 				photonView.RPC("ShowDeath",PhotonTargets.All);
 				
 				// Reset buff if we carry it
@@ -187,11 +225,14 @@ public class PlayerManager : Photon.MonoBehaviour {
 				}
 			
 			
-				// TODO Spawnschutz
+				// Make player invulnerbale
 				GetComponent<PlayerPhysic>().vulnerable = false;
 		}
 	}
 	
+	/**
+	 * Visualize death by hiding character and play VFX
+	 */ 
 	[RPC]
 	public void ShowDeath() {
 		if( GetComponentInChildren<SkinnedMeshRenderer>() != null
@@ -202,20 +243,30 @@ public class PlayerManager : Photon.MonoBehaviour {
 		Instantiate(deathVFX,transform.position,Quaternion.identity);
 	}
 	
+	/**
+	 * Do respawn with explosion!
+	 * Move player instance to respawn point and enable controls again.
+	 * Call for respawn animation and reanable player render.
+	 */ 
 	private void Respawn() {
+		// move to spawn point an reset rotation and physic movement
 		mover.Teleport( spawnPointObj.transform.position );
 		transform.rotation = Quaternion.identity;
-		spawnPointObj.GetPhotonView().RPC("StartAnimation",PhotonTargets.All);
-		
 		mover.SetPhysicMovement( Vector3.zero );
+		// enable controls
 		mover.controlable = true;
 		GetComponent<InputManager>().controlable = true;
+		// re-enable plyaer visuals and play VFX
 		photonView.RPC("ShowRespawn",PhotonTargets.AllBuffered);
+		spawnPointObj.GetPhotonView().RPC("StartAnimation",PhotonTargets.All);
 		
 		// explosion on respawn
 		Explode();
 	}
 	
+	/**
+	 * Re-enable player rendering and activate invulnable indicator
+	 */ 
 	[RPC]
 	public void ShowRespawn() {
 		if( GetComponentInChildren<SkinnedMeshRenderer>() != null
@@ -226,33 +277,46 @@ public class PlayerManager : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * Hide the invulnable indicator
+	 */ 
 	[RPC]
 	public void HideInvulnable() {
 		invulnable.SetActive( false );
 	}
 	
+	/**
+	 * Play explosion VFX and aplly hit and force to alle player around, moving them away.
+	 * This happens on respawn.
+	 */
 	public void Explode() {
+		// instiate VFX
 		if( explosion != null)
-				PhotonNetwork.Instantiate(explosion.name, this.transform.position, Quaternion.identity, 0);
+			PhotonNetwork.Instantiate(explosion.name, this.transform.position, Quaternion.identity, 0);
 		
+		// calculate force for each player in range and send them a force
 		GameObject[] gos = GameObject.FindGameObjectsWithTag( playerTag );
 		foreach( GameObject playerGo in gos ) {
+			// calculate force direction
 			Vector3 direction = playerGo.transform.position - this.transform.position;
 			direction.y = 0;
+			// check each zone from inside to the outside and stop if player was in the current zone
 			for( int i=0; i<zoneRadii.Count; i++ ) {
 				if( direction.magnitude < zoneRadii[i] && playerGo.GetPhotonView().owner != photonView.owner ) {
+					// calculate final force
 					Vector3 playerForce = direction.normalized * explosionForce * zoneStrength[i];
-					Debug.Log("Explosion strength: " + playerForce.magnitude );
-					
+					// send hit and force information to player instance on all clients
 					playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.AllBuffered,playerForce);	
 					playerGo.gameObject.GetPhotonView().RPC("HitBy",PhotonTargets.AllBuffered, photonView.owner);
-					break;
+					break; // stop if we found one zone and applied the force
 				}
 			}
 		}
 	}
 	
-	
+	/**
+	 * Struct to store timestamp and source of hits
+	 */ 
 	private class Hit {
 		public float timestamp;
 		public PhotonPlayer player;
