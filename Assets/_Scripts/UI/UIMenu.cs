@@ -26,6 +26,13 @@ public class UIMenu : Photon.MonoBehaviour {
 	}
 	
 	/**
+	 * Activate MainMenu on start
+	 */ 
+	void Start() {
+		ChanceState(UIState.MAINMENU);	
+	}
+	
+	/**
 	 * Hide all panels and unhide the one for the requested UIState.
 	 * Also do Quit() if this was requested.
 	 */ 
