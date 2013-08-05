@@ -5,19 +5,23 @@ using System.Collections.Generic;
 [RequireComponent(typeof(PlayMode))]
 public class PlayerPhysic : Photon.MonoBehaviour {
 	
+	// parameters to change force fall off behaviour
 	public float fadeTime = 1f;
 	public bool controlableWhileForce = false;
+	// used as power for the force fall off curve
+	public float curvePower = 2f;
 	
-	// TODO
-	public bool vulnerable = true;
-	
-	private float curvePower = 2f;
+	// if vulnerable is false, all physics are disabled
+	private bool vulnerable = true;
 	
 	private List<Force> forceSet = new List<Force>();
 	
 	private CharacterMover mover;
 	
-	// Use this for initialization
+	/**
+	 * Use this for initialization
+	 * Disable if we are not the owner of this gameObject
+	 */
 	void Start () {
 		if (!(photonView.owner == PhotonNetwork.player) ) {
 			this.enabled = false;
@@ -25,23 +29,47 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 		mover = GetComponent<CharacterMover>();
 	}
 	
-	// Update is called once per frame
+	/**
+	 * Oncer per frame, calculate physical movement per frame and forward this to mover instance.
+	 */ 
 	void Update () {
+		// calculate force for this frame
 		Vector3 frameForce = CalculateFrameForce();
 		if( frameForce.magnitude != 0 ) {
+			// send calculated force to mover
 			mover.SetPhysicMovement( frameForce );
 			
+			// disable movement if contrableWhileForce if false
 			if( !controlableWhileForce && (this.gameObject.GetComponent<InputManager>().enabled == true) ) {
 				this.gameObject.GetComponent<InputManager>().enabled = false;
 			}
 		} else {
+			// reenable movement if contrableWhileForce if false
 			if( this.gameObject.GetComponent<InputManager>().enabled == false) {
 				this.gameObject.GetComponent<InputManager>().enabled = true;
 			}
 		}
+		// delete forces which are already faded
 		CleanUpForceSet();
 	}
 	
+	/**
+	 * Check this instance can effect by forces at the moment.
+	 */ 
+	public bool IsVulnerable() {
+		return vulnerable;	
+	}
+	
+	/**
+	 * Change if forces have any effect or not
+	 */ 
+	public void SetVulnerable( bool val ) {
+		vulnerable = val;	
+	}
+	
+	/**
+	 * Calculate the movement of the current frame as result of all active forces
+	 */ 
 	private Vector3 CalculateFrameForce() {
 		Vector3 frameForce = Vector3.zero;
 		
@@ -54,6 +82,9 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 		return frameForce;
 	}
 	
+	/**
+	 * Delete all expired forces from the force list
+	 */
 	private void CleanUpForceSet() {
 		List<Force> toCleanUp = new List<Force>();
 		
@@ -71,15 +102,21 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 		toCleanUp.Clear();
 	}
 	
+	/**
+	 * Add a new force to the force list, if it's vulnerable
+	 */ 
 	[RPC]
-	public void ApplyForce( Vector3 newForce) {
+	public void ApplyForce( Vector3 newForce ) {
 		if (photonView.owner == PhotonNetwork.player && vulnerable) {
 				forceSet.Add( new Force(newForce, Time.time) );
 		}
 	}
 	
-	private class Force{
-		public Vector3 vector = Vector3.zero;
+	/**
+	 * Structur to store force vector with the born timestamp
+	 */ 
+	private struct Force{
+		public Vector3 vector;
 		public float timestamp;
 		
 		public Force( Vector3 vec, float startTime ) {

@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
+/**
+ * Advanced class to store player data. Holds all main data about an player in an match.
+ */ 
 [System.Serializable]
 public class RocketFightPlayer {
 	
@@ -13,7 +16,6 @@ public class RocketFightPlayer {
 		photonPlayer = player;
 		color = col;
 	}
-	
 	
 	public override string ToString() {
 		return "Name: " + photonPlayer.name + " photonID: " + photonPlayer.ID + " color: " + color.ToString() + " score: " + score;	

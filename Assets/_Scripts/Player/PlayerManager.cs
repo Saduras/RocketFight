@@ -6,7 +6,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	
 	public GameObject scorePopup;
 	public GameObject deathVFX;
-	public GameObject invulnable;
+	public GameObject invulnerable;
 	public GameObject marker;
 	public GameObject circleMarker;
 	private PlayerMarker markerInstance;
@@ -35,7 +35,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	
 	// respawn
 	public float respawnTime = 3f;
-	public float invulnableTime = 3f;
+	public float invulnerableTime = 3f;
 	private float deathTimestamp;
 	private bool requestSpawn = false;
 	
@@ -66,10 +66,10 @@ public class PlayerManager : Photon.MonoBehaviour {
 				requestSpawn = false;	
 			}
 			// make player vunable again if time is over
-			if( Time.time > deathTimestamp + respawnTime + invulnableTime && !GetComponent<PlayerPhysic>().vulnerable) {
+			if( Time.time > deathTimestamp + respawnTime + invulnerableTime && !GetComponent<PlayerPhysic>().IsVulnerable()) {
 				// become vunable again
-				GetComponent<PlayerPhysic>().vulnerable = true;
-				photonView.RPC("HideInvulnable",PhotonTargets.All);
+				GetComponent<PlayerPhysic>().SetVulnerable(true);
+				photonView.RPC("HideInvulnerable",PhotonTargets.All);
 			}
 		}
 	}
@@ -226,7 +226,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 			
 			
 				// Make player invulnerbale
-				GetComponent<PlayerPhysic>().vulnerable = false;
+				GetComponent<PlayerPhysic>().SetVulnerable(false);
 		}
 	}
 	
@@ -265,7 +265,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	}
 	
 	/**
-	 * Re-enable player rendering and activate invulnable indicator
+	 * Re-enable player rendering and activate invulnerable indicator
 	 */ 
 	[RPC]
 	public void ShowRespawn() {
@@ -273,16 +273,16 @@ public class PlayerManager : Photon.MonoBehaviour {
 			&& GetComponentInChildren<MeshRenderer>() != null ) {
 			GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
 			GetComponentInChildren<MeshRenderer>().enabled = true;
-			invulnable.SetActive( true );
+			invulnerable.SetActive( true );
 		}
 	}
 	
 	/**
-	 * Hide the invulnable indicator
+	 * Hide the invulnerable indicator
 	 */ 
 	[RPC]
-	public void HideInvulnable() {
-		invulnable.SetActive( false );
+	public void HideInvulnerable() {
+		invulnerable.SetActive( false );
 	}
 	
 	/**
