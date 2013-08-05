@@ -4,19 +4,19 @@ using System.Collections;
 public class UIMenu : Photon.MonoBehaviour {
 	
 	public Match match;
-	public UIPanel mainMenuPanel;
-	public UIPanel controlPanel;
-	public UIPanel enterNamePanel;
-	public UIPanel connectingPanel;
-	public UIPanel lobbyPanel;
-	public UIPanel inGamePanel;
-	public UIPanel afterMatchPanel;
+	// You need to add the panels in the same order
+	// as the UIStates, i.e.:
+	// 0 -> MainMenuPanel
+	// 1 -> ControlsPanel
+	// and so on ...
+	public UIPanel[] panels;
 	
 	private UIState currentState;
 	
 	public enum UIState {
 		MAINMENU,
 		CONTROLS,
+		CREDITS,
 		ENTERNAME,
 		LOBBY,
 		CONNECTING,
@@ -25,95 +25,45 @@ public class UIMenu : Photon.MonoBehaviour {
 		QUIT
 	}
 	
+	/**
+	 * Hide all panels and unhide the one for the requested UIState.
+	 * Also do Quit() if this was requested.
+	 */ 
 	public void ChanceState(UIState newState) {
+		// deactivate all panels
+		foreach( UIPanel p in panels )
+			p.gameObject.SetActive( false );
+		// activate the requested one
+		panels[(int) newState].gameObject.SetActive(true);
+		
+		// do additional stuff for cases INGAME and QUIT
 		switch(newState) {
-		case UIState.MAINMENU:
-			mainMenuPanel.gameObject.SetActive(true);
-			controlPanel.gameObject.SetActive(false);
-			enterNamePanel.gameObject.SetActive(false);
-			connectingPanel.gameObject.SetActive(false);
-			lobbyPanel.gameObject.SetActive(false);
-			inGamePanel.gameObject.SetActive(false);
-			afterMatchPanel.gameObject.SetActive(false);
-			break;
-		case UIState.CONTROLS:
-			mainMenuPanel.gameObject.SetActive(false);
-			controlPanel.gameObject.SetActive(true);
-			enterNamePanel.gameObject.SetActive(false);
-			connectingPanel.gameObject.SetActive(false);
-			lobbyPanel.gameObject.SetActive(false);
-			inGamePanel.gameObject.SetActive(false);
-			afterMatchPanel.gameObject.SetActive(false);
-			break;
-		case UIState.ENTERNAME:
-			mainMenuPanel.gameObject.SetActive(false);
-			controlPanel.gameObject.SetActive(false);
-			enterNamePanel.gameObject.SetActive(true);
-			connectingPanel.gameObject.SetActive(false);
-			lobbyPanel.gameObject.SetActive(false);
-			inGamePanel.gameObject.SetActive(false);
-			afterMatchPanel.gameObject.SetActive(false);
-			break;
-		case UIState.CONNECTING:
-			mainMenuPanel.gameObject.SetActive(false);
-			controlPanel.gameObject.SetActive(false);
-			enterNamePanel.gameObject.SetActive(false);
-			connectingPanel.gameObject.SetActive(true);
-			lobbyPanel.gameObject.SetActive(false);
-			inGamePanel.gameObject.SetActive(false);
-			afterMatchPanel.gameObject.SetActive(false);
-			break;
-		case UIState.LOBBY:
-			mainMenuPanel.gameObject.SetActive(false);
-			controlPanel.gameObject.SetActive(false);
-			enterNamePanel.gameObject.SetActive(false);
-			connectingPanel.gameObject.SetActive(false);
-			lobbyPanel.gameObject.SetActive(true);
-			inGamePanel.gameObject.SetActive(false);
-			afterMatchPanel.gameObject.SetActive(false);
-			match.UpdateLobbyUI();
-			break;
-		case UIState.INGAME:
-			mainMenuPanel.gameObject.SetActive(false);
-			controlPanel.gameObject.SetActive(false);
-			enterNamePanel.gameObject.SetActive(false);
-			connectingPanel.gameObject.SetActive(false);
-			lobbyPanel.gameObject.SetActive(false);
-			inGamePanel.gameObject.SetActive(true);
-			afterMatchPanel.gameObject.SetActive(false);
-			
-			if(PhotonNetwork.isMasterClient) {
-				photonView.RPC("ChangeToInGame",PhotonTargets.Others);
-				match.photonView.RPC("RequestStart",PhotonTargets.AllBuffered);
-			}
-			break;
-		case UIState.MATCHOVER:
-			mainMenuPanel.gameObject.SetActive(false);
-			controlPanel.gameObject.SetActive(false);
-			enterNamePanel.gameObject.SetActive(false);
-			connectingPanel.gameObject.SetActive(false);
-			lobbyPanel.gameObject.SetActive(false);
-			inGamePanel.gameObject.SetActive(false);
-			afterMatchPanel.gameObject.SetActive(true);
-			match.UpdateLobbyUI();
-			break;
-		case UIState.QUIT:
-			Application.Quit();
-			break;
+			case UIState.INGAME:
+				// forward change tu INGAME to all other clients
+				if(PhotonNetwork.isMasterClient) {
+					photonView.RPC("ChangeToInGame",PhotonTargets.Others);
+					match.photonView.RPC("RequestStart",PhotonTargets.AllBuffered);
+				}
+				break;
+			case UIState.QUIT:
+				Application.Quit();
+				break;
 		}
 		currentState = newState;
 	}
 	
+	/**
+	 * This allows to change the UIState via RPC to INGAME
+	 */ 
 	[RPC]
 	public void ChangeToInGame() {
-		mainMenuPanel.gameObject.SetActive(false);
-		enterNamePanel.gameObject.SetActive(false);
-		lobbyPanel.gameObject.SetActive(false);
-		inGamePanel.gameObject.SetActive(true);
+		ChanceState(UIState.INGAME);
 	}
 	
+	/**
+	 * Return the current state of the UI.
+	 */ 
 	public UIState GetState() {
 		return currentState;	
 	}
-	
 }
