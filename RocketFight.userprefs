@@ -8,10 +8,11 @@
             <Node name="Assets" expanded="True">
               <Node name="_Scripts" expanded="True">
                 <Node name="Player" expanded="True" />
-                <Node name="Rocket" expanded="True">
-                  <Node name="Rocket.cs" selected="True" />
+                <Node name="Rocket" expanded="True" />
+                <Node name="UI" expanded="True">
+                  <Node name="Buttons" expanded="True" />
+                  <Node name="CursorBehaviour.cs" selected="True" />
                 </Node>
-                <Node name="UI" expanded="True" />
               </Node>
             </Node>
           </Node>

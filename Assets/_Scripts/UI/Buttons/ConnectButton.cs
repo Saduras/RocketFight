@@ -3,6 +3,7 @@ using System.Collections;
 
 public class ConnectButton : MonoBehaviour {
 	
+	// label where we take the username from
 	public UILabel usernameLabel;
 	
 	/** 

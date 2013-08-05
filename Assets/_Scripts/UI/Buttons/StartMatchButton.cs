@@ -3,22 +3,30 @@ using System.Collections;
 
 public class StartMatchButton : MonoBehaviour {
 	
-	public GameObject targetBackground;
-	public GameObject targetSprite;
-
+	// we want to hide/unhide the button depending if we are master client or not
+	public UISprite targetBackground;
+	public UISprite targetSprite;
+	
+	/**
+	 * Check if the button should be displayed and hide it otherwise
+	 */ 
 	void Update() {
-		// TODO: doenst hide properly with new prefab
 		if(PhotonNetwork.isMasterClient && PhotonNetwork.connectionStateDetailed == PeerState.Joined) {
-			targetBackground.GetComponent<UISprite>().enabled = true;
-			targetBackground.GetComponent<BoxCollider>().enabled = true;
-			targetSprite.GetComponent<UISprite>().enabled = true;
+			// we are allowed to start a match: show button
+			targetBackground.enabled = true;
+			targetBackground.gameObject.GetComponent<BoxCollider>().enabled = true;
+			targetSprite.enabled = true;
 		} else {
-			targetBackground.GetComponent<UISprite>().enabled = false;
-			targetBackground.GetComponent<BoxCollider>().enabled = false;
-			targetSprite.GetComponentInChildren<UISprite>().enabled = false;
+			// we are not allowed to start a match: hide button
+			targetBackground.enabled = false;
+			targetBackground.gameObject.GetComponent<BoxCollider>().enabled = false;
+			targetSprite.enabled = false;
 		}
 	}
 	
+	/**
+	 * Lock & hide room on match start
+	 */ 
 	public void OnClick() {
 		PhotonNetwork.room.open = false;
 		PhotonNetwork.room.visible = false;

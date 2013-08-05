@@ -41,7 +41,8 @@ public class UIMenu : Photon.MonoBehaviour {
 		foreach( UIPanel p in panels )
 			p.gameObject.SetActive( false );
 		// activate the requested one
-		panels[(int) newState].gameObject.SetActive(true);
+		if( (int) newState < panels.Length )
+			panels[(int) newState].gameObject.SetActive(true);
 		
 		// do additional stuff for cases INGAME and QUIT
 		switch(newState) {
