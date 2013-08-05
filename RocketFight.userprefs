@@ -11,7 +11,7 @@
                 <Node name="Rocket" expanded="True" />
                 <Node name="UI" expanded="True">
                   <Node name="Buttons" expanded="True" />
-                  <Node name="CursorBehaviour.cs" selected="True" />
+                  <Node name="ScorePopup.cs" selected="True" />
                 </Node>
               </Node>
             </Node>

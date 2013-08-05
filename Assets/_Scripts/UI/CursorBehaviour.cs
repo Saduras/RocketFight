@@ -21,10 +21,13 @@ public class CursorBehaviour : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+		// set hardware cursor
 		Cursor.SetCursor(menuCursorTex, Vector2.zero, CursorMode.Auto);
 	}
 	
-	// Update is called once per frame
+	/**
+	 * Change between menu-cursor and crosshair and move crosshaire around each frame if active.
+	 */ 
 	void Update () {
 		if( match.IsRunning() ) {
 			if( Screen.showCursor ) {

@@ -12,7 +12,11 @@ public class GameTimerLabel : MonoBehaviour {
 		label = gameObject.GetComponent<UILabel>();
 	}
 	
-	// Update is called once per frame
+	
+	/**
+	 * Split game time into secounds and minutes and display them as
+	 * mm:ss
+	 */
 	void Update () {
 		float timer = match.GetGameTime();
 		string minutes = Mathf.Floor(timer / 60).ToString("00");

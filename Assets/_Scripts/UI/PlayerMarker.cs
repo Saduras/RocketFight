@@ -14,7 +14,9 @@ public class PlayerMarker : Photon.MonoBehaviour {
 		}
 	}
 	
-	// Update is called once per frame
+	/**
+	 * Update postion to follow parent transform and destroy this if animation has finished
+	 */ 
 	void Update () {
 		transform.position = parent.position + Vector3.up * 1.5f + Vector3.forward * 0.5f;
 		
@@ -22,6 +24,9 @@ public class PlayerMarker : Photon.MonoBehaviour {
 			Destroy( gameObject );
 	}
 	
+	/**
+	 * Set the transform this marker should follow and use it's material color
+	 */ 
 	public void SetParent( Transform trans ) {
 		parent = trans;
 		GetComponentInChildren<Renderer>().material.color = trans.gameObject.GetComponent<PlayerManager>().GetColor();

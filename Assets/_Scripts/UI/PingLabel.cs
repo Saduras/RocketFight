@@ -11,7 +11,10 @@ public class PingLabel : MonoBehaviour {
 		label = gameObject.GetComponent<UILabel>();
 	}
 	
-	// Update is called once per frame
+	/**
+	 * Set label text to current network ping and set color, depending on ping value
+	 * to something between green and red.
+	 */ 
 	void Update () {
 		int ping = PhotonNetwork.GetPing();
 		float r = (float)PhotonNetwork.GetPing()/300;
