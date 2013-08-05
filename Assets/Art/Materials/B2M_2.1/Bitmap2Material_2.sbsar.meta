@@ -5648,7 +5648,7 @@ SubstanceImporter:
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
-        texture: {fileID: 2800000, guid: e78c2715ca091e649b35ff95fcff14dc, type: 3}
+        texture: {fileID: 2800000, guid: 69465c4b68c8984458f759e94700be7f, type: 3}
     - name: Bitmap_Relief_optional
       value:
         scalar[0]: 0
