@@ -4,16 +4,18 @@ using System.Collections.Generic;
 
 public class Match : Photon.MonoBehaviour {
 	
+	// list of all players in this match
 	private List<RocketFightPlayer> playerList = new List<RocketFightPlayer>();
 	
+	// current match state datas
 	private MatchState currentState;
 	private bool allReady = false;
 	private bool startRequest = false;
 	private double startTime;
 	private float gameTime;
-	
+	// countdown start time
 	private double countdownTime;
-	
+	// match properties
 	public int maxPlayerCount = 4;
 	public float matchLength = 5;
 	public int countdownLength;
@@ -24,58 +26,67 @@ public class Match : Photon.MonoBehaviour {
 	public GameObject spawnPointPrefab;
 	public List<Vector3> positions = new List<Vector3>();
 	
+	// UI objects that will be updated from match
 	public UILabel countdownLabel;
 	public UILabel finalScoreLabel;
 	public UIPlayerLobbySlot[] uiPlayerLobbySlots;
-	
 	public ScorePanel scoreBoard;
 	public UIMenu uiMenu;
+	
+	// prefab we spawn as player
 	public GameObject playerPrefab;
+	// colors we use the distinguish player
 	public List<Color> freeColors = new List<Color>();
+	private List<Color> usedColors = new List<Color>();
 	
 	// sound & music stuff
 	public AudioSource matchMusic;
 	public AudioSource countdownSound;
 	
-	private List<Color> usedColors = new List<Color>();
 	private bool arenaLoaded = false;
 	private bool sent = false;
 	
+	// player who is holding the item at the moment
 	private PhotonPlayer itemHolder = null;
 	
 	public enum MatchState {
-		SETTINGUP,
-		COUNTDOWN,
-		RUNNING,
-		FINISHED
+		SETTINGUP, // lobby
+		COUNTDOWN, // countdown is running
+		RUNNING, // match is running
+		FINISHED // match is over
 	}
 	
-	
+	/**
+	 * Each frame, update gameTime, countdown or wait for start - depending on match state
+	 */ 
 	void Update() {
 		switch(currentState) {
-		case MatchState.RUNNING:
-			// use network time to calculate game time
-			// this ensures everyone has the same time
-			gameTime = (float) (matchLength + startTime - PhotonNetwork.time);
-			if( gameTime <= 0 ) {
-				GameOver();
-			}
-			break;
-		case MatchState.SETTINGUP:
-			if(startRequest && allReady && PhotonNetwork.isMasterClient) {
-				photonView.RPC("InitCountdown",PhotonTargets.AllBuffered, PhotonNetwork.time);
-				startRequest = false;
-			}
-			break;
-		case MatchState.COUNTDOWN:
-			int currentStep = Mathf.FloorToInt( (float) (countdownTime + countdownLength + 1 - PhotonNetwork.time) );
-			if( currentStep > 0)
-				countdownLabel.text = currentStep.ToString();
-			if( currentStep == 0 )
-				countdownLabel.text = "go";
-			if( currentStep < 0 && PhotonNetwork.isMasterClient )
-				photonView.RPC("StartMatch",PhotonTargets.AllBuffered, PhotonNetwork.time);
-			break;
+			case MatchState.RUNNING:
+				// use network time to calculate game time
+				// this ensures everyone has the same time
+				gameTime = (float) (matchLength + startTime - PhotonNetwork.time);
+				if( gameTime <= 0 ) {
+					GameOver();
+				}
+				break;
+			case MatchState.SETTINGUP:
+				// init countdown if start is requested
+				if(startRequest && allReady && PhotonNetwork.isMasterClient) {
+					photonView.RPC("InitCountdown",PhotonTargets.AllBuffered, PhotonNetwork.time);
+					startRequest = false;
+				}
+				break;
+			case MatchState.COUNTDOWN:
+				// update countdown
+				int currentStep = Mathf.FloorToInt( (float) (countdownTime + countdownLength + 1 - PhotonNetwork.time) );
+				if( currentStep > 0)
+					countdownLabel.text = currentStep.ToString();
+				if( currentStep == 0 )
+					countdownLabel.text = "go";
+				// start match after countdown has finished
+				if( currentStep < 0 && PhotonNetwork.isMasterClient )
+					photonView.RPC("StartMatch",PhotonTargets.AllBuffered, PhotonNetwork.time);
+				break;
 		}
 		
 		// finshed loading level
@@ -85,6 +96,9 @@ public class Match : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * Reset match states
+	 */ 
 	public void Reset() {
 		ReloadPlayerList();
 		
@@ -94,6 +108,9 @@ public class Match : Photon.MonoBehaviour {
 		UpdateLobbyUI();
 	}
 	
+	/**
+	 * Initalize gameTime and player scores.
+	 */ 
 	public void Init() {
 		gameTime = matchLength;
 		foreach( RocketFightPlayer rfp in playerList ) {
@@ -101,11 +118,15 @@ public class Match : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * Start countdown and update score board.
+	 * Start spawning if we are master client.
+	 */ 
 	[RPC]
 	public void InitCountdown(double timestamp) {
 		countdownTime = timestamp;
 		currentState = MatchState.COUNTDOWN;
-		countdownLabel.gameObject.SetActive( true );
+		countdownLabel.gameObject.SetActive(true);
 		countdownSound.Play();
 		
 		if( scoreBoard == null )
@@ -118,6 +139,9 @@ public class Match : Photon.MonoBehaviour {
 			OrganizeSpawning();
 	}
 	
+	/**
+	 * Add new player to the player list.
+	 */ 
 	[RPC]
 	public void AddPlayer(PhotonPlayer newPlayer) {
 		// check playerlist count
@@ -145,18 +169,30 @@ public class Match : Photon.MonoBehaviour {
 		UpdateLobbyUI();
 	}
 	
+	/**
+	 * Check if the match is already running.
+	 */ 
 	public bool IsRunning() {
 		return (currentState == MatchState.RUNNING);	
 	}
 	
+	/**
+	 * Get the time left to play.
+	 */ 
 	public float GetGameTime() {
 		return gameTime;	
 	}
 	
+	/**
+	 * Get list of player with all parameter like score and color.
+	 */ 
 	public List<RocketFightPlayer> GetPlayerList() {
 		return playerList;	
 	}
 	
+	/**
+	 * Remove an player from the player list.
+	 */ 
 	[RPC]
 	public void RemovePlayer(PhotonPlayer player) {
 		// find player
@@ -174,6 +210,9 @@ public class Match : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * Clear player list an recreate it from the player in this room.
+	 */ 
 	[RPC]
 	public void ReloadPlayerList() {
 		// reset colors
@@ -191,6 +230,9 @@ public class Match : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * Deactivate all player slots in the lobby and re-activate one for each player in the playerlist
+	 */ 
 	public void UpdateLobbyUI() {
 		// deactivate all slots in lobby
 		foreach( UIPlayerLobbySlot slot in uiPlayerLobbySlots ) {
@@ -206,6 +248,9 @@ public class Match : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * Tell's you a given player has finished loading the arena
+	 */ 
 	[RPC]
 	public void LoadingFinished(PhotonPlayer player) {
 		Debug.Log("Loading finished by: " + player.name + " [" + player.ID + "]");
@@ -223,8 +268,12 @@ public class Match : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * Request match start. But wait for all to load level and then start count down
+	 */ 
 	[RPC]
 	public void RequestStart() {
+		// load arena scene additive
 		if(!arenaLoaded) {
 			Application.LoadLevelAdditive(arenaScene);
 			arenaLoaded = true;
@@ -232,6 +281,9 @@ public class Match : Photon.MonoBehaviour {
 		startRequest = true;
 	}
 	
+	/**
+	 * Start the match.
+	 */ 
 	[RPC]
 	public void StartMatch(double timestamp) {
 		Debug.Log("Match started!");
@@ -249,6 +301,9 @@ public class Match : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * End the current match and destroy player instances.
+	 */ 
 	private void GameOver() {
 		currentState = MatchState.FINISHED;
 		if(PhotonNetwork.isMasterClient) {
@@ -273,11 +328,14 @@ public class Match : Photon.MonoBehaviour {
 	public void SpawnPlayer(Vector3 spawnPt, Vector3 rgb) {
 		Debug.Log("Instatiate player at " + spawnPt);
 		GameObject handle = PhotonNetwork.Instantiate(playerPrefab.name,spawnPt,Quaternion.identity,0);
-		// handle.GetComponent<InputManager>().SendMessage("SetPlayer", PhotonNetwork.player);
 		handle.GetPhotonView().RPC("SetPlayer",PhotonTargets.AllBuffered, PhotonNetwork.player);
 		handle.GetPhotonView().RPC("SetColor",PhotonTargets.AllBuffered,rgb);
 	}
 	
+	/**
+	 * Create spawnpoint at an given position and set it's properties according to it's owner
+	 * and spawn player character afterwards.
+	 */ 
 	[RPC]
 	public void SetSpawnPoint( Vector3 pos, PhotonPlayer player, Vector3 rgb ) {
 		GameObject handle = PhotonNetwork.Instantiate(spawnPointPrefab.name,pos, Quaternion.identity,0);
@@ -290,10 +348,12 @@ public class Match : Photon.MonoBehaviour {
 		photonView.RPC("SetScore",PhotonTargets.AllBuffered, player, 0);
 	}
 	
+	/**
+	 * Only master client ist allwoed to do this! Tell all clients where to spawn there respawnpoints and player character.
+	 */ 
 	public void OrganizeSpawning() {
 		if( !PhotonNetwork.isMasterClient ) 
 			return;
-		
 		
 		for( int i=0; i<playerList.Count; i++ ) {
 			// instatiate spawn points
@@ -302,6 +362,10 @@ public class Match : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * Increase the score of a given player by a given value.
+	 * Will spawn a score notification above the player character.
+	 */ 
 	[RPC]
 	public void IncreaseScore(int playerID, int val) {
 		// increase score value
@@ -329,6 +393,10 @@ public class Match : Photon.MonoBehaviour {
 		scoreBoard.UpdateScore();
 	}
 	
+	/**
+	 * Set score of an player to a given value.
+	 * There will be no notifcation.
+	 */ 
 	[RPC]
 	public void SetScore(PhotonPlayer target, int val) {
 		foreach( RocketFightPlayer rfp in playerList ) {
@@ -341,15 +409,25 @@ public class Match : Photon.MonoBehaviour {
 		scoreBoard.UpdateScore();
 	}
 	
+	/**
+	 * Get list of colors which are assigned to player in this match.
+	 */ 
 	public List<Color> GetUsedColors() {
 		return usedColors;	
 	}
 	
+	/**
+	 * Sort a copy of the given playerlist by ID with QuickSort.
+	 */ 
 	private List<PhotonPlayer> SortPlayerListByID( List<PhotonPlayer> unsortedPlayerList ) {
 		QuickSortPlayerID( ref unsortedPlayerList, 0, unsortedPlayerList.Count - 1);
 		return unsortedPlayerList;
 	}
 	
+	/**
+	 * Recursivly walk through the list and split it into right end left part by an
+	 * calculated pivot element.
+	 */ 
 	private void QuickSortPlayerID( ref List<PhotonPlayer> list, int left, int right) {
 		if( left < right ) {
 			int divisior = QuickSortDivideID(ref list, left, right);
@@ -358,6 +436,12 @@ public class Match : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * Select the last element as pivot element and sort it that way,
+	 * that all elemts on the left of pivot are smaller and all
+	 * elements on the right are bigger then pivot.
+	 * Return position of the pivot element
+	 */
 	private int QuickSortDivideID( ref List<PhotonPlayer> list, int left, int right ) {
 		int i = left;
         // start with j left beside pivot element
@@ -365,25 +449,24 @@ public class Match : Photon.MonoBehaviour {
         int pivot = list[right].ID;
 
         do {
-                // search element greater then pivot starting from left
-                while (list[i].ID <= pivot && i < right) 
-                        i++;
+            // search element greater then pivot starting from left
+            while (list[i].ID <= pivot && i < right) 
+                    i++;
 
-                // seach element smaller then pivot starting from right
-                while (list[j].ID >= pivot && j > left) 
-                        j--;
+            // seach element smaller then pivot starting from right
+            while (list[j].ID >= pivot && j > left) 
+                    j--;
 
-                if (i < j) {
-						// swap list[i] and list[j]
-                        PhotonPlayer z = list[i];
-                        list[i] = list[j];
-                        list[j] = z;
-                }
+            if (i < j) {
+					// swap list[i] and list[j]
+                    PhotonPlayer z = list[i];
+                    list[i] = list[j];
+                    list[j] = z;
+            }
 
         } while (i < j);
         // as long as i < j
 
-        // Tausche Pivotelement (daten[rechts]) mit neuer endgültiger Position (daten[i])
 		// swap pivot element (list[right]) with new final positoin (list[i])
         if (list[i].ID > pivot) {
                 PhotonPlayer z = list[i];
@@ -393,11 +476,18 @@ public class Match : Photon.MonoBehaviour {
         return i; // return position of pivot element
 	}
 	
+	/**
+	 * Sort a copy of the given playerlist by Score with QuickSort.
+	 */ 
 	private List<RocketFightPlayer> SortPlayerListByScore( List<RocketFightPlayer> unsortedPlayerList ) {
 		QuickSortPlayerScore( ref unsortedPlayerList, 0, unsortedPlayerList.Count - 1);
 		return unsortedPlayerList;
 	}
 	
+	/**
+	 * Recursivly walk through the list and split it into right end left part by an
+	 * calculated pivot element.
+	 */ 
 	private void QuickSortPlayerScore( ref List<RocketFightPlayer> list, int left, int right) {
 		if( left < right ) {
 			int divisior = QuickSortDivideScore(ref list, left, right);
@@ -406,6 +496,12 @@ public class Match : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * Select the last element as pivot element and sort it that way,
+	 * that all elemts on the left of pivot are smaller and all
+	 * elements on the right are bigger then pivot.
+	 * Return position of the pivot element
+	 */
 	private int QuickSortDivideScore( ref List<RocketFightPlayer> list, int left, int right ) {
 		int i = left;
         // start with j left beside pivot element
@@ -428,10 +524,8 @@ public class Match : Photon.MonoBehaviour {
                         list[j] = z;
                 }
 
-        } while (i < j);
-        // as long as i < j
-
-        // Tausche Pivotelement (daten[rechts]) mit neuer endgültiger Position (daten[i])
+        } while (i < j); // as long as i < j
+		
 		// swap pivot element (list[right]) with new final positoin (list[i])
         if (list[i].score < pivot) {
                 RocketFightPlayer z = list[i];

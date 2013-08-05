@@ -3,7 +3,10 @@ using System.Collections;
 
 public class TriggerShake : MonoBehaviour {
 
-	// Use this for initialization
+	
+	/**
+	 * On instatiation let the main camera shake a little.
+	 */ 
 	void Start () {
 		Camera.main.SendMessage("Shake");
 	}

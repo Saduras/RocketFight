@@ -2,6 +2,7 @@ using UnityEngine;
 
 /**
  * Source: http://pastebin.com/rzNU70Tt
+ * Simple script to convert rgb colors into hex color strings and back.
  */
 public class ColorX {
  

@@ -11,6 +11,10 @@ public class AutoDestructShuriken : Photon.MonoBehaviour {
 		StartCoroutine("CheckIfAlive");
 	}
 	
+	/**
+	 * Check every 500ms if the particlesystem is still alive
+	 * if not destroy gameobject
+	 */ 
 	IEnumerator CheckIfAlive ()
 	{
 		while(true)

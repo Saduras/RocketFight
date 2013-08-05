@@ -14,7 +14,12 @@ public class CameraShake : MonoBehaviour {
 		defaultPos = transform.position;
 	}
 	
-	// Update is called once per frame
+	
+	/**
+	 * Move camera randomly around defaultPos unitl duration is over.
+	 * Move to default postion if shaking time is over.
+	 * Since the camera is not moving, it's not a problem to set it's postion to default each frame.
+	 */ 
 	void Update () {
 		if( startTime + duration > Time.time ) {
 			// do shaking	
