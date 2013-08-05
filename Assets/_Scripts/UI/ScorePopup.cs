@@ -25,7 +25,13 @@ public class ScorePopup : MonoBehaviour {
 		startTime = Time.time;
 	}
 	
-	// Update is called once per frame
+	
+	/**
+	 * Per frame:
+	 * Fade out via alpha-value
+	 * Move with speed-vector
+	 * Destroy object if livetime is over
+	 */ 
 	void Update () {
 		// destroy object at the end of its lifetime
 		if(Time.time > startTime + lifeTime)
