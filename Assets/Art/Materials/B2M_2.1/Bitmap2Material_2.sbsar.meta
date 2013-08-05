@@ -4018,7 +4018,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: MakeItTile_Method
       value:
-        scalar[0]: 2
+        scalar[0]: 0
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -4046,7 +4046,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Sharpen
       value:
-        scalar[0]: .310000002
+        scalar[0]: 0
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -4088,7 +4088,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Depth_Balance
       value:
-        scalar[0]: .140000001
+        scalar[0]: -.140000001
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -4249,7 +4249,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: AO_Multiply
       value:
-        scalar[0]: .735000014
+        scalar[0]: .409999996
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -4312,7 +4312,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Light_Equalizer
       value:
-        scalar[0]: .439999998
+        scalar[0]: 0
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -4456,7 +4456,7 @@ SubstanceImporter:
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
-        texture: {fileID: 2800000, guid: 9c241592da965fb4db2d6a268fdc1167, type: 3}
+        texture: {fileID: 2800000, guid: fbb07122f48c0f544a5d6bec0577157c, type: 3}
     - name: Bitmap_Relief_optional
       value:
         scalar[0]: 0
