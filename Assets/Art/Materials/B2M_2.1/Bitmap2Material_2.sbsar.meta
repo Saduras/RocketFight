@@ -4481,7 +4481,7 @@ SubstanceImporter:
     materialInformation:
       serializedVersion: 5
       offset: {x: 0, y: 0}
-      scale: {x: 1, y: 1}
+      scale: {x: 2, y: 1}
       generateAllOutputs: 0
       animationUpdateRate: 0
     materialProperties:
@@ -4492,7 +4492,7 @@ SubstanceImporter:
             name: _MainTex
           second:
             texture: {instanceID: 0}
-            scale: {x: 1, y: 1}
+            scale: {x: 2, y: 1}
             offset: {x: 0, y: 0}
       floats:
         data:
@@ -6254,7 +6254,7 @@ SubstanceImporter:
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
-        texture: {fileID: 2800000, guid: 9ccee895f8faade439abca0e8a62c495, type: 3}
+        texture: {fileID: 2800000, guid: 7bba1db5d6d60fe42a2d2956cb487e3d, type: 3}
     - name: Bitmap_Relief_optional
       value:
         scalar[0]: 0
@@ -6280,7 +6280,7 @@ SubstanceImporter:
       serializedVersion: 5
       offset: {x: 0, y: 0}
       scale: {x: 1, y: 1}
-      generateAllOutputs: 0
+      generateAllOutputs: 1
       animationUpdateRate: 0
     materialProperties:
       serializedVersion: 2
@@ -6318,6 +6318,36 @@ SubstanceImporter:
       aniso: 1
       wrapMode: 0
     - name: Bitmap2Material2_Normal
+      alphaSource: 0
+      filterMode: 1
+      aniso: 1
+      wrapMode: 0
+    - name: Bitmap2Material2_Bump
+      alphaSource: 0
+      filterMode: 1
+      aniso: 1
+      wrapMode: 0
+    - name: Bitmap2Material2_Displacement
+      alphaSource: 0
+      filterMode: 1
+      aniso: 1
+      wrapMode: 0
+    - name: Bitmap2Material2_Height
+      alphaSource: 0
+      filterMode: 1
+      aniso: 1
+      wrapMode: 0
+    - name: Bitmap2Material2_AmbientOcclusion
+      alphaSource: 0
+      filterMode: 1
+      aniso: 1
+      wrapMode: 0
+    - name: Bitmap2Material2_Curvature
+      alphaSource: 0
+      filterMode: 1
+      aniso: 1
+      wrapMode: 0
+    - name: Bitmap2Material2_Opacity
       alphaSource: 0
       filterMode: 1
       aniso: 1
