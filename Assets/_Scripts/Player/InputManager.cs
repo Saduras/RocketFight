@@ -11,7 +11,7 @@ public class InputManager : Photon.MonoBehaviour {
 	public float cooldown = 0.5f;
 	
 	// sound and VFX
-	public Animation crosshairAnimation;
+	public CursorBehaviour crosshair;
 	public GameObject projectile;
 	public GameObject muzzleFlash;
 	public AudioSource walkSound;
@@ -42,7 +42,7 @@ public class InputManager : Photon.MonoBehaviour {
 		anim.speed = mover.movementSpeed / 2;
 		match = GameObject.Find("PhotonNetman").GetComponent<Match>();
 		pman = GetComponent<PlayerManager>();
-		crosshairAnimation = GameObject.Find("CursorController").GetComponent<Animation>();
+		crosshair = GameObject.Find("CursorController").GetComponent<CursorBehaviour>();
 		
 		// disable this if there is no match runnig at the moment
 		if(!match.IsRunning())
@@ -119,11 +119,8 @@ public class InputManager : Photon.MonoBehaviour {
 		if( (Time.time > lastShotTimestamp + cooldown) 
 			|| (rageCounter > 0 && Time.time > lastShotTimestamp + rageCooldown) ) {
 			
-			// animate crosshait
-			if(crosshairAnimation.isPlaying)
-				crosshairAnimation.Stop();
-			
-			crosshairAnimation.Play();
+			// animate cooldown
+			crosshair.StartAnimation();
 			
 			// calculate normalized direction
 			Vector3 direction = mousePos - this.transform.position;
@@ -148,15 +145,13 @@ public class InputManager : Photon.MonoBehaviour {
 			
 			// decrease rage counter
 			// change crosshair animation speed according to next cooldown
+			
+			
 			if( rageCounter > 0) {
 				rageCounter--;
-				foreach( AnimationState state in crosshairAnimation ) {
-					state.speed = 1/rageCooldown;
-				}
+				crosshair.SetAnimationTime( rageCooldown );
 			} else {
-				foreach( AnimationState state in crosshairAnimation ) {
-					state.speed = 1/cooldown;
-				}
+				crosshair.SetAnimationTime( cooldown );
 			}
 		}
 	}

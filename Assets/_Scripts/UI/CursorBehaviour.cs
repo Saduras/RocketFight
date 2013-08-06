@@ -13,6 +13,8 @@ public class CursorBehaviour : MonoBehaviour {
 	public UISprite botArrow;
 	public UISprite leftArrow;
 	
+	private float animationTime;
+	
 	// these are used to calculate the uiOffset
 	private static float targetAspectRation = 16.0f/9.0f;
 	private float screenAspectRation;
@@ -55,6 +57,39 @@ public class CursorBehaviour : MonoBehaviour {
 		} else {
 			if( !Screen.showCursor )
 				ChangeToMenuCursor();
+		}
+	}
+	
+	public void StartAnimation() {
+		// animate crosshait
+		if(animation.isPlaying) {
+			animation.Stop();
+			topArrow.color = Color.white;
+			rightArrow.color = Color.white;
+			botArrow.color = Color.white;
+			leftArrow.color = Color.white;
+		}
+		
+		Color startCol = new Color(1,1,1,0);
+		topArrow.color = startCol;
+		rightArrow.color = startCol;
+		botArrow.color = startCol;
+		leftArrow.color = startCol;
+		animation.Play();
+		TweenColor.Begin(topArrow.gameObject,animationTime, Color.white);
+		TweenColor.Begin(rightArrow.gameObject,animationTime, Color.white);
+		TweenColor.Begin(botArrow.gameObject,animationTime, Color.white);
+		TweenColor.Begin(leftArrow.gameObject,animationTime, Color.white);
+	}
+	
+	/**
+	 * Change the animation playback speed such that, the animation time = length
+	 */ 
+	public void SetAnimationTime( float length ) {
+		animationTime = length;
+		
+		foreach( AnimationState state in animation ) {
+			state.speed = 1/length;
 		}
 	}
 	
