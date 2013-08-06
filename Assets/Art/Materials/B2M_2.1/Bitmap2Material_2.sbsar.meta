@@ -5185,7 +5185,7 @@ SubstanceImporter:
   - serializedVersion: 7
     name: Sci_Fi_Holder
     prototypeName: Bitmap2Material2
-    shaderName: Unlit/Texture
+    shaderName: Diffuse
     inputs:
     - name: $time
       value:
