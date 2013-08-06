@@ -69,7 +69,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 			if( Time.time > deathTimestamp + respawnTime + invulnerableTime && !GetComponent<PlayerPhysic>().IsVulnerable()) {
 				// become vunable again
 				GetComponent<PlayerPhysic>().SetVulnerable(true);
-				photonView.RPC("HideInvulnerable",PhotonTargets.All);
+				photonView.RPC("HideInvulnerable",PhotonTargets.AllBuffered);
 			}
 		}
 	}
@@ -235,11 +235,8 @@ public class PlayerManager : Photon.MonoBehaviour {
 	 */ 
 	[RPC]
 	public void ShowDeath() {
-		if( GetComponentInChildren<SkinnedMeshRenderer>() != null
-			&& GetComponentInChildren<SkinnedMeshRenderer>() != null) {
-			GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
-			GetComponentInChildren<MeshRenderer>().enabled = false;
-		}
+		materialTarget.enabled = false;
+		circleMarker.renderer.enabled = false;
 		Instantiate(deathVFX,transform.position,Quaternion.identity);
 	}
 	
@@ -269,12 +266,10 @@ public class PlayerManager : Photon.MonoBehaviour {
 	 */ 
 	[RPC]
 	public void ShowRespawn() {
-		if( GetComponentInChildren<SkinnedMeshRenderer>() != null
-			&& GetComponentInChildren<MeshRenderer>() != null ) {
-			GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
-			GetComponentInChildren<MeshRenderer>().enabled = true;
-			invulnerable.SetActive( true );
-		}
+		materialTarget.enabled = true;
+		circleMarker.renderer.enabled = true;
+		invulnerable.SetActive( true );
+		invulnerable.animation.Play();
 	}
 	
 	/**
@@ -283,6 +278,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	[RPC]
 	public void HideInvulnerable() {
 		invulnerable.SetActive( false );
+		invulnerable.animation.Stop();
 	}
 	
 	/**
