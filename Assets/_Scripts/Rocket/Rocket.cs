@@ -6,28 +6,34 @@ using System.Collections.Generic;
 [RequireComponent(typeof(PhotonView))]
 public class Rocket : Photon.MonoBehaviour {
 	
+	// rocket properties
 	public float speed = 10;
 	public float lifetime = 3;
-	public float explosionRange = 2;
 	public float explosionForce = 20;
 	
-	public Vector3? target;
+	// destination where the rocket will explode (if not collide earlier
+	private Vector3? target;
 	
+	// VFX
 	public GameObject explosion;
+	
+	
 	public string playerTag = "Player";
 	
+	// describe explosion behaviour
+	// zones are defined in unity meter and should be orderd by size from small to big
 	public List<float> zoneRadii = new List<float>();
+	// strength is defined with values from 0.0 to 1.0 as percentage from explosionForce (see above)
+	// i.e. strength = 0.75 means 75% of explosionForce
 	public List<float> zoneStrength = new List<float>();
 	
+	// timestamp when this instance was created
 	private float birthTime;
-	
-	public enum FlightPath {
-		linear,
-		ballisitic,
-		controlled
-	}
 
-	// Use this for initialization
+	/**
+	 * Initalize.
+	 * Store birth time and check explosion zones.
+	 */ 
 	void Awake () {
 		birthTime = (float) PhotonNetwork.time;
 		
@@ -36,28 +42,44 @@ public class Rocket : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * Get real intatiation time via RPC. If we where born to late,
+	 * correct position on flightpath.
+	 */ 
 	[RPC]
 	public void InstatiateTimeStamp(float timestamp) {		
-		
+		// only do correction if actual born time was earlier then local born time
 		if( birthTime - timestamp <= 0 )
 			return;
 		
-		Debug.Log("Forward by: " + (birthTime - timestamp));
+		//Debug.Log("Forward by: " + (birthTime - timestamp));
 		
+		// correct flight postion by forwarding by birth times difference
 		UpdateInternal( birthTime - timestamp );
 	}
 	
+	/**
+	 * Set the target where we should explode if no collision happens.
+	 */ 
 	[RPC]
 	public void SetTarget(Vector3 targetPos) {
 		Debug.Log("Target Pos: " + targetPos);
 		target = targetPos;
 	}
 	
-	// Update is called once per frame
+	
+	/**
+	 * Do internal update for frame duration.
+	 */ 
 	void Update () {
 		UpdateInternal( Time.deltaTime );
 	}
-		
+	
+	/**
+	 * Move rocket forward for the given time interval.
+	 * Check if we reached our target and explode if so.
+	 * Check lifetime and destroy rocket if it's over.
+	 */ 
 	private void UpdateInternal(float deltaTime) {
 		this.transform.Translate( Vector3.forward * speed * deltaTime );
 		
@@ -74,10 +96,17 @@ public class Rocket : Photon.MonoBehaviour {
 		}
 	}
 	
+	/**
+	 * Explode on collision.
+	 */ 
 	void OnCollisionEnter( Collision collision ) {
 		Explode();
 	}
 	
+	/**
+	 * Play VFX and sent force and hit information to all player in explosion zones.
+	 * Then destroy/disbale this rocket.
+	 */ 
 	public void Explode() {
 		// play VFX
 		if( explosion != null )
@@ -109,6 +138,10 @@ public class Rocket : Photon.MonoBehaviour {
 			gameObject.SetActive( false );
 	}
 	
+	/**
+	 * Visualise explosion zones as sphere in Unity Editor. Use color do visualise strength.
+	 * Red = 100% strength ----- yellow = 0% strength.
+	 */ 
 	void OnDrawGizmos() {
 		for( int i=0; i<zoneRadii.Count; i++ ) {
 			Gizmos.color = new Color( 1f, 1-zoneStrength[i], 0f, 1f );
