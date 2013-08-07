@@ -7,11 +7,8 @@
           <Node name="Assembly-CSharp" expanded="True">
             <Node name="Assets" expanded="True">
               <Node name="_Scripts" expanded="True">
-                <Node name="Player" expanded="True" />
-                <Node name="Rocket" expanded="True" />
-                <Node name="UI" expanded="True">
-                  <Node name="Buttons" expanded="True" />
-                  <Node name="ScorePopup.cs" selected="True" />
+                <Node name="Networking" expanded="True">
+                  <Node name="Netman.cs" selected="True" />
                 </Node>
               </Node>
             </Node>
