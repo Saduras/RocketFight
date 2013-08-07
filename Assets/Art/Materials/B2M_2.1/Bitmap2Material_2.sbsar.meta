@@ -4456,7 +4456,7 @@ SubstanceImporter:
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
-        texture: {fileID: 2800000, guid: fbb07122f48c0f544a5d6bec0577157c, type: 3}
+        texture: {fileID: 2800000, guid: 83f520b368a4ad84eaf749af42491ef1, type: 3}
     - name: Bitmap_Relief_optional
       value:
         scalar[0]: 0
@@ -4481,7 +4481,7 @@ SubstanceImporter:
     materialInformation:
       serializedVersion: 5
       offset: {x: 0, y: 0}
-      scale: {x: 2, y: 1}
+      scale: {x: 1, y: 1}
       generateAllOutputs: 0
       animationUpdateRate: 0
     materialProperties:
@@ -4492,7 +4492,7 @@ SubstanceImporter:
             name: _MainTex
           second:
             texture: {instanceID: 0}
-            scale: {x: 2, y: 1}
+            scale: {x: 1, y: 1}
             offset: {x: 0, y: 0}
       floats:
         data:
@@ -6254,7 +6254,7 @@ SubstanceImporter:
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
-        texture: {fileID: 2800000, guid: 7bba1db5d6d60fe42a2d2956cb487e3d, type: 3}
+        texture: {fileID: 2800000, guid: f72607338f9e81d408d7387e851c0a27, type: 3}
     - name: Bitmap_Relief_optional
       value:
         scalar[0]: 0
