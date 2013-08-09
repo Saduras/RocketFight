@@ -1,19 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\UI\Buttons\HideExitGameButton.cs">
+    <Files>
+      <File FileName="Assets\_Scripts\Match.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Scripts\Player\PlayerManager.cs" Line="180" Column="51" />
+      <File FileName="Assets\_Scripts\UI\Buttons\HideExitGameButton.cs" Line="9" Column="32" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Assembly-CSharp" expanded="True">
-            <Node name="Assets" expanded="True">
-              <Node name="_Scripts" expanded="True">
-                <Node name="Networking" expanded="True">
-                  <Node name="Netman.cs" selected="True" />
-                </Node>
-              </Node>
-            </Node>
-          </Node>
-        </State>
+        <State expanded="True" selected="True" />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
