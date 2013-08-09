@@ -16,6 +16,7 @@ public class RespawnPoint : Photon.MonoBehaviour {
 	// paramteres used to move this object around
 	private Vector3? target;
 	private float speed = 5;
+	private Vector3 lastMove;
 	
 	/**
 	 * Initialize target position to ensure respawnpoint standing still on start
@@ -31,12 +32,14 @@ public class RespawnPoint : Photon.MonoBehaviour {
 				photonView.RPC("SetMarkerActive",PhotonTargets.All,true);
 			} else {
 				photonView.RPC("SetMarkerActive",PhotonTargets.All,false);
+				target = transform.localPosition;
 			}
 		}
 		
 		// move respawnpoint with given speed to target until we a very close
 		if( target != null && (target.Value - transform.position).magnitude > 0.2f ) {
-			transform.Translate( (target.Value - transform.position).normalized * speed * Time.deltaTime );
+			lastMove = (target.Value - transform.position).normalized * speed * Time.deltaTime;
+			transform.Translate( lastMove );
 		}
 	}
 	
@@ -98,5 +101,11 @@ public class RespawnPoint : Photon.MonoBehaviour {
 	[RPC]
 	public void AssignTo(PhotonPlayer assignedPlayer) {
 		player = assignedPlayer;
+	}
+	
+	public void OnLeaveArena() {
+		Debug.Log("LeavingArena!");
+		transform.Translate( -lastMove );
+		target = transform.localPosition;
 	}
 }
