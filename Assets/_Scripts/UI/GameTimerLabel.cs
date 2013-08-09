@@ -5,11 +5,12 @@ public class GameTimerLabel : MonoBehaviour {
 	
 	
 	private UILabel label;
-	public Match match;
+	private Match match;
 	
 	// Use this for initialization
 	void Start () {
 		label = gameObject.GetComponent<UILabel>();
+		match = GameObject.Find("PhotonNetman").GetComponent<Match>();
 	}
 	
 	
@@ -21,6 +22,6 @@ public class GameTimerLabel : MonoBehaviour {
 		float timer = match.GetGameTime();
 		string minutes = Mathf.Floor(timer / 60).ToString("00");
 		string seconds = (timer % 60).ToString("00");
-		label.text = "Time: " + minutes + ":" + seconds;
+		label.text = minutes + ":" + seconds;
 	}
 }
