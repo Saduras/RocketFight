@@ -104,6 +104,13 @@ public class Rocket : Photon.MonoBehaviour {
 	}
 	
 	/**
+	 * Explode when leaving the arena. Rockets outside has no use and may cause bad rendering with scoreboard...
+	 */ 
+	void OnLeaveArena() {
+		Explode();
+	}
+	
+	/**
 	 * Play VFX and sent force and hit information to all player in explosion zones.
 	 * Then destroy/disbale this rocket.
 	 */ 
