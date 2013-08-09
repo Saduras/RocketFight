@@ -53,6 +53,10 @@ public class UIMenu : Photon.MonoBehaviour {
 					match.photonView.RPC("RequestStart",PhotonTargets.AllBuffered);
 				}
 				break;
+			case UIState.MATCHOVER: {
+				panels[(int) UIState.MATCHOVER].GetComponentInChildren<ScorePanel>().UpdateDisplay();
+				break;
+			}
 			case UIState.QUIT:
 				Application.Quit();
 				break;

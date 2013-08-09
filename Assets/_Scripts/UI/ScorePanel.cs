@@ -13,7 +13,7 @@ public class ScorePanel : MonoBehaviour {
 	private int[] place;
 
 	// Use this for initialization
-	void Start () {
+	void Awake() {
 		match = GameObject.Find("PhotonNetman").GetComponent<Match>();
 		
 		// activate one slot for each player in the current match
