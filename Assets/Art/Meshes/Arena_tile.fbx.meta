@@ -13,6 +13,11 @@ ModelImporter:
     100014: Rocket_Arena3
     100016: transform12
     100018: transform13
+    100020: Arena_tile
+    100022: transform1
+    100024: transform2
+    100026: transform3
+    100028: transform4
     400000: Arena_Edges
     400002: Arena_Shape
     400004: //RootNode
@@ -23,21 +28,29 @@ ModelImporter:
     400014: Rocket_Arena3
     400016: transform12
     400018: transform13
+    400020: Arena_tile
+    400022: transform1
+    400024: transform2
+    400026: transform3
+    400028: transform4
     2300000: pPlane3
     2300002: Rocket_Arena
     2300004: Rocket_Arena1
     2300006: Rocket_Arena2
     2300008: Rocket_Arena3
+    2300010: Arena_tile
     3300000: pPlane3
     3300002: Rocket_Arena
     3300004: Rocket_Arena1
     3300006: Rocket_Arena2
     3300008: Rocket_Arena3
+    3300010: Arena_tile
     4300000: pPlane3
     4300002: Rocket_Arena
     4300004: Rocket_Arena1
     4300006: Rocket_Arena2
     4300008: Rocket_Arena3
+    4300010: Arena_tile
     9500000: //RootNode
   materials:
     importMaterials: 1
