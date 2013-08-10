@@ -5,7 +5,7 @@ using System.Collections;
  * This class holds all information about current player movement and executes them.
  */
 [RequireComponent(typeof(CharacterController))]
-public class CharacterMover : MonoBehaviour {
+public class CharacterMover : Photon.MonoBehaviour {
 	
 	// direction we get from the player input
 	Vector3 controllerMovement = Vector3.zero;
@@ -40,6 +40,8 @@ public class CharacterMover : MonoBehaviour {
 		
 		// move character respecting collision
 		controller.Move( frameMove * Time.deltaTime );
+		if( photonView.owner != PhotonNetwork.player ) 
+			GetComponent<Predictor>().UpdateLatestState( frameMove * Time.deltaTime );
 	}
 	
 	/**
@@ -58,8 +60,7 @@ public class CharacterMover : MonoBehaviour {
 	 * Set the sum of the physical effects moving the character.
 	 */
 	public void SetPhysicMovement( Vector3 vector ) {
-		if( vector != physicMovement )
-			physicMovement = vector;
+		physicMovement = vector;
 	}
 	
 	/**

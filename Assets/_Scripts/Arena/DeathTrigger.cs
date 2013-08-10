@@ -13,6 +13,5 @@ public class DeathTrigger : MonoBehaviour {
 		other.gameObject.SendMessage ("OnDeath", SendMessageOptions.DontRequireReceiver);
 		if(isOutside)
 			other.gameObject.SendMessage ("OnLeaveArena", SendMessageOptions.DontRequireReceiver);
-		Debug.Log("Something entered deathzone");
 	}
 }

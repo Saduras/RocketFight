@@ -7,10 +7,14 @@
           <Node name="Assembly-CSharp" expanded="True">
             <Node name="Assets" expanded="True">
               <Node name="_Scripts" expanded="True">
+                <Node name="Arena" expanded="True">
+                  <Node name="DeathTrigger.cs" selected="True" />
+                </Node>
+                <Node name="Networking" expanded="True" />
+                <Node name="Player" expanded="True" />
+                <Node name="Rocket" expanded="True" />
                 <Node name="UI" expanded="True">
-                  <Node name="Buttons" expanded="True">
-                    <Node name="ChangeUIStateButton.cs" selected="True" />
-                  </Node>
+                  <Node name="Buttons" expanded="True" />
                 </Node>
               </Node>
             </Node>

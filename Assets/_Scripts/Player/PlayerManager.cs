@@ -68,7 +68,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 			// make player vunable again if time is over
 			if( Time.time > deathTimestamp + respawnTime + invulnerableTime && !GetComponent<PlayerPhysic>().IsVulnerable()) {
 				// become vunable again
-				GetComponent<PlayerPhysic>().SetVulnerable(true);
+				photonView.RPC("SetVulnerable",PhotonTargets.AllBuffered,true);
 				photonView.RPC("HideInvulnerable",PhotonTargets.AllBuffered);
 			}
 		}
@@ -225,8 +225,8 @@ public class PlayerManager : Photon.MonoBehaviour {
 				}
 			
 			
-				// Make player invulnerbale
-				GetComponent<PlayerPhysic>().SetVulnerable(false);
+			// Make player invulnerbale
+			photonView.RPC("SetVulnerable",PhotonTargets.AllBuffered,false);
 		}
 	}
 	

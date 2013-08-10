@@ -23,9 +23,9 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	 * Disable if we are not the owner of this gameObject
 	 */
 	void Start () {
-		if (!(photonView.owner == PhotonNetwork.player) ) {
-			this.enabled = false;
-		}
+//		if (!(photonView.owner == PhotonNetwork.player) ) {
+//			this.enabled = false;
+//		}
 		mover = GetComponent<CharacterMover>();
 	}
 	
@@ -35,10 +35,9 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	void Update () {
 		// calculate force for this frame
 		Vector3 frameForce = CalculateFrameForce();
-		if( frameForce.magnitude != 0 ) {
-			// send calculated force to mover
-			mover.SetPhysicMovement( frameForce );
-			
+		// send calculated force to mover
+		mover.SetPhysicMovement( frameForce );
+		if( frameForce.magnitude != 0 ) {	
 			// disable movement if contrableWhileForce if false
 			if( !controlableWhileForce && (this.gameObject.GetComponent<InputManager>().enabled == true) ) {
 				this.gameObject.GetComponent<InputManager>().enabled = false;
@@ -63,6 +62,7 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	/**
 	 * Change if forces have any effect or not
 	 */ 
+	[RPC]
 	public void SetVulnerable( bool val ) {
 		vulnerable = val;	
 	}
@@ -75,9 +75,9 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 		
 		foreach( Force force in forceSet ) {
 			// add to frame force
-			float liveTime = Time.time - force.timestamp;
+			double liveTime = PhotonNetwork.time - force.timestamp;
 			if( liveTime < fadeTime ) 
-				frameForce += force.vector / fadeTime * (2f * Mathf.Pow(1 - liveTime / fadeTime, curvePower) );
+				frameForce += force.vector / fadeTime * (2f * Mathf.Pow( (float)(1 - liveTime / fadeTime), curvePower) );
 		}
 		return frameForce;
 	}
@@ -90,7 +90,7 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 		
 		// find force which has been expired
 		foreach( Force force in forceSet ) {
-			if( force.timestamp < Time.time - fadeTime ) 
+			if( force.timestamp < PhotonNetwork.time - fadeTime ) 
 				toCleanUp.Add( force );
 		}
 		
@@ -107,19 +107,19 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	 */ 
 	[RPC]
 	public void ApplyForce( Vector3 newForce ) {
-		if (photonView.owner == PhotonNetwork.player && vulnerable) {
-				forceSet.Add( new Force(newForce, Time.time) );
+		if (vulnerable) {
+			forceSet.Add( new Force(newForce, PhotonNetwork.time) );
 		}
 	}
 	
 	/**
 	 * Structur to store force vector with the born timestamp
 	 */ 
-	private struct Force{
+	private struct Force {
 		public Vector3 vector;
-		public float timestamp;
+		public double timestamp;
 		
-		public Force( Vector3 vec, float startTime ) {
+		public Force( Vector3 vec, double startTime ) {
 			vector = vec;	
 			timestamp = startTime;
 		}

@@ -9,9 +9,6 @@ public class Predictor : Photon.MonoBehaviour {
 	// By default this is 10 times/second for OnSerialize. (See PhotonNetwork.sendIntervalOnSerialize)
 	// Raise the sendrate if you want to lower the interpolationBackTime.
 	//
-	
-    public double interpolationBackTime = 0.15;
-
     internal struct State {
         internal double timestamp;
         internal Vector3 pos;
@@ -86,15 +83,22 @@ public class Predictor : Photon.MonoBehaviour {
 	// We store twenty states of local movements
 	State[] l_BufferedState = new State[20];
 	
+    public double interpolationBackTime = 0.15;
+	private CharacterMover mover;
 	private Animator anim;
+	
+	private Vector3 movementError = Vector3.zero;
 
     void Awake() {
         if (photonView.isMine)
             this.enabled = false;//Only enable inter/extrapol for remote players
+		
 		if(GetComponent<Animator>()) {
 			anim = GetComponent<Animator>(); 
 			anim.speed = GetComponent<CharacterMover>().movementSpeed / 2;
 		}
+		
+		mover = GetComponent<CharacterMover>();
 		
 		for( int i=0; i<l_BufferedState.Length-1; i++ ) {
 			l_BufferedState[i].pos = transform.localPosition;
@@ -139,6 +143,8 @@ public class Predictor : Photon.MonoBehaviour {
 			localState.pos = transform.localPosition;
 			localState.rot = transform.rotation;
 			l_BufferedState[0] = localState;
+			
+			
 
             // Increment state count but never exceed buffer size
             n_TimestampCount = Mathf.Min(n_TimestampCount + 1, n_BufferedState.Length);
@@ -166,10 +172,10 @@ public class Predictor : Photon.MonoBehaviour {
 					break;
 				}
 			}
-//			Debug.LogError("Compare: " + extrapolState.pos + " ?= " + l_BufferedState[index].pos);
 			
 			// calculate the error we had in our prediction
 			Vector3 posError = realNetState.pos - interpolState.pos;
+			movementError += posError;
 			Quaternion rotError = realNetState.rot * Quaternion.Inverse(interpolState.rot);
 			// replace old bufferedState with corrected extrapolation
 			l_BufferedState[index].pos += posError;
@@ -224,13 +230,21 @@ public class Predictor : Photon.MonoBehaviour {
         // received state. You can do clever stuff with predicting what should happen.
         else {
             State latest = l_BufferedState[0];
+			Vector3 frameDestination = transform.localPosition + movementError;
+			movementError = Vector3.zero;
+			
+			float t = (float)(latest.timestamp - PhotonNetwork.time + 0.1f)/(mover.movementSpeed*2) + 0.4f;
 
-            transform.localPosition = latest.pos;
-            transform.localRotation = latest.rot;
+			transform.localPosition = Vector3.Lerp(transform.localPosition, latest.pos, t/2);
+            transform.localRotation = Quaternion.Lerp(transform.localRotation, n_BufferedState[0].rot, t/2);
 			
 			float speed = Mathf.Abs((transform.localPosition - latest.pos).magnitude) / Time.deltaTime;
 			if(anim)
 				anim.SetFloat("speed", speed );
         }
     }
+	
+	public void UpdateLatestState( Vector3 frameMovement ) {
+		l_BufferedState[0].pos += frameMovement;
+	}
 }

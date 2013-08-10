@@ -54,8 +54,10 @@ public class InputManager : Photon.MonoBehaviour {
 		// Only controlling player is allow to send inputs to this instance
 		// also input only allowed if is controlable and macht is running
 		if( (PhotonNetwork.player == controllingPlayer && controlable && match.IsRunning()) ) {
-			// Get movement input.
+			// Get mous position.
 			Vector3 hitPoint;
+			hitPoint = GetMouseHitPoint();
+			
 			// calculate movement vector from keyboard input
 			Vector3 movement = new Vector3(Input.GetAxis("Horizontal"),0,Input.GetAxis("Vertical"));
 			movement.Normalize();
@@ -65,17 +67,18 @@ public class InputManager : Photon.MonoBehaviour {
 			
 			// rotate in movement direction and play sound
 			if( movement.magnitude > 0.1) {
-				this.transform.LookAt(this.transform.position + movement);
 				if( !walkSound.isPlaying )
 					walkSound.Play();
 			} else {
 				if( walkSound.isPlaying )
 					walkSound.Stop();
 			}
+			// look at mouse cursor
+			this.transform.LookAt(hitPoint);
 			
 			// shoot a missile to the mouse position on left-mouse click
 			if( Input.GetButton("Fire1") ) {
-				hitPoint = GetMouseHitPoint();
+				
 				Shoot(hitPoint);
 			}
 		} else if(pman.IsDead()) {

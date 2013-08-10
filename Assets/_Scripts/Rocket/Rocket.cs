@@ -63,7 +63,6 @@ public class Rocket : Photon.MonoBehaviour {
 	 */ 
 	[RPC]
 	public void SetTarget(Vector3 targetPos) {
-		Debug.Log("Target Pos: " + targetPos);
 		target = targetPos;
 	}
 	
@@ -122,17 +121,24 @@ public class Rocket : Photon.MonoBehaviour {
 //		Debug.LogError("Explosion at: " + PhotonNetwork.time);
 		
 		if( photonView.owner == PhotonNetwork.player ) {
+			// get a list of all character walking in this arena
 			GameObject[] gos = GameObject.FindGameObjectsWithTag( playerTag );
 			foreach( GameObject playerGo in gos ) {
+				// foreach character calculate distance vector
 				Vector3 direction = playerGo.transform.position - this.transform.position;
 				direction.y = 0;
+				// check each explosion zone if character is inside
+				// starting with the smallest zone
 				for( int i=0; i<zoneRadii.Count; i++ ) {
+					// if character is inside current zone, calculate force and send it to the character
+					// stop checking zone once we found one
 					if( direction.magnitude < zoneRadii[i] ) {
 						Vector3 playerForce = direction.normalized * explosionForce * zoneStrength[i];
-						Debug.Log("Explosion strength: " + playerForce.magnitude );
 						
-						playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.OthersBuffered,playerForce);	
+						// send force and hit-source via RPC to owner
+						playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.OthersBuffered,playerForce);
 						playerGo.gameObject.GetPhotonView().RPC("HitBy",PhotonTargets.OthersBuffered, photonView.owner);
+						playerGo.SendMessage("ApplyForce",playerForce);
 						break;
 					}
 				}
