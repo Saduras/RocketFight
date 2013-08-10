@@ -203,10 +203,12 @@ public class PlayerManager : Photon.MonoBehaviour {
 						if ( go.GetComponent<RespawnPoint>().IsOwner(photonView.owner) ) {
 							spawnPointObj = go;
 							spawnPointObj.GetComponent<RespawnPoint>().SetPMan(this);
+							transform.parent = spawnPointObj.transform;
 							break;
 						}
 					}
 				}
+				transform.localPosition = Vector3.zero;
 				
 				// request spawn and store time of death
 				deathTimestamp = Time.time;

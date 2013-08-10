@@ -72,9 +72,11 @@ public class ScoreBuff : Photon.MonoBehaviour {
 	 */
 	public void OnTriggerEnter(Collider other) {
 		if(other.gameObject.CompareTag("Player")) {
-			player = other.gameObject.GetComponent<InputManager>().controllingPlayer;
-			//photonView.RPC("ItemPickUp",PhotonTargets.AllBuffered,player);
-			ItemPickUp(player);
+			if( !other.gameObject.GetComponent<PlayerManager>().IsDead() ) {
+				player = other.gameObject.GetComponent<InputManager>().controllingPlayer;
+				//photonView.RPC("ItemPickUp",PhotonTargets.AllBuffered,player);
+				ItemPickUp(player);
+			}
 		}
 	}
 	
