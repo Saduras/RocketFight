@@ -1,8 +1,10 @@
+#if !(UNITY_WINRT || UNITY_WP8)
+
 using System;
-using System.Net.Sockets;
-using UnityEngine;
 using System.Collections;
 using System.Net;
+using System.Net.Sockets;
+using UnityEngine;
 
 /// <summary>
 /// This script is automatically added to the PhotonHandler gameobject by PUN
@@ -12,6 +14,8 @@ using System.Net;
 /// </summary>
 public class PingCloudRegions : MonoBehaviour
 {
+
+
     static CloudServerRegion closestRegion = CloudServerRegion.US;
     static public PingCloudRegions SP;
 
@@ -182,3 +186,4 @@ public class PingCloudRegions : MonoBehaviour
         return string.Empty;
     }
 }
+#endif

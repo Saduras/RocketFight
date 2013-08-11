@@ -7,9 +7,9 @@
 // </summary>
 // <author>developer@exitgames.com</author>
 // ----------------------------------------------------------------------------
-using System;
-using System.Collections;
+
 using ExitGames.Client.Photon;
+
 
 /// <summary>
 /// This class resembles a room that PUN joins (or joined).

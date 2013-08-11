@@ -7,9 +7,12 @@
 // </summary>
 // <author>developer@exitgames.com</author>
 // ----------------------------------------------------------------------------
+
 using System.Collections;
 using UnityEngine;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 using SupportClass = ExitGames.Client.Photon.SupportClass;
+
 
 /// <summary>
 /// This static class defines some useful extension methods for several existing classes (e.g. Vector3, float and others).
