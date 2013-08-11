@@ -7,9 +7,10 @@
 // </summary>
 // <author>developer@exitgames.com</author>
 // ----------------------------------------------------------------------------
+
+using ExitGames.Client.Photon;
 using System;
 using System.IO;
-using ExitGames.Client.Photon;
 using UnityEngine;
 
 /// <summary>

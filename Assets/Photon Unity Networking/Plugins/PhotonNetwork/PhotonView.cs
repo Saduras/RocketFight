@@ -8,10 +8,13 @@
 // <author>developer@exitgames.com</author>
 // ----------------------------------------------------------------------------
 
+using UnityEngine;
+using System.Reflection;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-using UnityEngine;
+
 
 public enum ViewSynchronization { Off, ReliableDeltaCompressed, Unreliable }
 public enum OnSerializeTransform { OnlyPosition, OnlyRotation, OnlyScale, PositionAndRotation, All }
@@ -171,7 +174,10 @@ public class PhotonView : Photon.MonoBehaviour
 
     public void OnDestroy()
     {
-        PhotonNetwork.networkingPeer.RemovePhotonView(this);
+        if (!this.destroyedByPhotonNetworkOrQuit)
+        {
+            PhotonNetwork.networkingPeer.LocalCleanPhotonView(this);
+        }
 
         if (!this.destroyedByPhotonNetworkOrQuit && !Application.isLoadingLevel)
         {
@@ -196,13 +202,50 @@ public class PhotonView : Photon.MonoBehaviour
 
         if (PhotonNetwork.networkingPeer.instantiatedObjects.ContainsKey(this.instantiationId))
         {
-            Debug.LogWarning(string.Format("OnDestroy for PhotonView {0} but GO is still in instantiatedObjects. instantiationId: {1}. Use PhotonNetwork.Destroy(). {2}", this, this.instantiationId, Application.isLoadingLevel ? "Loading new scene caused this." : ""));
+            // Unity destroys GOs and PVs at the end of a frame. In worst case, a instantiate created a new view with the same id. Let's compare the associated GameObject.
+            GameObject instGo = PhotonNetwork.networkingPeer.instantiatedObjects[this.instantiationId];
+            bool instanceIsThisOne = (instGo == this.gameObject);
+            if (instanceIsThisOne)
+            {
+                Debug.LogWarning(string.Format("OnDestroy for PhotonView {0} but GO is still in instantiatedObjects. instantiationId: {1}. Use PhotonNetwork.Destroy(). {2} Identical with this: {3} PN.Destroyed called for this PV: {4}", this, this.instantiationId, Application.isLoadingLevel ? "Loading new scene caused this." : "", instanceIsThisOne, destroyedByPhotonNetworkOrQuit));
+            }
         }
+    }
+
+    private MethodInfo OnSerializeMethodInfo;
+
+    private bool failedToFindOnSerialize;
+
+    internal protected void ExecuteOnSerialize(PhotonStream pStream, PhotonMessageInfo info)
+    {
+        if (failedToFindOnSerialize)
+        {
+            return;
+        }
+
+        if (OnSerializeMethodInfo == null)
+        {
+            if (!NetworkingPeer.GetMethod(this.observed as MonoBehaviour, PhotonNetworkingMessage.OnPhotonSerializeView.ToString(), out OnSerializeMethodInfo))
+            {
+                Debug.LogError("The observed monobehaviour (" + this.observed.name + ") of this PhotonView does not implement OnPhotonSerialize()!");
+                failedToFindOnSerialize = true;
+                return;
+            }
+        }
+
+        OnSerializeMethodInfo.Invoke((object)this.observed, new object[] { pStream, info });
     }
 
     public void RPC(string methodName, PhotonTargets target, params object[] parameters)
     {
-        PhotonNetwork.RPC(this, methodName, target, parameters);
+		if(PhotonNetwork.networkingPeer.hasSwitchedMC && target == PhotonTargets.MasterClient)
+        {
+			PhotonNetwork.RPC(this, methodName, PhotonNetwork.masterClient, parameters);
+		}
+        else
+        {
+        	PhotonNetwork.RPC(this, methodName, target, parameters);
+		}
     }
 
     public void RPC(string methodName, PhotonPlayer targetPlayer, params object[] parameters)
