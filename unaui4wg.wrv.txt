@@ -1,0 +1,51 @@
+﻿Merge branch 'master' of https://github.com/Saduras/RocketFight
+
+Conflicts:
+	Assets/Art/Tex/Respawn.meta
+	Assets/Scenes/Arena.unity
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch and 'origin/master' have diverged,
+# and have 1 and 5 different commits each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# All conflicts fixed but you are still merging.
+#   (use "git commit" to conclude merge)
+#
+# Changes to be committed:
+#
+#	new file:   Assets/Art/Animation/SpawnPointRotation.anim
+#	new file:   Assets/Art/Animation/SpawnPointRotation.anim.meta
+#	new file:   Assets/Art/Materials/Arena/RespawnMarkerColor.mat
+#	new file:   Assets/Art/Materials/Arena/RespawnMarkerColor.mat.meta
+#	new file:   Assets/Art/Materials/Arena/RespawnMarkerOutline.mat
+#	new file:   Assets/Art/Materials/Arena/RespawnMarkerOutline.mat.meta
+#	new file:   Assets/Art/Tex/Respawn.meta
+#	new file:   Assets/Art/Tex/Respawn/RespawnMarkerOutline.png
+#	new file:   Assets/Art/Tex/Respawn/RespawnMarkerOutline.png.meta
+#	new file:   Assets/Art/Tex/Respawn/RespawnMarker_Color.tga
+#	new file:   Assets/Art/Tex/Respawn/RespawnMarker_Color.tga.meta
+#	new file:   Assets/Art/Tex/Respawn/marker.psd
+#	new file:   Assets/Art/Tex/Respawn/marker.psd.meta
+#	new file:   Assets/Resources/Item.prefab
+#	new file:   Assets/Resources/Item.prefab.meta
+#	modified:   Assets/Resources/SpawnPoint.prefab
+#	modified:   Assets/Resources/_NoNetInstancePrefabs/Arena.prefab
+#	modified:   Assets/Resources/_NoNetInstancePrefabs/PhotonNetman.prefab
+#	new file:   Assets/Shader.meta
+#	new file:   Assets/Shader/UnlitTransparentCutoutColor.shader
+#	new file:   Assets/Shader/UnlitTransparentCutoutColor.shader.meta
+#	modified:   Assets/_Scripts/Arena/RespawnPoint.cs
+#	modified:   Assets/_Scripts/Match.cs
+#	modified:   Assets/_Scripts/Networking/Predictor.cs
+#	modified:   Assets/_Scripts/Player/PlayerManager.cs
+#
+
