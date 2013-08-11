@@ -35,6 +35,8 @@ public class Match : Photon.MonoBehaviour {
 	
 	// prefab we spawn as player
 	public GameObject playerPrefab;
+	// prefab for spawning item
+	public GameObject itemPrefab;
 	// colors we use the distinguish player
 	public List<Color> freeColors = new List<Color>();
 	private List<Color> usedColors = new List<Color>();
@@ -363,6 +365,8 @@ public class Match : Photon.MonoBehaviour {
 			Vector3 rgb = new Vector3( playerList[i].color.r, playerList[i].color.g,playerList[i].color.b );
 			photonView.RPC("SetSpawnPoint",playerList[i].photonPlayer,positions[i],playerList[i].photonPlayer,rgb);	
 		}
+		// spawn item
+		PhotonNetwork.Instantiate(itemPrefab.name,new Vector3(0,0.5f,0),Quaternion.identity,0);
 	}
 	
 	/**

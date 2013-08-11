@@ -22,14 +22,15 @@ public class RespawnPoint : Photon.MonoBehaviour {
 	 * Initialize target position to ensure respawnpoint standing still on start
 	 */ 
 	void Start() {
-		target = transform.position;	
+		target = transform.position;
 	}
 	
 	void Update() {
 		// enable/disable marker if the linked player is dead/alive
 		if( pman != null ) {
-			if( pman.IsDead() ) {		
+			if( pman.IsDead() ) {
 				photonView.RPC("SetMarkerActive",PhotonTargets.All,true);
+				positionMarker.renderer.material.SetFloat("_Cutoff", Mathf.InverseLerp(1, 0, pman.RespawnTimeNormalized()));
 			} else {
 				photonView.RPC("SetMarkerActive",PhotonTargets.All,false);
 				target = transform.localPosition;
@@ -83,7 +84,7 @@ public class RespawnPoint : Photon.MonoBehaviour {
 		foreach( ParticleSystem particle in ps ) {
 			particle.startColor = color;
 		}
-		positionMarker.renderer.material.color = color;
+		positionMarker.renderer.material.SetColor("_MainColor",color);;
 	}
 	
 	/**
@@ -105,7 +106,7 @@ public class RespawnPoint : Photon.MonoBehaviour {
 	
 	public void OnLeaveArena() {
 		Debug.Log("LeavingArena!");
-		transform.Translate( -lastMove );
+		transform.Translate( -2*lastMove );
 		target = transform.localPosition;
 	}
 }
