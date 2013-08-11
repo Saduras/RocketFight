@@ -42,6 +42,7 @@ public class Match : Photon.MonoBehaviour {
 	// sound & music stuff
 	public AudioSource matchMusic;
 	public AudioSource countdownSound;
+	public AudioSource ambientWind;
 	
 	private bool arenaLoaded = false;
 	private bool sent = false;
@@ -292,6 +293,7 @@ public class Match : Photon.MonoBehaviour {
 		Init();
 		// play background music
 		matchMusic.Play();
+		ambientWind.Play ();
 		countdownLabel.gameObject.SetActive( false );
 		
 		GameObject[] characters = GameObject.FindGameObjectsWithTag("Player");
@@ -317,6 +319,7 @@ public class Match : Photon.MonoBehaviour {
 		// UpdateUIPlayerList( finalScoreLabel );
 		// stop background music
 		matchMusic.Stop();
+		ambientWind.Stop();
 	}
 	
 	/**
