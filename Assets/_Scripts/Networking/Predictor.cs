@@ -50,7 +50,7 @@ public class Predictor : Photon.MonoBehaviour {
 			
 			// calculate difference between last and curr
 			Vector3 diffPos = curr.pos - last.pos;
-			Quaternion diffRot = last.rot * Quaternion.Inverse(curr.rot);
+//			Quaternion diffRot = last.rot * Quaternion.Inverse(curr.rot);
 			// calculate time factor
 			float timeFactor = (float) ( (time - last.timestamp) / (curr.timestamp - last.timestamp) );
 			// generate new extrapolated state
@@ -158,7 +158,7 @@ public class Predictor : Photon.MonoBehaviour {
 			
 			// fix erros in local state buffer with new recieved network state
 			State realNetState = n_BufferedState[0];
-			State extrapolState = realNetState;
+//			State extrapolState = realNetState;
 			State interpolState = realNetState;
 			int index = 0;
 			// find local states wich are near to new network state
@@ -166,7 +166,7 @@ public class Predictor : Photon.MonoBehaviour {
 				if( l_BufferedState[i].timestamp > realNetState.timestamp ) {
 					// we found the right local states
 					// extrapolate the new l_BufferedState[i] with the correction through realNetState
-					extrapolState = State.Extrapolate(realNetState, l_BufferedState[i+1], l_BufferedState[i].timestamp);
+//					extrapolState = State.Extrapolate(realNetState, l_BufferedState[i+1], l_BufferedState[i].timestamp);
 					interpolState = State.Interpolate(l_BufferedState[i],l_BufferedState[i+1], realNetState.timestamp);
 					index = i;
 					break;
@@ -230,7 +230,6 @@ public class Predictor : Photon.MonoBehaviour {
         // received state. You can do clever stuff with predicting what should happen.
         else {
             State latest = l_BufferedState[0];
-			Vector3 frameDestination = transform.localPosition + movementError;
 			movementError = Vector3.zero;
 			
 			float t = (float)(latest.timestamp - PhotonNetwork.time + 0.1f)/(mover.movementSpeed*2) + 0.4f;

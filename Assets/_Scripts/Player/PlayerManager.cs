@@ -239,6 +239,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	public void ShowDeath() {
 		materialTarget.enabled = false;
 		circleMarker.renderer.enabled = false;
+		invulnerable.SetActive( false );
 		Instantiate(deathVFX,transform.position,Quaternion.identity);
 	}
 	
@@ -312,6 +313,10 @@ public class PlayerManager : Photon.MonoBehaviour {
 		}
 	}
 	
+	public float RespawnTimeNormalized() {
+		return (Time.time - deathTimestamp)/respawnTime;
+	}
+	
 	/**
 	 * Struct to store timestamp and source of hits
 	 */ 
@@ -328,4 +333,6 @@ public class PlayerManager : Photon.MonoBehaviour {
 			return "Hit by " + player.name + " [" + player.ID + "] at time " + timestamp;
 		}
 	}
+	
+	
 }
