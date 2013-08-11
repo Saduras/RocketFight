@@ -16,6 +16,8 @@ public class InputManager : Photon.MonoBehaviour {
 	public GameObject muzzleFlash;
 	public AudioSource walkSound;
 	
+	public GameObject upperBody;
+	
 	public string groundTag = "Ground";
 	private Match match;
 	
@@ -38,8 +40,6 @@ public class InputManager : Photon.MonoBehaviour {
 	// Use this for initialization
 	public void Awake () {
 		mover = GetComponent<CharacterMover>();
-		anim = GetComponent<Animator>();
-		anim.speed = mover.movementSpeed / 2;
 		match = GameObject.Find("PhotonNetman").GetComponent<Match>();
 		pman = GetComponent<PlayerManager>();
 		crosshair = GameObject.Find("CursorController").GetComponent<CursorBehaviour>();
@@ -63,7 +63,6 @@ public class InputManager : Photon.MonoBehaviour {
 			movement.Normalize();
 			// apply previous calculated movement
 			mover.SetControllerMovement( movement );
-			anim.SetFloat("speed", movement.magnitude );
 			
 			// rotate in movement direction and play sound
 			if( movement.magnitude > 0.1) {
@@ -74,7 +73,7 @@ public class InputManager : Photon.MonoBehaviour {
 					walkSound.Stop();
 			}
 			// look at mouse cursor
-			this.transform.LookAt(hitPoint);
+			upperBody.transform.LookAt(hitPoint);
 			
 			// shoot a missile to the mouse position on left-mouse click
 			if( Input.GetButton("Fire1") ) {

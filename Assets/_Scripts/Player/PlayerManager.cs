@@ -23,7 +23,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	// materials and target for changing materials
 	// depending on player color
 	public Material[] playerMaterials;
-	public MeshRenderer materialTarget;
+	public SkinnedMeshRenderer materialTarget;
 	// this color is the player main color and will be used to
 	// color marker and respawn VFX
 	private Color color;
