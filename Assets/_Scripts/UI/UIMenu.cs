@@ -29,7 +29,7 @@ public class UIMenu : Photon.MonoBehaviour {
 	 * Activate MainMenu on start
 	 */ 
 	void Start() {
-		ChanceState(UIState.ENTERNAME);	
+		ChanceState(UIState.MAINMENU);	
 	}
 	
 	/**

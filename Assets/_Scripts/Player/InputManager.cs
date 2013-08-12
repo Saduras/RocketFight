@@ -78,8 +78,9 @@ public class InputManager : Photon.MonoBehaviour {
 			}			
 		}
 		
-		if( animator.GetNextAnimatorStateInfo(0).nameHash == shootState )
+		if( animator.GetCurrentAnimatorStateInfo(0).nameHash == shootState ) {
 			animator.SetBool("Shot", false);
+		}
 	}
 	
 	void LateUpdate() {

@@ -75,11 +75,8 @@ public class PlayerManager : Photon.MonoBehaviour {
 			}
 		}
 		
-		Debug.Log(animator.GetCurrentAnimatorStateInfo(0).nameHash);
-		Debug.Log("hitstate: " + hitState);
 		if(animator.GetCurrentAnimatorStateInfo(0).nameHash == hitState) {
 			animator.SetBool("Hit", false);
-			Debug.Log("deactivate hit");
 		}
 	}
 	
