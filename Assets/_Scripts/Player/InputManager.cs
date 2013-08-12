@@ -17,6 +17,7 @@ public class InputManager : Photon.MonoBehaviour {
 	public AudioSource walkSound;
 	
 	public GameObject upperBody;
+	private Quaternion initRotUpperBody;
 	
 	public string groundTag = "Ground";
 	private Match match;
@@ -33,6 +34,9 @@ public class InputManager : Photon.MonoBehaviour {
 	private int rageCounter = 0;
 	private float rageCooldown = 0.2f;
 	
+	private Vector3 movement;
+	private Vector3 walkDir;
+	private Vector3 viewDir;
 	
 	// The client who controls this character
 	public PhotonPlayer controllingPlayer;
@@ -54,12 +58,9 @@ public class InputManager : Photon.MonoBehaviour {
 		// Only controlling player is allow to send inputs to this instance
 		// also input only allowed if is controlable and macht is running
 		if( (PhotonNetwork.player == controllingPlayer && controlable && match.IsRunning()) ) {
-			// Get mous position.
-			Vector3 hitPoint;
-			hitPoint = GetMouseHitPoint();
 			
 			// calculate movement vector from keyboard input
-			Vector3 movement = new Vector3(Input.GetAxis("Horizontal"),0,Input.GetAxis("Vertical"));
+			movement = new Vector3(Input.GetAxis("Horizontal"),0,Input.GetAxis("Vertical"));
 			movement.Normalize();
 			// apply previous calculated movement
 			mover.SetControllerMovement( movement );
@@ -71,16 +72,21 @@ public class InputManager : Photon.MonoBehaviour {
 			} else {
 				if( walkSound.isPlaying )
 					walkSound.Stop();
-			}
-			// look at mouse cursor
-			upperBody.transform.LookAt(hitPoint);
-			
-			// shoot a missile to the mouse position on left-mouse click
-			if( Input.GetButton("Fire1") ) {
-				
-				Shoot(hitPoint);
-			}
-		} else if(pman.IsDead()) {
+			}			
+		}
+	}
+	
+	void LateUpdate() {
+		// Get mous position.
+		Vector3 hitPoint;
+		hitPoint = GetMouseHitPoint();
+		
+		// shoot a missile to the mouse position on left-mouse click
+		if( Input.GetButton("Fire1") && !pman.IsDead() ) {
+			Shoot(hitPoint); 
+		}
+	
+		if(pman.IsDead()) {
 			// we are dead
 			
 			// reset rage-counter (0 means it's disabled)
@@ -92,7 +98,29 @@ public class InputManager : Photon.MonoBehaviour {
 				pman.SetSpawnPoint( mousePos );
 			}
 		}
-	}
+		
+		// rotate character into moving direction
+		// if angle between movedir and viewdir is <90 degree
+		walkDir = movement;
+		viewDir = hitPoint - transform.position;
+		if( Vector3.Angle( walkDir, viewDir ) > 90 )
+			walkDir *= -1;
+		
+		if( walkDir == Vector3.back ) {
+			// Quaternion.FromToRotation gives bad results for 180 degree rotation
+			// so hack for back movement
+			transform.rotation = Quaternion.AngleAxis(180, Vector3.up);
+		} else { 
+			transform.rotation = Quaternion.FromToRotation(Vector3.forward, walkDir);
+		}
+		
+				
+		// look at mouse cursor
+		Quaternion rotZ = Quaternion.AngleAxis(-90f, new Vector3(0,0,1));
+		Quaternion rotY = Quaternion.AngleAxis(90f, new Vector3(0,1,0));
+		upperBody.transform.LookAt( hitPoint + new Vector3(0,0.5f,0) );
+		upperBody.transform.rotation = upperBody.transform.rotation * rotY * rotZ;
+	}	
 	
 	/**
 	 * Calculate hit point of mouse cursor ray with "Ground" collider

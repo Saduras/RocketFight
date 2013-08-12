@@ -23,6 +23,8 @@ ModelImporter:
     100034: joint_weapon_end
     100036: polySurface1
     100038: //RootNode
+    100040: joint_headend
+    100042: jointhead
     400000: joint_hand_left
     400002: joint_hand_right
     400004: joint_handend_left
@@ -43,6 +45,8 @@ ModelImporter:
     400034: joint_weapon_end
     400036: polySurface1
     400038: //RootNode
+    400040: joint_headend
+    400042: jointhead
     4300000: polySurface1
     9500000: //RootNode
     13700000: polySurface1
