@@ -139,6 +139,7 @@ public class Rocket : Photon.MonoBehaviour {
 						playerGo.gameObject.GetPhotonView().RPC("ApplyForce",PhotonTargets.OthersBuffered,playerForce);
 						playerGo.gameObject.GetPhotonView().RPC("HitBy",PhotonTargets.OthersBuffered, photonView.owner);
 						playerGo.SendMessage("ApplyForce",playerForce);
+						playerGo.SendMessage("HitBy", photonView.owner);
 						break;
 					}
 				}

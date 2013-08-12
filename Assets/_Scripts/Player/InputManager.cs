@@ -25,9 +25,11 @@ public class InputManager : Photon.MonoBehaviour {
 	// data about the last shot
 	private float lastShotTimestamp = 0;
 	
-	private Animator anim;
 	private CharacterMover mover;
 	private PlayerManager pman;
+	
+	public Animator animator;
+	private int shootState = Animator.StringToHash("Base Layer.shotState");
 	
 	// these to allow an rage-mode after respawn
 	// a limit number of shoots with reduces cooldown
@@ -61,6 +63,7 @@ public class InputManager : Photon.MonoBehaviour {
 			
 			// calculate movement vector from keyboard input
 			movement = new Vector3(Input.GetAxis("Horizontal"),0,Input.GetAxis("Vertical"));
+			animator.SetFloat("Speed",movement.magnitude);
 			movement.Normalize();
 			// apply previous calculated movement
 			mover.SetControllerMovement( movement );
@@ -74,6 +77,9 @@ public class InputManager : Photon.MonoBehaviour {
 					walkSound.Stop();
 			}			
 		}
+		
+		if( animator.GetNextAnimatorStateInfo(0).nameHash == shootState )
+			animator.SetBool("Shot", false);
 	}
 	
 	void LateUpdate() {
@@ -117,7 +123,7 @@ public class InputManager : Photon.MonoBehaviour {
 				
 		// look at mouse cursor
 		Quaternion rotZ = Quaternion.AngleAxis(-90f, new Vector3(0,0,1));
-		Quaternion rotY = Quaternion.AngleAxis(90f, new Vector3(0,1,0));
+		Quaternion rotY = Quaternion.AngleAxis(-90f, new Vector3(0,1,0));
 		upperBody.transform.LookAt( hitPoint + new Vector3(0,0.5f,0) );
 		upperBody.transform.rotation = upperBody.transform.rotation * rotY * rotZ;
 	}	
@@ -148,6 +154,8 @@ public class InputManager : Photon.MonoBehaviour {
 		// check if we are off cooldown
 		if( (Time.time > lastShotTimestamp + cooldown) 
 			|| (rageCounter > 0 && Time.time > lastShotTimestamp + rageCooldown) ) {
+			
+			animator.SetBool("Shot",true);
 			
 			// animate cooldown
 			crosshair.StartAnimation();

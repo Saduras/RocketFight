@@ -19,6 +19,8 @@ public class PlayerManager : Photon.MonoBehaviour {
 	public List<float> zoneStrength = new List<float>();
 	
 	public AudioSource hitSound;
+	public Animator animator;
+	private static int hitState = Animator.StringToHash("Base Layer.hitState");
 	
 	// materials and target for changing materials
 	// depending on player color
@@ -71,6 +73,13 @@ public class PlayerManager : Photon.MonoBehaviour {
 				photonView.RPC("SetVulnerable",PhotonTargets.AllBuffered,true);
 				photonView.RPC("HideInvulnerable",PhotonTargets.AllBuffered);
 			}
+		}
+		
+		Debug.Log(animator.GetCurrentAnimatorStateInfo(0).nameHash);
+		Debug.Log("hitstate: " + hitState);
+		if(animator.GetCurrentAnimatorStateInfo(0).nameHash == hitState) {
+			animator.SetBool("Hit", false);
+			Debug.Log("deactivate hit");
 		}
 	}
 	
@@ -127,6 +136,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	public void HitBy( PhotonPlayer player ) {
 		// play sound
 		hitSound.Play();
+		animator.SetBool("Hit", true);
 		
 		// return if you hit yourself
 		if( player == photonView.owner )

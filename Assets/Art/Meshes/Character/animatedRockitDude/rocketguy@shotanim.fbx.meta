@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5cb0dbc470f219143b6a050319591aca
+guid: 7d62c7aeab70dcd4583a944558da27a9
 ModelImporter:
   serializedVersion: 15
   fileIDToRecycleName:
@@ -43,7 +43,7 @@ ModelImporter:
     400034: joint_weapon_end
     400036: locator2
     400038: //RootNode
-    7400000: walkcycle
+    7400000: Take 001
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -57,28 +57,7 @@ ModelImporter:
     animationPositionError: .5
     animationScaleError: .5
     animationWrapMode: 0
-    clipAnimations:
-    - name: walkcycle
-      takeName: Take 001
-      firstFrame: 1
-      lastFrame: 24
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      loopBlend: 1
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      transformMask: []
+    clipAnimations: []
     isReadable: 1
   meshes:
     lODScreenPercentages: []

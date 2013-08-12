@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5cb0dbc470f219143b6a050319591aca
+guid: ca63fd9a012862546bd789330e8ca52c
 ModelImporter:
   serializedVersion: 15
   fileIDToRecycleName:
@@ -43,7 +43,7 @@ ModelImporter:
     400034: joint_weapon_end
     400036: locator2
     400038: //RootNode
-    7400000: walkcycle
+    7400000: hitanim
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -58,10 +58,10 @@ ModelImporter:
     animationScaleError: .5
     animationWrapMode: 0
     clipAnimations:
-    - name: walkcycle
+    - name: hitanim
       takeName: Take 001
       firstFrame: 1
-      lastFrame: 24
+      lastFrame: 13
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -100,7 +100,7 @@ ModelImporter:
     splitTangentsAcrossUV: 1
     normalImportMode: 0
     tangentImportMode: 1
-  importAnimation: 1
+  importAnimation: 0
   copyAvatar: 0
   humanDescription:
     human: []
