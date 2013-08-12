@@ -24,12 +24,12 @@ Shader "Unlit/Transparent Colored (SoftClip)"
 			Offset -1, -1
 			Fog { Mode Off }
 			ColorMask RGB
+			AlphaTest Greater .01
 			Blend SrcAlpha OneMinusSrcAlpha
 
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			#pragma fragmentoption ARB_precision_hint_fastest
 
 			#include "UnityCG.cginc"
 
@@ -40,14 +40,14 @@ Shader "Unlit/Transparent Colored (SoftClip)"
 			struct appdata_t
 			{
 				float4 vertex : POSITION;
-				fixed4 color : COLOR;
+				half4 color : COLOR;
 				float2 texcoord : TEXCOORD0;
 			};
 
 			struct v2f
 			{
 				float4 vertex : POSITION;
-				fixed4 color : COLOR;
+				half4 color : COLOR;
 				float2 texcoord : TEXCOORD0;
 				float2 worldPos : TEXCOORD1;
 			};
@@ -62,13 +62,13 @@ Shader "Unlit/Transparent Colored (SoftClip)"
 				return o;
 			}
 
-			fixed4 frag (v2f IN) : COLOR
+			half4 frag (v2f IN) : COLOR
 			{
 				// Softness factor
 				float2 factor = (float2(1.0, 1.0) - abs(IN.worldPos)) * _ClipSharpness;
 			
 				// Sample the texture
-				fixed4 col = tex2D(_MainTex, IN.texcoord) * IN.color;
+				half4 col = tex2D(_MainTex, IN.texcoord) * IN.color;
 				col.a *= clamp( min(factor.x, factor.y), 0.0, 1.0);
 				return col;
 			}
@@ -78,6 +78,8 @@ Shader "Unlit/Transparent Colored (SoftClip)"
 	
 	SubShader
 	{
+		LOD 100
+
 		Tags
 		{
 			"Queue" = "Transparent"
@@ -85,17 +87,15 @@ Shader "Unlit/Transparent Colored (SoftClip)"
 			"RenderType" = "Transparent"
 		}
 		
-		LOD 100
-		Cull Off
-		Lighting Off
-		ZWrite Off
-		Fog { Mode Off }
-		ColorMask RGB
-		AlphaTest Greater .01
-		Blend SrcAlpha OneMinusSrcAlpha
-		
 		Pass
 		{
+			Cull Off
+			Lighting Off
+			ZWrite Off
+			Fog { Mode Off }
+			ColorMask RGB
+			AlphaTest Greater .01
+			Blend SrcAlpha OneMinusSrcAlpha
 			ColorMaterial AmbientAndDiffuse
 			
 			SetTexture [_MainTex]

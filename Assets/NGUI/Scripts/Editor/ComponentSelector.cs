@@ -1,6 +1,6 @@
-﻿//----------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2012 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEditor;
@@ -27,15 +27,17 @@ public class ComponentSelector : ScriptableWizard
 	static public void Draw<T> (string buttonName, T obj, OnSelectionCallback cb, params GUILayoutOption[] options) where T : MonoBehaviour
 	{
 		GUILayout.BeginHorizontal();
-		bool show = GUILayout.Button(buttonName, GUILayout.Width(76f));
-#if !UNITY_3_4
+		bool show = GUILayout.Button(buttonName, "DropDownButton", GUILayout.Width(76f));
 		GUILayout.BeginVertical();
 		GUILayout.Space(5f);
-#endif
+
 		T o = EditorGUILayout.ObjectField(obj, typeof(T), false, options) as T;
-#if !UNITY_3_4
 		GUILayout.EndVertical();
-#endif
+
+		if (o != null && Selection.activeObject != o.gameObject && GUILayout.Button("Edit", GUILayout.Width(40f)))
+		{
+			Selection.activeObject = o.gameObject;
+		}
 		GUILayout.EndHorizontal();
 		if (show) Show<T>(cb);
 		else if (o != obj) cb(o);
@@ -70,16 +72,42 @@ public class ComponentSelector : ScriptableWizard
 	void OnGUI ()
 	{
 		EditorGUIUtility.LookLikeControls(80f);
+		GUILayout.Label("Recently used components", "LODLevelNotifyText");
+		NGUIEditorTools.DrawSeparator();
 
 		if (mObjects.Length == 0)
 		{
-			GUILayout.Label("No recently used " + mType.ToString() + " components found.\nTry drag & dropping one instead.");
+			EditorGUILayout.HelpBox("No recently used " + mType.ToString() + " components found.\nTry drag & dropping one instead, or creating a new one.", MessageType.Info);
+
+			bool isDone = false;
+
+			EditorGUILayout.Space();
+			GUILayout.BeginHorizontal();
+			GUILayout.FlexibleSpace();
+
+			if (mType == typeof(UIFont))
+			{
+				if (GUILayout.Button("Open the Font Maker", GUILayout.Width(150f)))
+				{
+					EditorWindow.GetWindow<UIFontMaker>(false, "Font Maker", true);
+					isDone = true;
+				}
+			}
+			else if (mType == typeof(UIAtlas))
+			{
+				if (GUILayout.Button("Open the Atlas Maker", GUILayout.Width(150f)))
+				{
+					EditorWindow.GetWindow<UIAtlasMaker>(false, "Atlas Maker", true);
+					isDone = true;
+				}
+			}
+
+			GUILayout.FlexibleSpace();
+			GUILayout.EndHorizontal();
+			if (isDone) Close();
 		}
 		else
 		{
-			GUILayout.Label("List of recently used components:");
-			NGUIEditorTools.DrawSeparator();
-
 			MonoBehaviour sel = null;
 
 			foreach (MonoBehaviour o in mObjects)
@@ -110,17 +138,18 @@ public class ComponentSelector : ScriptableWizard
 		{
 			if (EditorUtility.IsPersistent(mb.gameObject))
 			{
-				GUILayout.Label("Prefab", GUILayout.Width(80f));
+				GUILayout.Label("Prefab", "AS TextArea", GUILayout.Width(80f), GUILayout.Height(20f));
 			}
 			else
 			{
 				GUI.color = Color.grey;
-				GUILayout.Label("Object", GUILayout.Width(80f));
+				GUILayout.Label("Object", "AS TextArea", GUILayout.Width(80f), GUILayout.Height(20f));
 			}
 
-			GUILayout.Label(NGUITools.GetHierarchy(mb.gameObject));
+			GUILayout.Label(NGUITools.GetHierarchy(mb.gameObject), "AS TextArea", GUILayout.Height(20f));
 			GUI.color = Color.white;
-			retVal = GUILayout.Button("Select", GUILayout.Width(60f));
+
+			retVal = GUILayout.Button("Select", "ButtonLeft", GUILayout.Width(60f), GUILayout.Height(16f));
 		}
 		GUILayout.EndHorizontal();
 		return retVal;

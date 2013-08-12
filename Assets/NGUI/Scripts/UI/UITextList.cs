@@ -1,10 +1,11 @@
 //----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2012 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
 using System.Collections.Generic;
+using System.Text;
 
 /// <summary>
 /// Text list can be used with a UILabel to create a scrollable multi-line text field that's
@@ -81,7 +82,7 @@ public class UITextList : MonoBehaviour
 		{
 			// Rebuild the line
 			ce.lines = textLabel.font.WrapText(ce.text, maxWidth / textLabel.transform.localScale.y,
-				textLabel.multiLine, textLabel.supportEncoding, textLabel.symbolStyle).Split(mSeparator);
+				textLabel.maxLineCount, textLabel.supportEncoding, textLabel.symbolStyle).Split(mSeparator);
 
 			// Recalculate the total number of lines
 			mTotalLines = 0;
@@ -125,7 +126,7 @@ public class UITextList : MonoBehaviour
 	{
 		if (textLabel != null)
 		{
-			UIFont font = (UIFont)textLabel.font;
+			UIFont font = textLabel.font;
 
 			if (font != null)
 			{
@@ -145,7 +146,7 @@ public class UITextList : MonoBehaviour
 					offset = Mathf.Max(0, mTotalLines - maxLines - offset);
 				}
 
-				string final = "";
+				StringBuilder final = new StringBuilder();
 
 				for (int i = 0, imax = mParagraphs.Count; i < imax; ++i)
 				{
@@ -161,15 +162,15 @@ public class UITextList : MonoBehaviour
 						}
 						else
 						{
-							if (final.Length > 0) final += "\n";
-							final += s;
+							if (final.Length > 0) final.Append("\n");
+							final.Append(s);
 							++lines;
 							if (lines >= maxLines) break;
 						}
 					}
 					if (lines >= maxLines) break;
 				}
-				textLabel.text = final;
+				textLabel.text = final.ToString();
 			}
 		}
 	}

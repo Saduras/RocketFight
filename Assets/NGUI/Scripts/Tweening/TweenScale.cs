@@ -1,6 +1,6 @@
 ﻿//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2012 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -23,7 +23,7 @@ public class TweenScale : UITweener
 
 	public Vector3 scale { get { return cachedTransform.localScale; } set { cachedTransform.localScale = value; } }
 
-	override protected void OnUpdate (float factor)
+	protected override void OnUpdate (float factor, bool isFinished)
 	{
 		cachedTransform.localScale = from * (1f - factor) + to * factor;
 
@@ -47,6 +47,12 @@ public class TweenScale : UITweener
 		TweenScale comp = UITweener.Begin<TweenScale>(go, duration);
 		comp.from = comp.scale;
 		comp.to = scale;
+
+		if (duration <= 0f)
+		{
+			comp.Sample(1f, true);
+			comp.enabled = false;
+		}
 		return comp;
 	}
 }

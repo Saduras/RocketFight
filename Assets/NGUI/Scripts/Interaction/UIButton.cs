@@ -1,6 +1,6 @@
-﻿//----------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2012 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -13,6 +13,12 @@ using UnityEngine;
 public class UIButton : UIButtonColor
 {
 	/// <summary>
+	/// Color that will be applied when the button is disabled.
+	/// </summary>
+
+	public Color disabledColor = Color.grey;
+
+	/// <summary>
 	/// If the collider is disabled, assume the disabled color.
 	/// </summary>
 
@@ -21,6 +27,9 @@ public class UIButton : UIButtonColor
 		if (isEnabled) base.OnEnable();
 		else UpdateColor(false, true);
 	}
+
+	public override void OnHover (bool isOver) { if (isEnabled) base.OnHover(isOver); }
+	public override void OnPress (bool isPressed) { if (isEnabled) base.OnPress(isPressed); }
 
 	/// <summary>
 	/// Whether the button should be enabled.
@@ -50,21 +59,17 @@ public class UIButton : UIButtonColor
 	/// Update the button's color to either enabled or disabled state.
 	/// </summary>
 
-	void UpdateColor (bool shouldBeEnabled, bool immediate)
+	public void UpdateColor (bool shouldBeEnabled, bool immediate)
 	{
 		if (tweenTarget)
 		{
-			if (!mInitDone) Init();
-
-			Color c = defaultColor;
-
-			if (!shouldBeEnabled)
+			if (!mStarted)
 			{
-				c.r *= 0.65f;
-				c.g *= 0.65f;
-				c.b *= 0.65f;
+				mStarted = true;
+				Init();
 			}
 
+			Color c = shouldBeEnabled ? defaultColor : disabledColor;
 			TweenColor tc = TweenColor.Begin(tweenTarget, 0.15f, c);
 
 			if (immediate)

@@ -1,6 +1,6 @@
 ﻿//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2012 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -54,7 +54,7 @@ public class TweenVolume : UITweener
 	/// Tween update function.
 	/// </summary>
 
-	override protected void OnUpdate (float factor)
+	protected override void OnUpdate (float factor, bool isFinished)
 	{
 		volume = from * (1f - factor) + to * factor;
 		mSource.enabled = (mSource.volume > 0.01f);
@@ -69,6 +69,12 @@ public class TweenVolume : UITweener
 		TweenVolume comp = UITweener.Begin<TweenVolume>(go, duration);
 		comp.from = comp.volume;
 		comp.to = targetVolume;
+
+		if (duration <= 0f)
+		{
+			comp.Sample(1f, true);
+			comp.enabled = false;
+		}
 		return comp;
 	}
 }

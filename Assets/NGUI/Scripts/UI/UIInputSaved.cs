@@ -1,6 +1,6 @@
-﻿//----------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2012 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -14,9 +14,22 @@ public class UIInputSaved : UIInput
 {
 	public string playerPrefsField;
 
-	void Start ()
+	public override string text
 	{
-		Init();
+		get
+		{
+			return base.text;
+		}
+		set
+		{
+			base.text = value;
+			SaveToPlayerPrefs(value);
+		}
+	}
+
+	void Awake ()
+	{
+		onSubmit = SaveToPlayerPrefs;
 
 		if (!string.IsNullOrEmpty(playerPrefsField) && PlayerPrefs.HasKey(playerPrefsField))
 		{
@@ -24,11 +37,16 @@ public class UIInputSaved : UIInput
 		}
 	}
 
-	void OnApplicationQuit ()
+	private void SaveToPlayerPrefs (string val)
 	{
 		if (!string.IsNullOrEmpty(playerPrefsField))
 		{
-			PlayerPrefs.SetString(playerPrefsField, text);
+			PlayerPrefs.SetString(playerPrefsField, val);
 		}
+	}
+
+	void OnApplicationQuit ()
+	{
+		SaveToPlayerPrefs(text);
 	}
 }

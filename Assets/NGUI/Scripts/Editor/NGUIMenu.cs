@@ -1,6 +1,6 @@
-﻿//----------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2012 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -30,62 +30,84 @@ static public class NGUIMenu
 		return go;
 	}
 
-	[MenuItem("NGUI/Attach a Collider #&c")]
-	static public void AddCollider ()
+	[MenuItem("NGUI/Create a Sprite #&s")]
+	static public void AddSprite ()
 	{
-		GameObject go = Selection.activeGameObject;
+		GameObject go = NGUIEditorTools.SelectedRoot(true);
 
-		if (NGUIEditorTools.WillLosePrefab(go))
+		if (go != null)
 		{
-			if (go != null)
+			Undo.RegisterSceneUndo("Add a Sprite");
+			
+			UISprite sprite = NGUITools.AddWidget<UISprite>(go);
+			sprite.name = "Sprite";
+			sprite.atlas = NGUISettings.atlas;
+			
+			if (sprite.atlas != null)
 			{
-				NGUIEditorTools.RegisterUndo("Add Widget Collider", go);
-				NGUITools.AddWidgetCollider(go);
+				string sn = EditorPrefs.GetString("NGUI Sprite", "");
+				UIAtlas.Sprite sp = sprite.atlas.GetSprite(sn);
+				
+				if (sp != null)
+				{
+					sprite.spriteName = sn;
+					if (sp.inner != sp.outer) sprite.type = UISprite.Type.Sliced;
+				}
 			}
-			else
-			{
-				Debug.Log("You must select a game object first, such as your button.");
-			}
-		}
-	}
-
-	static Vector3 Round (Vector3 v)
-	{
-		v.x = Mathf.Round(v.x);
-		v.y = Mathf.Round(v.y);
-		v.z = Mathf.Round(v.z);
-		return v;
-	}
-
-	static void MakePixelPerfect (Transform t)
-	{
-		UIWidget w = t.GetComponent<UIWidget>();
-
-		if (w != null)
-		{
-			w.MakePixelPerfect();
+			sprite.pivot = NGUISettings.pivot;
+			sprite.cachedTransform.localScale = new Vector3(100f, 100f, 1f);
+			sprite.MakePixelPerfect();
+			Selection.activeGameObject = sprite.gameObject;
 		}
 		else
 		{
-			t.localPosition = Round(t.localPosition);
-			t.localScale = Round(t.localScale);
-
-			for (int i = 0, imax = t.childCount; i < imax; ++i)
-			{
-				MakePixelPerfect(t.GetChild(i));
-			}
+			Debug.Log("You must select a game object first.");
 		}
 	}
 
-	[MenuItem("NGUI/Make Pixel Perfect #&p")]
-	static void PixelPerfectSelection ()
+	[MenuItem("NGUI/Create a Label #&l")]
+	static public void AddLabel ()
 	{
-		if (Selection.activeTransform == null)
+		GameObject go = NGUIEditorTools.SelectedRoot(true);
+
+		if (go != null)
 		{
-			Debug.Log("You must select an object in the scene hierarchy first");
-			return;
+			Undo.RegisterSceneUndo("Add a Label");
+
+			UILabel lbl = NGUITools.AddWidget<UILabel>(go);
+			lbl.name = "Label";
+			lbl.font = NGUISettings.font;
+			lbl.text = "New Label";
+			lbl.pivot = NGUISettings.pivot;
+			lbl.cachedTransform.localScale = new Vector3(100f, 100f, 1f);
+			lbl.MakePixelPerfect();
+			Selection.activeGameObject = lbl.gameObject;
 		}
-		foreach (Transform t in Selection.transforms) MakePixelPerfect(t);
+		else
+		{
+			Debug.Log("You must select a game object first.");
+		}
+	}
+
+	[MenuItem("NGUI/Create a Texture #&t")]
+	static public void AddTexture ()
+	{
+		GameObject go = NGUIEditorTools.SelectedRoot(true);
+
+		if (go != null)
+		{
+			Undo.RegisterSceneUndo("Add a Texture");
+
+			UITexture tex = NGUITools.AddWidget<UITexture>(go);
+			tex.name = "Texture";
+			tex.pivot = NGUISettings.pivot;
+			tex.cachedTransform.localScale = new Vector3(100f, 100f, 1f);
+			Selection.activeGameObject = tex.gameObject;
+		}
+		else
+		{
+			Debug.Log("You must select a game object first.");
+		}
 	}
 
 	[MenuItem("NGUI/Create a Panel")]
@@ -111,39 +133,100 @@ static public class NGUIMenu
 		}
 	}
 
-	[MenuItem("NGUI/Create a Widget")]
+	[MenuItem("NGUI/Attach a Collider #&c")]
+	static public void AddCollider ()
+	{
+		GameObject go = Selection.activeGameObject;
+
+		if (NGUIEditorTools.WillLosePrefab(go))
+		{
+			if (go != null)
+			{
+				NGUIEditorTools.RegisterUndo("Add Widget Collider", go);
+				NGUITools.AddWidgetCollider(go);
+			}
+			else
+			{
+				Debug.Log("You must select a game object first, such as your button.");
+			}
+		}
+	}
+
+	[MenuItem("NGUI/Attach an Anchor #&h")]
+	static public void AddAnchor ()
+	{
+		GameObject go = Selection.activeGameObject;
+
+		if (go != null)
+		{
+			NGUIEditorTools.RegisterUndo("Add an Anchor", go);
+			if (go.GetComponent<UIAnchor>() == null) go.AddComponent<UIAnchor>();
+		}
+		else
+		{
+			Debug.Log("You must select a game object first.");
+		}
+	}
+
+	[MenuItem("NGUI/Make Pixel Perfect #&p")]
+	static void PixelPerfectSelection ()
+	{
+		if (Selection.activeTransform == null)
+		{
+			Debug.Log("You must select an object in the scene hierarchy first");
+			return;
+		}
+		foreach (Transform t in Selection.transforms) NGUITools.MakePixelPerfect(t);
+	}
+
+	[MenuItem("NGUI/Open the Widget Wizard")]
 	static public void CreateWidgetWizard ()
 	{
 		EditorWindow.GetWindow<UICreateWidgetWizard>(false, "Widget Tool", true);
 	}
 
-	[MenuItem("NGUI/Create a New UI")]
+	[MenuItem("NGUI/Open the UI Wizard")]
 	static public void CreateUIWizard ()
 	{
 		EditorWindow.GetWindow<UICreateNewUIWizard>(false, "UI Tool", true);
 	}
 
-	[MenuItem("NGUI/Panel Tool")]
+	[MenuItem("NGUI/Open the Panel Tool")]
 	static public void OpenPanelWizard ()
 	{
 		EditorWindow.GetWindow<UIPanelTool>(false, "Panel Tool", true);
 	}
 
-	[MenuItem("NGUI/Camera Tool")]
+	[MenuItem("NGUI/Open the Camera Tool")]
 	static public void OpenCameraWizard ()
 	{
 		EditorWindow.GetWindow<UICameraTool>(false, "Camera Tool", true);
 	}
 
-	[MenuItem("NGUI/Font Maker #&f")]
+	[MenuItem("NGUI/Open the Font Maker #&f")]
 	static public void OpenFontMaker ()
 	{
 		EditorWindow.GetWindow<UIFontMaker>(false, "Font Maker", true);
 	}
 
-	[MenuItem("NGUI/Atlas Maker #&m")]
+	[MenuItem("NGUI/Open the Atlas Maker #&m")]
 	static public void OpenAtlasMaker ()
 	{
 		EditorWindow.GetWindow<UIAtlasMaker>(false, "Atlas Maker", true);
+	}
+
+	[MenuItem("NGUI/Toggle Draggable Handles")]
+	static public void ToggleNewGUI ()
+	{
+		UIWidget.showHandlesWithMoveTool = !UIWidget.showHandlesWithMoveTool;
+
+		if (UIWidget.showHandlesWithMoveTool)
+		{
+			Debug.Log("Simple Mode: Draggable Handles will show up with the Move Tool selected (W).");
+		}
+		else
+		{
+			Debug.Log("Classic Mode: Draggable Handles will show up only with the View Tool selected (Q).");
+		}
 	}
 }

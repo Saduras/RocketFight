@@ -1,6 +1,6 @@
 ﻿//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2012 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -62,7 +62,7 @@ public class TweenColor : UITweener
 	/// Interpolate and update the color.
 	/// </summary>
 
-	override protected void OnUpdate (float factor) { color = from * (1f - factor) + to * factor; }
+	protected override void OnUpdate(float factor, bool isFinished) { color = Color.Lerp(from, to, factor); }
 
 	/// <summary>
 	/// Start the tweening operation.
@@ -73,6 +73,12 @@ public class TweenColor : UITweener
 		TweenColor comp = UITweener.Begin<TweenColor>(go, duration);
 		comp.from = comp.color;
 		comp.to = color;
+
+		if (duration <= 0f)
+		{
+			comp.Sample(1f, true);
+			comp.enabled = false;
+		}
 		return comp;
 	}
 }

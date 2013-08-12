@@ -1,6 +1,6 @@
 ﻿//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2012 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -14,31 +14,81 @@ using System.Collections.Generic;
 [CustomEditor(typeof(UITexture))]
 public class UITextureInspector : UIWidgetInspector
 {
-	override protected bool OnDrawProperties ()
-	{
-		Material mat = EditorGUILayout.ObjectField("Material", mWidget.material, typeof(Material), false) as Material;
+	UITexture mTex;
 
-		if (mWidget.material != mat)
+	protected override void OnEnable ()
+	{
+		base.OnEnable();
+		mTex = target as UITexture;
+	}
+
+	protected override bool DrawProperties ()
+	{
+		if (!mTex.hasDynamicMaterial && (mTex.material != null || mTex.mainTexture == null))
 		{
-			NGUIEditorTools.RegisterUndo("Material Selection", mWidget);
-			mWidget.material = mat;
+			Material mat = EditorGUILayout.ObjectField("Material", mTex.material, typeof(Material), false) as Material;
+
+			if (mTex.material != mat)
+			{
+				NGUIEditorTools.RegisterUndo("Material Selection", mTex);
+				mTex.material = mat;
+			}
+		}
+
+		if (mTex.material == null || mTex.hasDynamicMaterial)
+		{
+			Shader shader = EditorGUILayout.ObjectField("Shader", mTex.shader, typeof(Shader), false) as Shader;
+
+			if (mTex.shader != shader)
+			{
+				NGUIEditorTools.RegisterUndo("Shader Selection", mTex);
+				mTex.shader = shader;
+			}
+
+			Texture tex = EditorGUILayout.ObjectField("Texture", mTex.mainTexture, typeof(Texture), false) as Texture;
+
+			if (mTex.mainTexture != tex)
+			{
+				NGUIEditorTools.RegisterUndo("Texture Selection", mTex);
+				mTex.mainTexture = tex;
+			}
+		}
+
+		if (mTex.mainTexture != null)
+		{
+			Rect rect = EditorGUILayout.RectField("UV Rectangle", mTex.uvRect);
+
+			if (rect != mTex.uvRect)
+			{
+				NGUIEditorTools.RegisterUndo("UV Rectangle Change", mTex);
+				mTex.uvRect = rect;
+			}
 		}
 		return (mWidget.material != null);
 	}
 
-	override protected void OnDrawTexture ()
+	/// <summary>
+	/// Allow the texture to be previewed.
+	/// </summary>
+
+	public override bool HasPreviewGUI ()
 	{
-		Texture2D tex = mWidget.mainTexture as Texture2D;
+		return (mTex != null) && (mTex.mainTexture as Texture2D != null);
+	}
+
+	/// <summary>
+	/// Draw the sprite preview.
+	/// </summary>
+
+	public override void OnPreviewGUI (Rect rect, GUIStyle background)
+	{
+		Texture2D tex = mTex.mainTexture as Texture2D;
 
 		if (tex != null)
 		{
-			// Draw the atlas
-			EditorGUILayout.Separator();
-			NGUIEditorTools.DrawSprite(tex, new Rect(0f, 0f, 1f, 1f), null);
-
-			// Sprite size label
-			Rect rect = GUILayoutUtility.GetRect(Screen.width, 18f);
-			EditorGUI.DropShadowLabel(rect, "Texture Size: " + tex.width + "x" + tex.height);
+			Rect uv = mTex.uvRect;
+			Rect outer = NGUIMath.ConvertToPixels(uv, tex.width, tex.height, true);
+			NGUIEditorTools.DrawSprite(tex, rect, outer, outer, uv, mTex.color);
 		}
 	}
 }

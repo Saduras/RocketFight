@@ -1,6 +1,6 @@
 //----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2012 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -80,7 +80,7 @@ public class UIDragObject : IgnoreTimeScale
 
 	void OnPress (bool pressed)
 	{
-		if (enabled && gameObject.activeSelf && target != null)
+		if (enabled && NGUITools.GetActive(gameObject) && target != null)
 		{
 			mPressed = pressed;
 
@@ -119,7 +119,7 @@ public class UIDragObject : IgnoreTimeScale
 
 	void OnDrag (Vector2 delta)
 	{
-		if (enabled && gameObject.activeSelf && target != null)
+		if (enabled && NGUITools.GetActive(gameObject) && target != null)
 		{
 			UICamera.currentTouch.clickNotification = UICamera.ClickNotification.BasedOnDelta;
 
@@ -140,7 +140,7 @@ public class UIDragObject : IgnoreTimeScale
 				}
 
 				// Adjust the momentum
-				mMomentum = Vector3.Lerp(mMomentum, mMomentum + offset * (0.01f * momentumAmount), 0.67f);
+				if (dragEffect != DragEffect.None) mMomentum = Vector3.Lerp(mMomentum, mMomentum + offset * (0.01f * momentumAmount), 0.67f);
 
 				// We want to constrain the UI to be within bounds
 				if (restrictWithinPanel)
@@ -223,7 +223,7 @@ public class UIDragObject : IgnoreTimeScale
 
 	void OnScroll (float delta)
 	{
-		if (enabled && gameObject.activeSelf)
+		if (enabled && NGUITools.GetActive(gameObject))
 		{
 			if (Mathf.Sign(mScroll) != Mathf.Sign(delta)) mScroll = 0f;
 			mScroll += delta * scrollWheelFactor;

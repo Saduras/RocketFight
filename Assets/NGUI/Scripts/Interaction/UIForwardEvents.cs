@@ -1,6 +1,6 @@
 ﻿//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2012 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -24,6 +24,7 @@ public class UIForwardEvents : MonoBehaviour
 	public bool onDrop			= false;
 	public bool onInput			= false;
 	public bool onSubmit		= false;
+	public bool onScroll		= false;
 
 	void OnHover (bool isOver)
 	{
@@ -94,6 +95,14 @@ public class UIForwardEvents : MonoBehaviour
 		if (onSubmit && target != null)
 		{
 			target.SendMessage("OnSubmit", SendMessageOptions.DontRequireReceiver);
+		}
+	}
+
+	void OnScroll (float delta)
+	{
+		if (onScroll && target != null)
+		{
+			target.SendMessage("OnScroll", delta, SendMessageOptions.DontRequireReceiver);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 //----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2012 Tasharen Entertainment
+// Copyright Â© 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -63,7 +63,7 @@ public class UIDragPanelContents : MonoBehaviour
 
 	void OnPress (bool pressed)
 	{
-		if (enabled && gameObject.activeSelf && draggablePanel != null)
+		if (enabled && NGUITools.GetActive(gameObject) && draggablePanel != null)
 		{
 			draggablePanel.Press(pressed);
 		}
@@ -75,9 +75,9 @@ public class UIDragPanelContents : MonoBehaviour
 
 	void OnDrag (Vector2 delta)
 	{
-		if (enabled && gameObject.activeSelf && draggablePanel != null)
+		if (enabled && NGUITools.GetActive(gameObject) && draggablePanel != null)
 		{
-			draggablePanel.Drag(delta);
+			draggablePanel.Drag();
 		}
 	}
 
@@ -87,7 +87,7 @@ public class UIDragPanelContents : MonoBehaviour
 
 	void OnScroll (float delta)
 	{
-		if (enabled && gameObject.activeSelf && draggablePanel != null)
+		if (enabled && NGUITools.GetActive(gameObject) && draggablePanel != null)
 		{
 			draggablePanel.Scroll(delta);
 		}

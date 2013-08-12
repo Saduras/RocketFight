@@ -1,6 +1,6 @@
 ﻿//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2012 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -33,6 +33,20 @@ public class UIPopupListInspector : Editor
 		mList.font = obj as UIFont;
 	}
 
+	void OnBackground (string spriteName)
+	{
+		RegisterUndo();
+		mList.backgroundSprite = spriteName;
+		Repaint();
+	}
+
+	void OnHighlight (string spriteName)
+	{
+		RegisterUndo();
+		mList.highlightSprite = spriteName;
+		Repaint();
+	}
+
 	public override void OnInspectorGUI ()
 	{
 		EditorGUIUtility.LookLikeControls(80f);
@@ -41,6 +55,7 @@ public class UIPopupListInspector : Editor
 		ComponentSelector.Draw<UIAtlas>(mList.atlas, OnSelectAtlas);
 		ComponentSelector.Draw<UIFont>(mList.font, OnSelectFont);
 
+		GUILayout.BeginHorizontal();
 		UILabel lbl = EditorGUILayout.ObjectField("Text Label", mList.textLabel, typeof(UILabel), true) as UILabel;
 
 		if (mList.textLabel != lbl)
@@ -49,18 +64,13 @@ public class UIPopupListInspector : Editor
 			mList.textLabel = lbl;
 			if (lbl != null) lbl.text = mList.selection;
 		}
+		GUILayout.Space(44f);
+		GUILayout.EndHorizontal();
 
 		if (mList.atlas != null)
 		{
-			string bg = UISpriteInspector.SpriteField(mList.atlas, "Background", mList.backgroundSprite);
-			string hl = UISpriteInspector.SpriteField(mList.atlas, "Highlight", mList.highlightSprite);
-
-			if (mList.backgroundSprite != bg || mList.highlightSprite != hl)
-			{
-				RegisterUndo();
-				mList.backgroundSprite = bg;
-				mList.highlightSprite = hl;
-			}
+			NGUIEditorTools.SpriteField("Background", mList.atlas, mList.backgroundSprite, OnBackground);
+			NGUIEditorTools.SpriteField("Highlight", mList.atlas, mList.highlightSprite, OnHighlight);
 
 			GUILayout.BeginHorizontal();
 			GUILayout.Space(6f);
@@ -70,7 +80,7 @@ public class UIPopupListInspector : Editor
 			string text = "";
 			foreach (string s in mList.items) text += s + "\n";
 
-			GUILayout.Space(-22f);
+			GUILayout.Space(-14f);
 			GUILayout.BeginHorizontal();
 			GUILayout.Space(84f);
 			string modified = EditorGUILayout.TextArea(text, GUILayout.Height(100f));

@@ -1,6 +1,6 @@
-﻿//----------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2012 Tasharen Entertainment
+// Copyright © 2011-2013 Tasharen Entertainment
 //----------------------------------------------
 
 using UnityEngine;
@@ -11,22 +11,57 @@ using System.Collections.Generic;
 public class UIPanelInspector : Editor
 {
 	/// <summary>
+	/// Handles & interaction.
+	/// </summary>
+
+	public void OnSceneGUI ()
+	{
+		//Tools.current = Tool.View;
+
+		Event e = Event.current;
+
+		switch (e.type)
+		{
+			case EventType.MouseUp:
+			{
+				UIPanel panel = target as UIPanel;
+				BetterList<UIWidget> widgets = UIWidgetInspector.SceneViewRaycast(panel, e.mousePosition);
+				if (widgets.size > 0) Selection.activeGameObject = widgets[0].gameObject;
+			}
+			break;
+
+			case EventType.KeyDown:
+			{
+				if (e.keyCode == KeyCode.Escape)
+				{
+					Tools.current = Tool.Move;
+					Selection.activeGameObject = null;
+					e.Use();
+				}
+			}
+			break;
+		}
+	}
+
+	/// <summary>
 	/// Draw the inspector widget.
 	/// </summary>
 
 	public override void OnInspectorGUI ()
 	{
 		UIPanel panel = target as UIPanel;
-		List<UIDrawCall> drawcalls = panel.drawCalls;
+		BetterList<UIDrawCall> drawcalls = panel.drawCalls;
 		EditorGUIUtility.LookLikeControls(80f);
 
-		NGUIEditorTools.DrawSeparator();
+		//NGUIEditorTools.DrawSeparator();
+		EditorGUILayout.Space();
 
-		if (panel.showInPanelTool != EditorGUILayout.Toggle("Panel Tool", panel.showInPanelTool))
+		float alpha = EditorGUILayout.Slider("Alpha", panel.alpha, 0f, 1f);
+
+		if (alpha != panel.alpha)
 		{
-			panel.showInPanelTool = !panel.showInPanelTool;
-			EditorUtility.SetDirty(panel);
-			EditorWindow.FocusWindowIfItsOpen<UIPanelTool>();
+			NGUIEditorTools.RegisterUndo("Panel Alpha", panel);
+			panel.alpha = alpha;
 		}
 
 		GUILayout.BeginHorizontal();
@@ -41,14 +76,39 @@ public class UIPanelInspector : Editor
 			EditorUtility.SetDirty(panel);
 		}
 
+		// No one seems to know how to use this properly correctly. Solution? Removing it.
+		// If you know wtf you're doing, you're welcome to uncomment it.
+
+		//GUILayout.BeginHorizontal();
+		//bool depth = EditorGUILayout.Toggle("Depth Pass", panel.depthPass, GUILayout.Width(100f));
+		//GUILayout.Label("Doubles draw calls, saves fillrate");
+		//GUILayout.EndHorizontal();
+
+		//if (panel.depthPass != depth)
+		//{
+		//    panel.depthPass = depth;
+		//    panel.UpdateDrawcalls();
+		//    EditorUtility.SetDirty(panel);
+		//}
+
+		//if (depth)
+		//{
+		//    UICamera cam = UICamera.FindCameraForLayer(panel.gameObject.layer);
+
+		//    if (cam == null || cam.camera.isOrthoGraphic)
+		//    {
+		//        EditorGUILayout.HelpBox("Please note that depth pass will only save fillrate when used with 3D UIs, and only UIs drawn by the game camera. If you are using a separate camera for the UI, you will not see any benefit!", MessageType.Warning);
+		//    }
+		//}
+
 		GUILayout.BeginHorizontal();
-		bool depth = EditorGUILayout.Toggle("Depth Pass", panel.depthPass, GUILayout.Width(100f));
-		GUILayout.Label("Extra draw call, saves fillrate");
+		bool cull = EditorGUILayout.Toggle("Cull", panel.cullWhileDragging, GUILayout.Width(100f));
+		GUILayout.Label("Cull widgets while dragging them");
 		GUILayout.EndHorizontal();
 
-		if (panel.depthPass != depth)
+		if (panel.cullWhileDragging != cull)
 		{
-			panel.depthPass = depth;
+			panel.cullWhileDragging = cull;
 			panel.UpdateDrawcalls();
 			EditorUtility.SetDirty(panel);
 		}
@@ -65,8 +125,17 @@ public class UIPanelInspector : Editor
 			EditorUtility.SetDirty(panel);
 		}
 
-		EditorGUILayout.LabelField("Widgets", panel.widgets.Count.ToString());
-		EditorGUILayout.LabelField("Draw Calls", drawcalls.Count.ToString());
+		if (stat)
+		{
+			EditorGUILayout.HelpBox("Only mark the panel as 'static' if you know FOR CERTAIN that the widgets underneath will not move, rotate, or scale. Doing this improves performance, but moving widgets around will have no effect.", MessageType.Warning);
+		}
+
+		if (panel.showInPanelTool != EditorGUILayout.Toggle("Panel Tool", panel.showInPanelTool))
+		{
+			panel.showInPanelTool = !panel.showInPanelTool;
+			EditorUtility.SetDirty(panel);
+			EditorWindow.FocusWindowIfItsOpen<UIPanelTool>();
+		}
 
 		UIPanel.DebugInfo di = (UIPanel.DebugInfo)EditorGUILayout.EnumPopup("Debug Info", panel.debugInfo);
 
@@ -130,13 +199,46 @@ public class UIPanelInspector : Editor
 					EditorUtility.SetDirty(panel);
 				}
 			}
+
+#if !UNITY_3_5 && !UNITY_4_0 && (UNITY_ANDROID || UNITY_IPHONE)
+			if (PlayerSettings.targetGlesGraphics == TargetGlesGraphics.OpenGLES_1_x)
+			{
+				EditorGUILayout.HelpBox("Clipping requires shader support!\n\nOpen File -> Build Settings -> Player Settings -> Other Settings, then set:\n\n- Graphics Level: OpenGL ES 2.0.", MessageType.Error);
+			}
+#endif
 		}
 
-		foreach (UIDrawCall dc in drawcalls)
+		if (clipping == UIDrawCall.Clipping.HardClip)
 		{
-			NGUIEditorTools.DrawSeparator();
-			EditorGUILayout.ObjectField("Material", dc.material, typeof(Material), false);
-			EditorGUILayout.LabelField("Triangles", dc.triangles.ToString());
+			EditorGUILayout.HelpBox("Hard clipping has been removed due to major performance issues on certain Android devices. Alpha clipping will be used instead.", MessageType.Warning);
+		}
+
+		if (clipping != UIDrawCall.Clipping.None && !NGUIEditorTools.IsUniform(panel.transform.lossyScale))
+		{
+			EditorGUILayout.HelpBox("Clipped panels must have a uniform scale, or clipping won't work properly!", MessageType.Error);
+			
+			if (GUILayout.Button("Auto-fix"))
+			{
+				NGUIEditorTools.FixUniform(panel.gameObject);
+			}
+		}
+
+		if (panel.drawCalls.size > 0 && NGUIEditorTools.DrawHeader(panel.drawCalls.size + " draw calls from " + panel.widgets.size + " widgets", "DrawCalls"))
+		{
+			NGUIEditorTools.BeginContents();
+			
+			foreach (UIDrawCall dc in drawcalls)
+			{
+				EditorGUILayout.ObjectField("Material", dc.material, typeof(Material), false);
+				EditorGUILayout.LabelField("Triangles", dc.triangles.ToString());
+
+				if (clipping != UIDrawCall.Clipping.None && !dc.isClipped)
+				{
+					EditorGUILayout.HelpBox("You must switch this material's shader to Unlit/Transparent Colored or Unlit/Premultiplied Colored in order for clipping to work.",
+						MessageType.Warning);
+				}
+			}
+			NGUIEditorTools.EndContents();
 		}
 	}
 }
