@@ -84,7 +84,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	 * Check if the player is dead and waits for respawn.
 	 */ 
 	public bool IsDead() {
-		return requestSpawn;	
+		return requestSpawn;
 	}
 	
 	/**
@@ -184,6 +184,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	 * Reset item if we hold it
 	 */ 
 	public void OnDeath() {
+		Debug.Log("Dead");
 		if( photonView.owner == PhotonNetwork.player ) {
 			if( requestSpawn == false ) {
 				// give score points to killer and assistances
@@ -204,17 +205,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 				hitList.Clear();
 				
 				// if we don't know our spawn point: find it!
-				if( spawnPointObj == null ) {
-					GameObject[] gos = GameObject.FindGameObjectsWithTag("Respawn");
-					foreach( GameObject go in gos ) {
-						if ( go.GetComponent<RespawnPoint>().IsOwner(photonView.owner) ) {
-							spawnPointObj = go;
-							spawnPointObj.GetComponent<RespawnPoint>().SetPMan(this);
-							transform.parent = spawnPointObj.transform;
-							break;
-						}
-					}
-				}
+				photonView.RPC("ParentSpawnPoint",PhotonTargets.AllBuffered);
 				transform.localPosition = Vector3.zero;
 				
 				// request spawn and store time of death
@@ -239,6 +230,19 @@ public class PlayerManager : Photon.MonoBehaviour {
 		}
 	}
 	
+	[RPC]
+	public void ParentSpawnPoint() {
+		GameObject[] gos = GameObject.FindGameObjectsWithTag("Respawn");
+		foreach( GameObject go in gos ) {
+			if ( go.GetComponent<RespawnPoint>().IsOwner(photonView.owner) ) {
+				spawnPointObj = go;
+				spawnPointObj.GetComponent<RespawnPoint>().SetPMan(this);
+				transform.parent = spawnPointObj.transform;
+				break;
+			}
+		}
+	}
+	
 	/**
 	 * Visualize death by hiding character and play VFX
 	 */ 
@@ -248,6 +252,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 		circleMarker.renderer.enabled = false;
 		invulnerable.SetActive( false );
 		Instantiate(deathVFX,transform.position,Quaternion.identity);
+		requestSpawn = true;
 	}
 	
 	/**
@@ -280,6 +285,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 		circleMarker.renderer.enabled = true;
 		invulnerable.SetActive( true );
 		invulnerable.animation.Play();
+		requestSpawn = false;
 	}
 	
 	/**

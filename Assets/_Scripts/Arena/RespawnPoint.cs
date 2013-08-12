@@ -29,10 +29,9 @@ public class RespawnPoint : Photon.MonoBehaviour {
 		// enable/disable marker if the linked player is dead/alive
 		if( pman != null ) {
 			if( pman.IsDead() ) {
-				photonView.RPC("SetMarkerActive",PhotonTargets.All,true);
-				positionMarker.renderer.material.SetFloat("_Cutoff", Mathf.InverseLerp(1, 0, pman.RespawnTimeNormalized()));
+				photonView.RPC("SetMarkerActive",PhotonTargets.AllBuffered,true);
 			} else {
-				photonView.RPC("SetMarkerActive",PhotonTargets.All,false);
+				photonView.RPC("SetMarkerActive",PhotonTargets.AllBuffered,false);
 				target = transform.localPosition;
 			}
 		}

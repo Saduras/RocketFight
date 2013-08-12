@@ -7,7 +7,6 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	
 	// parameters to change force fall off behaviour
 	public float fadeTime = 1f;
-	public bool controlableWhileForce = false;
 	// used as power for the force fall off curve
 	public float curvePower = 2f;
 	
@@ -37,17 +36,6 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 		Vector3 frameForce = CalculateFrameForce();
 		// send calculated force to mover
 		mover.SetPhysicMovement( frameForce );
-		if( frameForce.magnitude != 0 ) {	
-			// disable movement if contrableWhileForce if false
-			if( !controlableWhileForce && (this.gameObject.GetComponent<InputManager>().enabled == true) ) {
-				this.gameObject.GetComponent<InputManager>().enabled = false;
-			}
-		} else {
-			// reenable movement if contrableWhileForce if false
-			if( this.gameObject.GetComponent<InputManager>().enabled == false) {
-				this.gameObject.GetComponent<InputManager>().enabled = true;
-			}
-		}
 		// delete forces which are already faded
 		CleanUpForceSet();
 	}

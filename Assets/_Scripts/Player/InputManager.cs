@@ -51,8 +51,10 @@ public class InputManager : Photon.MonoBehaviour {
 		crosshair = GameObject.Find("CursorController").GetComponent<CursorBehaviour>();
 		
 		// disable this if there is no match runnig at the moment
-		if(!match.IsRunning())
+		if(!match.IsRunning()) {
+			Debug.Log("Wait for Match to start!");
 			enabled = false;
+		}
 	}
 	
 	// Update is called once per frame
@@ -75,24 +77,15 @@ public class InputManager : Photon.MonoBehaviour {
 			} else {
 				if( walkSound.isPlaying )
 					walkSound.Stop();
-			}			
+			}
+			
+			
 		}
 		
-		if( animator.GetCurrentAnimatorStateInfo(0).nameHash == shootState ) {
-			animator.SetBool("Shot", false);
-		}
-	}
-	
-	void LateUpdate() {
 		// Get mous position.
 		Vector3 hitPoint;
 		hitPoint = GetMouseHitPoint();
 		
-		// shoot a missile to the mouse position on left-mouse click
-		if( Input.GetButton("Fire1") && !pman.IsDead() ) {
-			Shoot(hitPoint); 
-		}
-	
 		if(pman.IsDead()) {
 			// we are dead
 			
@@ -103,30 +96,50 @@ public class InputManager : Photon.MonoBehaviour {
 			if( Input.GetButton("Fire1") ) {
 				Vector3 mousePos = GetMouseHitPoint();
 				pman.SetSpawnPoint( mousePos );
+				Debug.Log("MouseClick");
 			}
 		}
 		
-		// rotate character into moving direction
-		// if angle between movedir and viewdir is <90 degree
-		walkDir = movement;
-		viewDir = hitPoint - transform.position;
-		if( Vector3.Angle( walkDir, viewDir ) > 90 )
-			walkDir *= -1;
-		
-		if( walkDir == Vector3.back ) {
-			// Quaternion.FromToRotation gives bad results for 180 degree rotation
-			// so hack for back movement
-			transform.rotation = Quaternion.AngleAxis(180, Vector3.up);
-		} else { 
-			transform.rotation = Quaternion.FromToRotation(Vector3.forward, walkDir);
+		if( animator.GetCurrentAnimatorStateInfo(0).nameHash == shootState ) {
+			animator.SetBool("Shot", false);
 		}
+	}
+	
+	void LateUpdate() {
+		if( (PhotonNetwork.player == controllingPlayer && controlable && match.IsRunning()) ) {
+			// Get mous position.
+			Vector3 hitPoint;
+			hitPoint = GetMouseHitPoint();
+			
+			// shoot a missile to the mouse position on left-mouse click
+			if( Input.GetButton("Fire1") && !pman.IsDead() ) {
+				Shoot(hitPoint); 
+			}
 		
-				
-		// look at mouse cursor
-		Quaternion rotZ = Quaternion.AngleAxis(-90f, new Vector3(0,0,1));
-		Quaternion rotY = Quaternion.AngleAxis(-90f, new Vector3(0,1,0));
-		upperBody.transform.LookAt( hitPoint + new Vector3(0,0.5f,0) );
-		upperBody.transform.rotation = upperBody.transform.rotation * rotY * rotZ;
+			
+			
+			// rotate character into moving direction
+			// if angle between movedir and viewdir is <90 degree
+			walkDir = movement;
+			viewDir = hitPoint - transform.position;
+			if( Vector3.Angle( walkDir, viewDir ) > 90 )
+				walkDir *= -1;
+			
+			if( walkDir == Vector3.back ) {
+				// Quaternion.FromToRotation gives bad results for 180 degree rotation
+				// so hack for back movement
+				transform.rotation = Quaternion.AngleAxis(180, Vector3.up);
+			} else { 
+				transform.rotation = Quaternion.FromToRotation(Vector3.forward, walkDir);
+			}
+			
+					
+			// look at mouse cursor
+			Quaternion rotZ = Quaternion.AngleAxis(-90f, new Vector3(0,0,1));
+			Quaternion rotY = Quaternion.AngleAxis(-90f, new Vector3(0,1,0));
+			upperBody.transform.LookAt( hitPoint + new Vector3(0,0.5f,0) );
+			upperBody.transform.rotation = upperBody.transform.rotation * rotY * rotZ;
+		}
 	}	
 	
 	/**
