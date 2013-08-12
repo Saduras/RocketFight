@@ -5,6 +5,7 @@ using System.Collections;
 public class AutoDestructShuriken : Photon.MonoBehaviour {
 	
 	public bool OnlyDeactivate;
+	public bool network;
 	
 	void OnEnable()
 	{
@@ -29,10 +30,15 @@ public class AutoDestructShuriken : Photon.MonoBehaviour {
 					#elif UNITY_3_5
 							this.gameObject.SetActiveRecursively(false);
 					#endif
+				} else {
+					if(network) {
+						if( photonView.owner == PhotonNetwork.player ) {
+							PhotonNetwork.Destroy(this.gameObject);
+						}
+					} else { 
+						Destroy(gameObject);
+					}
 				}
-				else
-					if( photonView.owner == PhotonNetwork.player )
-						PhotonNetwork.Destroy(this.gameObject);
 				break;
 			}
 		}
