@@ -6,6 +6,7 @@ public class RespawnPoint : Photon.MonoBehaviour {
 	
 	// sound & VFX references
 	public GameObject particleEffectSystem;
+	public GameObject meteor;
 	public AudioSource respawnSound;
 	public GameObject positionMarker;
 	
@@ -68,6 +69,7 @@ public class RespawnPoint : Photon.MonoBehaviour {
 	[RPC]
 	public void SetMarkerActive( bool val ) {
 		positionMarker.SetActive( val );
+		meteor.SetActive( val);	
 	}
 	
 	/**
@@ -103,7 +105,7 @@ public class RespawnPoint : Photon.MonoBehaviour {
 	 */ 
 	[RPC]
 	public void StartAnimation() {
-		particleEffectSystem.SetActive(true);
+		//particleEffectSystem.SetActive(true);
 		respawnSound.Play();
 	}
 	
