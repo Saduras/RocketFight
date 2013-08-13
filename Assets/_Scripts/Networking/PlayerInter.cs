@@ -11,12 +11,14 @@ public class PlayerInter : Photon.MonoBehaviour {
 	//
 	
     public double interpolationBackTime = 0.15;
+	public GameObject upperBody;
 
     internal struct State
     {
         internal double timestamp;
         internal Vector3 pos;
         internal Quaternion rot;
+		internal Quaternion upperRot;
     }
 
     // We store twenty states with "playback" information
@@ -25,7 +27,7 @@ public class PlayerInter : Photon.MonoBehaviour {
     int m_TimestampCount;
 	
 	private Animator anim;
-
+	
     void Awake()
     {
         if (photonView.isMine)
@@ -45,6 +47,10 @@ public class PlayerInter : Photon.MonoBehaviour {
             Quaternion rot = transform.localRotation;
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
+			if(upperBody) {
+				Quaternion upperRot = upperBody.transform.localRotation;
+				stream.Serialize(ref upperRot);
+			}
         }
         // When receiving, buffer the information
         else
@@ -52,8 +58,12 @@ public class PlayerInter : Photon.MonoBehaviour {
 			// Receive latest state information
             Vector3 pos = Vector3.zero;
             Quaternion rot = Quaternion.identity;
+			Quaternion upperRot = Quaternion.identity;
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
+			if(upperBody) {
+				stream.Serialize(ref upperRot);
+			}
 
             // Shift buffer contents, oldest data erased, 18 becomes 19, ... , 0 becomes 1
             for (int i = m_BufferedState.Length - 1; i >= 1; i--)
@@ -67,6 +77,7 @@ public class PlayerInter : Photon.MonoBehaviour {
             state.timestamp = info.timestamp;
             state.pos = pos;
             state.rot = rot;
+			state.upperRot = upperRot;
             m_BufferedState[0] = state;
 
             // Increment state count but never exceed buffer size
@@ -80,9 +91,12 @@ public class PlayerInter : Photon.MonoBehaviour {
             }
 		}
     }
-
+	
+	Vector3 walkDir;
+	Vector3 viewDir;
+	
     // This only runs where the component is enabled, which is only on remote peers (server/clients)
-    void Update()
+    void LateUpdate()
     {
         double currentTime = PhotonNetwork.time;
         double interpolationTime = currentTime - interpolationBackTime;
@@ -112,10 +126,14 @@ public class PlayerInter : Photon.MonoBehaviour {
                     // which case rhs is only used
                     if (length > 0.0001)
                         t = (float)((interpolationTime - lhs.timestamp) / length);
-
-                    // if t=0 => lhs is used directly
+					
+					// if t=0 => lhs is used directly
                     transform.localPosition = Vector3.Lerp(lhs.pos, rhs.pos, t);
-                    transform.localRotation = Quaternion.Slerp(lhs.rot, rhs.rot, t);
+					transform.localRotation = Quaternion.Slerp(lhs.rot, rhs.rot, t);
+					
+					if(upperBody) {
+						upperBody.transform.localRotation = Quaternion.Slerp(lhs.upperRot, rhs.upperRot, t);	
+					}
 					
 					float speed = Mathf.Abs((lhs.pos - rhs.pos).magnitude) / (float)length;
 					if(anim)
@@ -132,6 +150,10 @@ public class PlayerInter : Photon.MonoBehaviour {
 
             transform.localPosition = Vector3.Lerp(transform.localPosition, latest.pos, Time.deltaTime * 20 );
             transform.localRotation = latest.rot;
+			
+			if(upperBody) {
+				upperBody.transform.localRotation = latest.upperRot;	
+			}
 			
 			float speed = Mathf.Abs((transform.localPosition - latest.pos).magnitude) / Time.deltaTime;
 			if(anim)

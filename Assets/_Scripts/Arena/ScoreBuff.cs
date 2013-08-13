@@ -6,6 +6,7 @@ public class ScoreBuff : Photon.MonoBehaviour {
 	// sound and VFX references
 	public GameObject staticVFX;
 	public GameObject mobileVFX;
+	public GameObject mesh;
 	public AudioSource itemSound;
 	
 	// parameter to modify buff effect
@@ -63,6 +64,7 @@ public class ScoreBuff : Photon.MonoBehaviour {
 		transform.parent = null;
 		transform.position = startPos;
 		staticVFX.SetActive( true );
+		mesh.SetActive( true );
 		collider.enabled = true;
 		match.photonView.RPC("ClearItem",PhotonTargets.AllBuffered);
 	}
@@ -74,8 +76,8 @@ public class ScoreBuff : Photon.MonoBehaviour {
 		if(other.gameObject.CompareTag("Player")) {
 			if( !other.gameObject.GetComponent<PlayerManager>().IsDead() ) {
 				player = other.gameObject.GetComponent<InputManager>().controllingPlayer;
-				//photonView.RPC("ItemPickUp",PhotonTargets.AllBuffered,player);
-				ItemPickUp(player);
+				photonView.RPC("ItemPickUp",PhotonTargets.AllBuffered,player);
+				//ItemPickUp(player);
 			}
 		}
 	}
@@ -85,6 +87,9 @@ public class ScoreBuff : Photon.MonoBehaviour {
 	 */
 	[RPC]
 	public void ItemPickUp(PhotonPlayer player) {
+		if(pickedUp)
+			return;
+		
 		// find players game object
 		GameObject playerGo = new GameObject();
 		GameObject[] gos = GameObject.FindGameObjectsWithTag("Player");
@@ -102,7 +107,6 @@ public class ScoreBuff : Photon.MonoBehaviour {
 		localPos.z = 0;
 		transform.localPosition = localPos;
 		
-		renderer.enabled = false;
 		pickedUp = true;
 		// play sound
 		itemSound.Play();
@@ -110,6 +114,7 @@ public class ScoreBuff : Photon.MonoBehaviour {
 		// disable collider and static VFX
 		collider.enabled = false;
 		staticVFX.SetActive( false );
+		mesh.SetActive( false );
 		
 		pickupTime = Time.time;
 		

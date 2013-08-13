@@ -318,9 +318,8 @@ public class Match : Photon.MonoBehaviour {
 		uiMenu.ChanceState(UIMenu.UIState.MATCHOVER);
 		
 		playerList = SortPlayerListByScore( playerList );
-		// UpdateUIPlayerList( finalScoreLabel );
 		// stop background music
-		matchMusic.Stop();
+//		matchMusic.Stop();
 		ambientWind.Stop();
 	}
 	

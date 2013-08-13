@@ -96,7 +96,6 @@ public class InputManager : Photon.MonoBehaviour {
 			if( Input.GetButton("Fire1") ) {
 				Vector3 mousePos = GetMouseHitPoint();
 				pman.SetSpawnPoint( mousePos );
-				Debug.Log("MouseClick");
 			}
 		}
 		
