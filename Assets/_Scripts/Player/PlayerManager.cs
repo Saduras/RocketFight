@@ -37,6 +37,7 @@ public class PlayerManager : Photon.MonoBehaviour {
 	
 	// respawn
 	public float respawnTime = 3f;
+	public float respawnDelay = 2f;
 	public float invulnerableTime = 3f;
 	private float deathTimestamp;
 	private bool requestSpawn = false;
@@ -63,12 +64,12 @@ public class PlayerManager : Photon.MonoBehaviour {
 	void Update() {	
 		if( photonView.owner == PhotonNetwork.player ) {
 			// proceed respawn if respawntime it over and respawn is requested
-			if( Time.time > deathTimestamp + respawnTime && requestSpawn) {
+			if( Time.time > deathTimestamp + respawnTime + respawnDelay && requestSpawn) {
 				Respawn();
 				requestSpawn = false;	
 			}
 			// make player vunable again if time is over
-			if( Time.time > deathTimestamp + respawnTime + invulnerableTime && !GetComponent<PlayerPhysic>().IsVulnerable()) {
+			if( Time.time > deathTimestamp + respawnTime + respawnDelay + invulnerableTime && !GetComponent<PlayerPhysic>().IsVulnerable()) {
 				// become vunable again
 				photonView.RPC("SetVulnerable",PhotonTargets.AllBuffered,true);
 				photonView.RPC("HideInvulnerable",PhotonTargets.AllBuffered);
@@ -204,13 +205,8 @@ public class PlayerManager : Photon.MonoBehaviour {
 				// empty hitList
 				hitList.Clear();
 				
-				// if we don't know our spawn point: find it!
-				photonView.RPC("ParentSpawnPoint",PhotonTargets.AllBuffered);
-				transform.localPosition = Vector3.zero;
-				
 				// request spawn and store time of death
 				deathTimestamp = Time.time;
-				requestSpawn = true;
 				// disable controls
 				mover.controlable = false;
 				mover.SetControllerMovement( Vector3.zero );
@@ -247,11 +243,17 @@ public class PlayerManager : Photon.MonoBehaviour {
 	 * Visualize death by hiding character and play VFX
 	 */ 
 	[RPC]
-	public void ShowDeath() {
+	public IEnumerator ShowDeath() {
 		materialTarget.enabled = false;
 		circleMarker.renderer.enabled = false;
 		invulnerable.SetActive( false );
 		Instantiate(deathVFX,transform.position,Quaternion.identity);
+		// wait before instantiate spawn
+		yield return new WaitForSeconds(respawnDelay);
+		// if we don't know our spawn point: find it!
+		ParentSpawnPoint();
+		transform.localPosition = Vector3.zero;
+		Debug.Log("isdead");
 		requestSpawn = true;
 	}
 	
