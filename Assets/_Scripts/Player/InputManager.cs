@@ -57,6 +57,8 @@ public class InputManager : Photon.MonoBehaviour {
 			Debug.Log("Wait for Match to start!");
 			enabled = false;
 		}
+		
+		transform.LookAt( Vector3.zero );
 	}
 	
 	// Update is called once per frame
