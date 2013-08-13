@@ -11,6 +11,8 @@ public class UIMenu : Photon.MonoBehaviour {
 	// and so on ...
 	public UIPanel[] panels;
 	
+	public UISprite background;
+	
 	private UIState currentState;
 	
 	public enum UIState {
@@ -44,6 +46,8 @@ public class UIMenu : Photon.MonoBehaviour {
 		if( (int) newState < panels.Length )
 			panels[(int) newState].gameObject.SetActive(true);
 		
+		background.enabled = true;
+		
 		// do additional stuff for cases INGAME and QUIT
 		switch(newState) {
 			case UIState.INGAME:
@@ -52,6 +56,7 @@ public class UIMenu : Photon.MonoBehaviour {
 					photonView.RPC("ChangeToInGame",PhotonTargets.Others);
 					match.photonView.RPC("RequestStart",PhotonTargets.AllBuffered);
 				}
+			background.enabled = false;
 				break;
 			case UIState.MATCHOVER: {
 				panels[(int) UIState.MATCHOVER].GetComponentInChildren<ScorePanel>().UpdateDisplay();
