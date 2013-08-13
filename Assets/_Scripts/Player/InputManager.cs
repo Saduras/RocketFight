@@ -29,7 +29,6 @@ public class InputManager : Photon.MonoBehaviour {
 	private PlayerManager pman;
 	
 	public Animator animator;
-	public GameObject barrelGO;
 	private int shootState = Animator.StringToHash("Base Layer.shotState");
 	
 	// these to allow an rage-mode after respawn
