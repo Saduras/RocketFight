@@ -23,7 +23,7 @@ public class ScoreBuff : Photon.MonoBehaviour {
 	private Match match;
 	
 	// Use this for initialization
-	void Start () {
+	void Start () {	
 		startPos = transform.position;
 		netman = GameObject.Find("PhotonNetman").GetComponent<Netman>();
 		match = GameObject.Find("PhotonNetman").GetComponent<Match>();
