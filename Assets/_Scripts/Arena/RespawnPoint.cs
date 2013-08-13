@@ -9,12 +9,14 @@ public class RespawnPoint : Photon.MonoBehaviour {
 	public AudioSource respawnSound;
 	public GameObject positionMarker;
 	
+	public Vector2[] limits;
+	
 	private Color color;
 	private PhotonPlayer player;
 	private PlayerManager pman;
 	
 	// paramteres used to move this object around
-	private Vector3? target;
+	private Vector3 target = new Vector3(999,999,999);
 	private float speed = 5;
 	private Vector3 lastMove;
 	
@@ -37,8 +39,18 @@ public class RespawnPoint : Photon.MonoBehaviour {
 		}
 		
 		// move respawnpoint with given speed to target until we a very close
-		if( target != null && (target.Value - transform.position).magnitude > 0.2f ) {
-			lastMove = (target.Value - transform.position).normalized * speed * Time.deltaTime;
+		if( target != new Vector3(999,999,999) && (target - transform.position).magnitude > 0.2f ) {
+			// check x
+			if( target.x < limits[0].x )
+				target.x = limits[0].x;
+			if( target.x > limits[1].x )
+				target.x = limits[1].x;
+			// check y
+			if( target.z > limits[0].y )
+				target.z = limits[0].y;
+			if( target.z < limits[1].y )
+				target.z = limits[1].y;
+			lastMove = (target - transform.position).normalized * speed * Time.deltaTime;
 			transform.Translate( lastMove );
 		}
 	}
@@ -103,9 +115,15 @@ public class RespawnPoint : Photon.MonoBehaviour {
 		player = assignedPlayer;
 	}
 	
-	public void OnLeaveArena() {
-		Debug.Log("LeavingArena!");
-		transform.Translate( -2*lastMove );
-		target = transform.localPosition;
+	void OnDrawGizmos() {
+		Vector3 topLeft 	= new Vector3(limits[0].x, 1, limits[0].y);
+		Vector3 topRight 	= new Vector3(limits[1].x, 1,limits[0].y);
+		Vector3 botLeft		= new Vector3(limits[0].x, 1, limits[1].y);
+		Vector3 botRight	= new Vector3(limits[1].x, 1, limits[1].y);
+		
+		Gizmos.DrawLine(topLeft,topRight);
+		Gizmos.DrawLine(topRight,botRight);
+		Gizmos.DrawLine(botRight,botLeft);
+		Gizmos.DrawLine(botLeft,topLeft);
 	}
 }
