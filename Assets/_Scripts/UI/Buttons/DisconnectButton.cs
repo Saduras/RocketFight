@@ -9,5 +9,6 @@ public class DisconnectButton : MonoBehaviour {
 	public void OnClick() {
 		Debug.Log("Disconnecting");
 		PhotonNetwork.Disconnect();	
+		GameObject.Find("PhotonNetman").GetComponent<Match>().Reset();
 	}
 }

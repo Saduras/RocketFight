@@ -31,6 +31,8 @@ public class InputManager : Photon.MonoBehaviour {
 	public Animator animator;
 	private int shootState = Animator.StringToHash("Base Layer.shotState");
 	
+	public GameObject rocketStart;
+	
 	// these to allow an rage-mode after respawn
 	// a limit number of shoots with reduces cooldown
 	private int rageCounter = 0;
@@ -110,13 +112,6 @@ public class InputManager : Photon.MonoBehaviour {
 			Vector3 hitPoint;
 			hitPoint = GetMouseHitPoint();
 			
-			// shoot a missile to the mouse position on left-mouse click
-			if( Input.GetButton("Fire1") && !pman.IsDead() ) {
-				Shoot(hitPoint); 
-			}
-		
-			
-			
 			// rotate character into moving direction
 			// if angle between movedir and viewdir is <90 degree
 			walkDir = movement;
@@ -138,6 +133,11 @@ public class InputManager : Photon.MonoBehaviour {
 			Quaternion rotY = Quaternion.AngleAxis(-90f, new Vector3(0,1,0));
 			upperBody.transform.LookAt( hitPoint + new Vector3(0,0.5f,0) );
 			upperBody.transform.rotation = upperBody.transform.rotation * rotY * rotZ;
+			
+			// shoot a missile to the mouse position on left-mouse click
+			if( Input.GetButton("Fire1") && !pman.IsDead() ) {
+				Shoot(hitPoint); 
+			}
 		}
 	}	
 	
@@ -179,7 +179,8 @@ public class InputManager : Photon.MonoBehaviour {
 			direction.Normalize();
 			
 			// set start position of the projectile
-			Vector3 pos = this.transform.position + direction.normalized * 0.7f + Vector3.up * 0.5f;
+			Vector3 pos = rocketStart.transform.position;
+			
 			// instatiate VFX
 			PhotonNetwork.Instantiate(muzzleFlash.name,
 										pos, 
