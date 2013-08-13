@@ -41,6 +41,12 @@ public class ScorePanel : MonoBehaviour {
 			scoreSlots[i].Deactivate();
 		}
 		
+		// reset places
+		place = new int[scoreSlots.Length];
+		for( int i=0; i<scoreSlots.Length; i++)  {
+			place[i] = i;
+		}
+		
 		// enable all labels for current playerlist
 		List<RocketFightPlayer> playerList = match.GetPlayerList();
 		for( int i=0; i< playerList.Count; i++) {
