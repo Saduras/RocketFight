@@ -118,7 +118,7 @@ public class Rocket : Photon.MonoBehaviour {
 		if( explosion != null )
 				Instantiate(explosion, this.transform.position, Quaternion.identity);
 		
-//		Debug.LogError("Explosion at: " + PhotonNetwork.time);
+		Camera.main.gameObject.GetComponent<CameraShake>().Shake();
 		
 		if( photonView.owner == PhotonNetwork.player ) {
 			// get a list of all character walking in this arena

@@ -18,7 +18,6 @@ public class AutoDestructAnimation : Photon.MonoBehaviour {
 	IEnumerator CheckIfAlive ()	{
 		while(true){
 			yield return new WaitForSeconds(0.33f);
-			Debug.Log("Test");
 			if(!animation.isPlaying) {
 				if(OnlyDeactivate) {
 					this.gameObject.SetActive(false);

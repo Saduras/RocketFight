@@ -308,6 +308,12 @@ public class PlayerManager : Photon.MonoBehaviour {
 		if( explosion != null)
 			PhotonNetwork.Instantiate(explosion.name, this.transform.position, Quaternion.identity, 0);
 		
+		// heavy shake if it's the own player
+		if( photonView.owner == PhotonNetwork.player )
+			Camera.main.gameObject.GetComponent<CameraShake>().Shake(0.5f);
+		else
+			Camera.main.gameObject.GetComponent<CameraShake>().Shake();
+		
 		// calculate force for each player in range and send them a force
 		GameObject[] gos = GameObject.FindGameObjectsWithTag( playerTag );
 		foreach( GameObject playerGo in gos ) {

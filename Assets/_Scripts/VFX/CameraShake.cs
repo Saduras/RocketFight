@@ -8,10 +8,12 @@ public class CameraShake : MonoBehaviour {
 	
 	private float startTime;
 	private Vector3 defaultPos;
+	private float defaultStrength;
 
 	// Use this for initialization
 	void Start () {
 		defaultPos = transform.position;
+		defaultStrength = strength;
 	}
 	
 	
@@ -33,6 +35,14 @@ public class CameraShake : MonoBehaviour {
 	}
 	
 	public void Shake() {
+		Debug.Log("Shake");
 		startTime = Time.time;	
+		strength = defaultStrength;
+	}
+	
+	public void Shake(float str) {
+		Debug.Log("Shake strong");
+		startTime = Time.time;
+		strength = str;
 	}
 }
