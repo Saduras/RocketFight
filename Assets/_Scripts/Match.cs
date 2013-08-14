@@ -218,6 +218,12 @@ public class Match : Photon.MonoBehaviour {
 	 */ 
 	[RPC]
 	public void ReloadPlayerList() {
+		// request to kick each player without name
+		foreach( PhotonPlayer player in PhotonNetwork.playerList ) {
+			if( player.name == "")
+				PhotonNetwork.CloseConnection(player);
+		}
+		
 		// reset colors
 		for( int i=usedColors.Count-1; i>=0; i-- ) {
 			freeColors.Add( usedColors[i] );	
@@ -229,7 +235,8 @@ public class Match : Photon.MonoBehaviour {
 		List<PhotonPlayer> sortedList = SortPlayerListByID( new List<PhotonPlayer>( PhotonNetwork.playerList ) );
 		
 		foreach( PhotonPlayer player in sortedList ) {
-			AddPlayer( player );	
+			if( player.name != "")
+				AddPlayer( player );	
 		}
 	}
 	
@@ -249,6 +256,7 @@ public class Match : Photon.MonoBehaviour {
 				(PhotonNetwork.masterClient == playerList[i].photonPlayer),
 				(PhotonNetwork.player == playerList[i].photonPlayer));
 		}
+		
 	}
 	
 	/**

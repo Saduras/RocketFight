@@ -54,6 +54,10 @@ public class RespawnPoint : Photon.MonoBehaviour {
 			lastMove = (target - transform.position).normalized * speed * Time.deltaTime;
 			transform.Translate( lastMove );
 		}
+		
+		// allow sound only to play for own spawn
+		if(respawnSound.isPlaying && photonView.owner != PhotonNetwork.player)
+			respawnSound.Stop();
 	}
 	
 	/**
