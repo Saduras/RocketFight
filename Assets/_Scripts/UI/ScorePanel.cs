@@ -19,7 +19,7 @@ public class ScorePanel : MonoBehaviour {
 		// activate one slot for each player in the current match
 		List<RocketFightPlayer> playerList = match.GetPlayerList();
 		for( int i=0; i<playerList.Count; i++) {
-			scoreSlots[i].SetName( playerList[i].photonPlayer.name );
+			scoreSlots[i].SetName( playerList[i].photonPlayer );
 		}
 		
 		// save inital position of the slots and there order
@@ -51,7 +51,7 @@ public class ScorePanel : MonoBehaviour {
 		List<RocketFightPlayer> playerList = match.GetPlayerList();
 		for( int i=0; i< playerList.Count; i++) {
 			// set player label
-			scoreSlots[i].SetName( playerList[i].photonPlayer.name );
+			scoreSlots[i].SetName( playerList[i].photonPlayer );
 		}
 		
 		UpdateScore();

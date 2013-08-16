@@ -5155,12 +5155,12 @@ SubstanceImporter:
       floats:
         data:
           first:
-            name: _Shininess
-          second: .078125
-        data:
-          first:
             name: _InvFade
           second: 1
+        data:
+          first:
+            name: _Shininess
+          second: .078125
       colors:
         data:
           first:

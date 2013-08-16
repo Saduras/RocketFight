@@ -8,7 +8,10 @@ public class Netman : Photon.MonoBehaviour {
 	public string gameScene = "Arena";
 	
 	public Match match;
+	public UILabel label;
+	public UIMenu uimenu;
 	private int playerCountRoom = 0;
+	
 	
 	/**
 	 * Initialize PhotonNetwork settings.
@@ -31,6 +34,31 @@ public class Netman : Photon.MonoBehaviour {
 						photonView.RPC("ReloadPlayerList",PhotonTargets.All);
 						playerCountRoom = PhotonNetwork.room.playerCount;
 					}
+	}
+	
+	/**
+	 * If player leave the match, remove all objects owned by this player
+	 */ 
+	public virtual void OnPhotonPlayerDisconnected(PhotonPlayer player) {
+		if(PhotonNetwork.isMasterClient) {
+			PhotonNetwork.DestroyPlayerObjects(player);
+		}
+		match.ReloadPlayerList();
+		
+		if(match.IsRunning()) {
+			PhotonNetwork.Disconnect();
+			// activate label if it is inactive
+			if( !label.gameObject.activeSelf )
+				label.gameObject.SetActive( true );
+			
+			// update text
+			label.text = "Match closed,\n because player disconnected!";
+			// init fade via TweenColor
+			label.color = Color.white;	
+			TweenColor.Begin(label.gameObject, 1.5f, new Color(1,1,1,0));
+			
+			uimenu.ChanceState(UIMenu.UIState.MAINMENU);
+		}
 	}
 	
 	/**

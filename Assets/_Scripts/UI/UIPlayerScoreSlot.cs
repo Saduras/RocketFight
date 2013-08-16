@@ -10,6 +10,8 @@ public class UIPlayerScoreSlot : MonoBehaviour {
 	
 	public Color inactiveColor;
 	public Color activeBackgroundColor;
+	
+	private int playerID = 0;
 
 	// Use this for initialization
 	void Awake() {
@@ -20,10 +22,11 @@ public class UIPlayerScoreSlot : MonoBehaviour {
 	/**
 	 * Active this player slot and update name.
 	 */
-	public void SetName(string playerName) {
+	public void SetName( PhotonPlayer player) {
 		// enable label and set text
 		slotNameLabel.enabled = true;
-		slotNameLabel.text = playerName;
+		slotNameLabel.text = player.name;
+		playerID = player.ID;
 		slotScoreLabel.enabled = true;
 		slotScoreLabel.text = "0";
 		
@@ -55,5 +58,9 @@ public class UIPlayerScoreSlot : MonoBehaviour {
 		
 		// change background color to inactive
 		slotBackground.color = inactiveColor;
+	}
+	
+	public int GetID() {
+		return playerID;
 	}
 }
