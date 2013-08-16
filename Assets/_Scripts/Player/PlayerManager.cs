@@ -212,14 +212,13 @@ public class PlayerManager : Photon.MonoBehaviour {
 				mover.SetControllerMovement( Vector3.zero );
 				GetComponent<InputManager>().controlable = false;
 				// visualise death on all clients
-				photonView.RPC("ShowDeath",PhotonTargets.All);
+				photonView.RPC("ShowDeath",PhotonTargets.AllBuffered);
 				
 				// Reset buff if we carry it
 				ScoreBuff sb = gameObject.GetComponentInChildren<ScoreBuff>();
 				if( sb != null )
 					sb.Drop();
 				}
-			
 			
 			// Make player invulnerbale
 			photonView.RPC("SetVulnerable",PhotonTargets.AllBuffered,false);
