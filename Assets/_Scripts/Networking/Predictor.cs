@@ -89,7 +89,7 @@ public class Predictor : Photon.MonoBehaviour {
 	
 	private Vector3 movementError = Vector3.zero;
 
-    void Awake() {
+    void Start() {
         if (photonView.isMine)
             this.enabled = false;//Only enable inter/extrapol for remote players
 		

@@ -22,7 +22,7 @@ public class CharacterMover : Photon.MonoBehaviour {
 	/**
 	 * Init character controller reference on wake up
 	 */ 
-	void Awake() {
+	void Start() {
 		controller = GetComponent<CharacterController>();
 	}
 

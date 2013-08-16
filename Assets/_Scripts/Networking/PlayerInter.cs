@@ -28,7 +28,7 @@ public class PlayerInter : Photon.MonoBehaviour {
 	
 	private Animator anim;
 	
-    void Awake()
+    void Start()
     {
         if (photonView.isMine)
             this.enabled = false;//Only enable inter/extrapol for remote players

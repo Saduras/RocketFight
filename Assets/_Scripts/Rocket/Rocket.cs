@@ -34,7 +34,7 @@ public class Rocket : Photon.MonoBehaviour {
 	 * Initalize.
 	 * Store birth time and check explosion zones.
 	 */ 
-	void Awake () {
+	void Start() {
 		birthTime = (float) PhotonNetwork.time;
 		
 		if(zoneRadii.Count < 1 || zoneStrength.Count != zoneRadii.Count ) {

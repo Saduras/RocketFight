@@ -21,7 +21,7 @@ public class PlayerPhysic : Photon.MonoBehaviour {
 	 * Use this for initialization
 	 * Disable if we are not the owner of this gameObject
 	 */
-	void Start () {
+	void Start() {
 //		if (!(photonView.owner == PhotonNetwork.player) ) {
 //			this.enabled = false;
 //		}

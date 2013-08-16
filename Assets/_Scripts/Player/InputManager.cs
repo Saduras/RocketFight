@@ -46,7 +46,7 @@ public class InputManager : Photon.MonoBehaviour {
 	public PhotonPlayer controllingPlayer;
 	
 	// Use this for initialization
-	public void Awake () {
+	public void Start() {
 		mover = GetComponent<CharacterMover>();
 		match = GameObject.Find("PhotonNetman").GetComponent<Match>();
 		pman = GetComponent<PlayerManager>();
