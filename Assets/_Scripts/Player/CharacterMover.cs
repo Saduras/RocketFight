@@ -24,6 +24,22 @@ public class CharacterMover : Photon.MonoBehaviour {
 	 */ 
 	void Start() {
 		controller = GetComponent<CharacterController>();
+		StartCoroutine("CheckHeight");
+	}
+	
+	/**
+	 * Run a coroutine every 500ms which check the y-coordiante of transform.position.
+	 * Move Character to y=0 if necessary.
+	 */ 
+	public IEnumerator CheckHeight() {
+		while(true) {
+			yield return WaitForSeconds(0.5f);
+			if(transform.position.y != 0) {
+				Vector3 pos = transform.position;
+				pos.y = 0;
+				transform.position = pos;
+			}
+		}
 	}
 
 	/**
