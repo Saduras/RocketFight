@@ -12,7 +12,7 @@ public class ConnectButton : MonoBehaviour {
 	 */
 	void OnClick() {
 		PlayerPrefs.SetString("Playername",usernameLabel.text);
-		PhotonNetwork.ConnectUsingSettings( "1" );
+		PhotonNetwork.ConnectUsingSettings( "v1.0-GC" );
 		PhotonNetwork.player.name = PlayerPrefs.GetString("Playername");
 		GameObject.Find("PhotonNetman").GetComponent<Match>().Reset();
 	}
