@@ -59,6 +59,13 @@ public class Match : Photon.MonoBehaviour {
 		FINISHED // match is over
 	}
 	
+	void Start() {
+		if(!arenaLoaded) {
+			Application.LoadLevelAdditive(arenaScene);
+			arenaLoaded = true;
+		}	
+	}
+	
 	/**
 	 * Each frame, update gameTime, countdown or wait for start - depending on match state
 	 */ 
