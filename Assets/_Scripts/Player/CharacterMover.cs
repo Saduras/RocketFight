@@ -11,7 +11,6 @@ public class CharacterMover : Photon.MonoBehaviour {
 	Vector3 controllerMovement = Vector3.zero;
 	// sum of all forces which influence the character now
 	Vector3 physicMovement = Vector3.zero;
-	
 	// speed of the character movement through player input
 	public float movementSpeed = 5;
 	// enable/disable controller movement
@@ -33,7 +32,7 @@ public class CharacterMover : Photon.MonoBehaviour {
 	 */ 
 	public IEnumerator CheckHeight() {
 		while(true) {
-			yield return WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(0.5f);
 			if(transform.position.y != 0) {
 				Vector3 pos = transform.position;
 				pos.y = 0;

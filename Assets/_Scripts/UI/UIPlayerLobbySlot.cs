@@ -16,8 +16,6 @@ public class UIPlayerLobbySlot : MonoBehaviour {
 	 * enable/disable master client icon and local player high light.
 	 */
 	public void Set(string playerName, bool isMaster, bool isLocal) {
-		Debug.Log("Set LobbySlot: " + playerName);
-		
 		// enable label and set text
 		slotLabel.enabled = true;
 		slotLabel.text = playerName;
@@ -37,9 +35,7 @@ public class UIPlayerLobbySlot : MonoBehaviour {
 	/**
 	 * Hide icon and label and change background to inactive color
 	 */
-	public void Deactivate() {
-		Debug.Log("Deactivate LobbySlot");
-		
+	public void Deactivate() {		
 		// hide master icon, label & highlight
 		masterClientIcon.enabled = false;
 		slotLabel.enabled = false;
