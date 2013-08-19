@@ -63,6 +63,7 @@ public class Match : Photon.MonoBehaviour {
 		if(!arenaLoaded) {
 			Application.LoadLevelAdditive(arenaScene);
 			arenaLoaded = true;
+			allReady = true;
 		}	
 	}
 	
